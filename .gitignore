@@ -6,5 +6,5 @@ binInt/
 .user/
 
 # Ingore IDE File Use premake5.exe instead
-.sln
-.vcxproj
+*.sln
+*.vcxproj
