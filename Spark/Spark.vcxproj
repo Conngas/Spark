@@ -11,9 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Spark\Log.cpp" />
     <ClCompile Include="src\Spark\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Spark\Log.h" />
     <ClInclude Include="src\Spark\Application.h" />
     <ClInclude Include="src\Spark\Core.h" />
     <ClInclude Include="src\Spark.h" />
@@ -67,6 +69,7 @@
       <PreprocessorDefinitions>SPK_PLATFORM_WINDOWS;SPK_BUILD_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)Spark\vendor\spdlog\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -82,6 +85,7 @@
       <PreprocessorDefinitions>SPK_PLATFORM_WINDOWS;SPK_BUILD_DLL</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)Spark\vendor\spdlog\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

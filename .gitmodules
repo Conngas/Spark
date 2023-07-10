@@ -1,0 +1,3 @@
+[submodule "Spark/vendor/spdlog"]
+	path = Spark/vendor/spdlog
+	url = git@github.com:gabime/spdlog.git

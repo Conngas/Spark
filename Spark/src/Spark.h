@@ -2,8 +2,8 @@
 
 /// 仅供Sandbox客户端使用
 
-#include <stdio.h>
 #include "Spark/Application.h"
+#include "Spark/Log.h"
 
 // ---Entry Point---------------------------------------
 #include "Spark/EntryPoint.h"
