@@ -77,7 +77,7 @@ project "Sandbox"
     -- include文件
     includedirs
     {
-        "%{prj.name}/vendor/spdlog/include",
+        "Spark/vendor/spdlog/include",
         "Spark/src"
     }
     -- 连接Sandbox到Spark
