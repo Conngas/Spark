@@ -1,0 +1,6 @@
+# Ingore Intermediate File
+.vs/
+bin/
+binInt/
+
+.user/
