@@ -9,3 +9,16 @@
 #else
 	#error Spark only support windows!
 #endif // SPK_PLATFROM_WINDOWS
+
+#ifdef SPK_ENABLE_ASSERTS
+	// 出错打印，并在错误处中断
+	#define SPK_ASSERT(x,...) {if(!(x)) { SPK_ERROR("Assertion Faild: {0}",__VA_ARGS__); __debugbreak(); }}
+	#define SPK_CORE_ASSERT(x,...) {if(!(x)) {SPK_CORE_ERROR("Assertion Faild: {0}",__VA_ARGS__); __debugbreak(); }}
+#else
+	#define SPK_ASSERT(x,...)
+	#define SPK_CORE_ASSERT(x,...)
+#endif // SPK_ENABLE_ASSERTS	
+
+// Event---------------
+// 左移运算符相当于乘2
+#define BIT(x) (1 << x)

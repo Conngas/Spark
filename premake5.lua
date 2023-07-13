@@ -8,28 +8,47 @@ workspace "Spark"
         "Distribution"
     }
 
--- Êä³öÄ¿Â¼
+-- è¾“å‡ºç›®å½•
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
+-- å¤åˆ¶GLFW luaé…ç½®åˆ°æœ¬é…ç½®ä¸­
+IncludeDir = {}
+IncludeDir["GLFW"] = "Spark/vendor/GLFW/include"
+include "Spark/vendor/GLFW"
 
 project "Spark"
     location "Spark"
     kind "SharedLib"
     language "C++"
-    -- ÉèÖÃ±àÒëÊä³öÄ¿Â¼
+    -- è®¾ç½®ç¼–è¯‘è¾“å‡ºç›®å½•
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("binInt/" .. outputdir .. "/%{prj.name}")
-    -- ¹éÄÉÔ´´úÂëÎÄ¼ş
+
+    -- è®¾ç½®pché¢„ç¼–è¯‘å¤´
+    pchheader "spkpch.h"
+    pchsource "Spark/src/spkpch.cpp"
+
+    -- å½’çº³æºä»£ç æ–‡ä»¶
     files
     {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp"
     }
-    -- includeÎÄ¼ş
+    -- includeæ–‡ä»¶
     includedirs
     {
-        "%{prj.name}/vendor/spdlog/include"
+        "%{prj.name}/src",
+        "%{prj.name}/vendor/spdlog/include",
+        "%{IncludeDir.GLFW}"
     }
-    -- IDE±àÒëÆ÷ÉèÖÃ
+    -- linkæ–‡ä»¶
+    links
+    {
+        "GLFW",
+        "opengl32.lib"
+    }
+
+    -- IDEç¼–è¯‘å™¨è®¾ç½®
     filter "system:windows"
         cppdialect "C++17"
         staticruntime "On"
@@ -41,13 +60,13 @@ project "Spark"
             "SPK_BUILD_DLL"
         }
 
-        -- ×Ô¶¯¿½±´Á¬½ÓdllÃüÁî
+        -- è‡ªåŠ¨æ‹·è´è¿æ¥dllå‘½ä»¤
         postbuildcommands
         {
             ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
         }
 
-        -- ´´½¨¹ıÂËÆ÷
+        -- åˆ›å»ºè¿‡æ»¤å™¨
         filter "configurations:Debug"
             defines "SPK_DEBUG"
             symbols "On"
@@ -65,27 +84,27 @@ project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
-    -- ÉèÖÃ±àÒëÊä³öÄ¿Â¼
+    -- è®¾ç½®ç¼–è¯‘è¾“å‡ºç›®å½•
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("binInt/" .. outputdir .. "/%{prj.name}")
-    -- ¹éÄÉÔ´´úÂëÎÄ¼ş
+    -- å½’çº³æºä»£ç æ–‡ä»¶
     files
     {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp"
     }
-    -- includeÎÄ¼ş
+    -- includeæ–‡ä»¶
     includedirs
     {
         "Spark/vendor/spdlog/include",
         "Spark/src"
     }
-    -- Á¬½ÓSandboxµ½Spark
+    -- è¿æ¥Sandboxåˆ°Spark
     links
     {
         "Spark"
     }
-    -- IDE±àÒëÆ÷ÉèÖÃ
+    -- IDEç¼–è¯‘å™¨è®¾ç½®
     filter "system:windows"
         cppdialect "C++17"
         staticruntime "On"
@@ -95,7 +114,7 @@ project "Sandbox"
         {
             "SPK_PLATFORM_WINDOWS"
         }
-        -- ´´½¨¹ıÂËÆ÷
+        -- åˆ›å»ºè¿‡æ»¤å™¨
         filter "configurations:Debug"
             defines "SPK_DEBUG"
             symbols "On"

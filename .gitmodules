@@ -1,3 +1,6 @@
 [submodule "Spark/vendor/spdlog"]
 	path = Spark/vendor/spdlog
 	url = git@github.com:gabime/spdlog.git
+[submodule "Spark/vendor/GLFW"]
+	path = Spark/vendor/GLFW
+	url = git@github.com:TheCherno/glfw.git

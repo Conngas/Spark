@@ -1,3 +1,4 @@
+#include "spkpch.h"
 #include <Spark.h>
 
 /// <summary>
