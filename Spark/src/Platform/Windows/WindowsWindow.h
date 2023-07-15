@@ -25,7 +25,7 @@ namespace Spark {
 		virtual void Init(const WindowProps& props);
 		virtual void Shutdown();
 
-	private:
+	private: 
 		GLFWwindow* m_Window;
 
 		struct WindowData

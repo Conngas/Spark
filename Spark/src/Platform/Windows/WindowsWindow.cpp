@@ -1,6 +1,10 @@
 #include "spkpch.h"
 #include "WindowsWindow.h"
 
+#include "Spark/Event/ApplicationEvent.h"
+#include "Spark/Event/KeyEvent.h"
+#include "Spark/Event/MouseEvent.h"
+
 namespace Spark {
 	
 	static bool s_GLFWInitalized = false;
@@ -41,6 +45,27 @@ namespace Spark {
 		glfwMakeContextCurrent(m_Window);
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
+
+		// 设置GLFW回调，传入临时函数
+		// 设置窗口大小
+		glfwSetWindowSizeCallback(	m_Window, [](GLFWwindow* window, int width, int height)
+									{WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+									data.Height = height;
+									data.Width = width;
+									WindowResizeEvent event(width, height);
+									data.EventCallback(event);});
+		// 窗口关闭
+		glfwSetWindowCloseCallback(	m_Window, [](GLFWwindow* window)
+									{WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+									WindowCloseEvent event;
+									data.EventCallback(event);});
+		// 按键事件
+		glfwSetKeyCallback(	m_Window,[](GLFWwindow* window,int key,int scancode,int action,int mode)
+							{}));
+		// 鼠标事件
+
+
+
 	}
 
 	void WindowsWindow::Shutdown()
