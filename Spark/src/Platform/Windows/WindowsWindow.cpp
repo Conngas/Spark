@@ -127,7 +127,7 @@ namespace Spark {
 	void WindowsWindow::OnUpdate()
 	{
 		glfwPollEvents();
-		glfwSwapBuffers(m_Window);
+		glfwSwapBuffers (m_Window);
 	}
 
 	void WindowsWindow::SetVSync(bool enable)
