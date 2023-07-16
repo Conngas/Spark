@@ -9,6 +9,11 @@ namespace Spark {
 	
 	static bool s_GLFWInitalized = false;
 
+	static void GLFWErrorCallback(int error, const char* description)
+	{
+		SPK_CORE_ERROR("GLFW Error ({0}),{1}", error, description);
+	}
+
 	Window* Window::Create(const WindowProps& props)
 	{
 		return new WindowsWindow(props);
@@ -61,10 +66,56 @@ namespace Spark {
 									data.EventCallback(event);});
 		// 按键事件
 		glfwSetKeyCallback(	m_Window,[](GLFWwindow* window,int key,int scancode,int action,int mode)
-							{}));
+						  {WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+							switch (action)
+							{
+							case GLFW_PRESS:
+								{
+									KeyPressedEvent event(key, 0);
+									data.EventCallback(event);
+									break;
+								}
+							case GLFW_RELEASE:
+								{
+									KeyReleaseEvent event(key);
+									data.EventCallback(event);
+									break;
+								}
+							case GLFW_REPEAT:
+								{
+									KeyPressedEvent event(key, 1);
+									data.EventCallback(event);
+									break;
+								}
+							}});
 		// 鼠标事件
-
-
+		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window,int button,int action,int mods)
+								{WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+								switch (action)
+								{
+								case GLFW_PRESS:
+									{
+										MouseButtonPressedEvent event(button);
+										data.EventCallback(event);
+										break;
+									}
+								case GLFW_RELEASE:
+									{
+										MouseButtonReleasedEvent event(button);
+										data.EventCallback(event);
+										break;
+									}
+								}});
+		// 鼠标滚轮事件
+		glfwSetScrollCallback(	m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
+								{WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+								MousScrollEvent event((float)xOffset, (float)yOffset);
+								data.EventCallback(event); });
+		// 鼠标指针事件
+		glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
+								{WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+								MouseMovedEvent event((float)xPos, (float)yPos);
+								data.EventCallback(event); });
 
 	}
 

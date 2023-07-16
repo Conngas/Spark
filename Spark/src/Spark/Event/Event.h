@@ -80,8 +80,9 @@ namespace Spark {
 		template<typename T>
 		bool Dispatch(Eventfn<T> func)
 		{
-			if (m_Event.GetEventType == T::GetStaticType())
+			if (m_Event.GetEventType() == T::GetStaticType())
 			{
+				// µ÷ÓÃfuncº¯Êý
 				m_Event.m_Handled = func(*(T*)&m_Event);
 				return true;				
 			}
