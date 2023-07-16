@@ -60,7 +60,6 @@ namespace Spark {
 		{
 			return GetCategoryFlags() & category;
 		}
-	protected:
 		// 控制相应信息不越界
 		bool m_Handled = false;
 

@@ -47,6 +47,8 @@
       <Filter>Spark</Filter>
     </ClInclude>
     <ClInclude Include="src\spkpch.h" />
+    <ClInclude Include="src\Spark\Layer.h" />
+    <ClInclude Include="src\Spark\LayerStack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
@@ -59,5 +61,7 @@
       <Filter>Spark</Filter>
     </ClCompile>
     <ClCompile Include="src\spkpch.cpp" />
+    <ClCompile Include="src\Spark\Layer.cpp" />
+    <ClCompile Include="src\Spark\LayerStack.cpp" />
   </ItemGroup>
 </Project>

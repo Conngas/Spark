@@ -86,6 +86,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -112,6 +113,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,6 +141,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -161,6 +164,8 @@
     <ClInclude Include="src\Spark\Event\Event.h" />
     <ClInclude Include="src\Spark\Event\KeyEvent.h" />
     <ClInclude Include="src\Spark\Event\MouseEvent.h" />
+    <ClInclude Include="src\Spark\Layer.h" />
+    <ClInclude Include="src\Spark\LayerStack.h" />
     <ClInclude Include="src\Spark\Log.h" />
     <ClInclude Include="src\Spark\Window.h" />
     <ClInclude Include="src\spkpch.h" />
@@ -168,6 +173,8 @@
   <ItemGroup>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Spark\Application.cpp" />
+    <ClCompile Include="src\Spark\Layer.cpp" />
+    <ClCompile Include="src\Spark\LayerStack.cpp" />
     <ClCompile Include="src\Spark\Log.cpp" />
     <ClCompile Include="src\spkpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

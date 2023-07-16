@@ -69,14 +69,17 @@ project "Spark"
         -- 创建过滤器
         filter "configurations:Debug"
             defines "SPK_DEBUG"
+            buildoptions "/MDd"
             symbols "On"
 
         filter "configurations:Release"
             defines "SPK_RELEASE"
+            buildoptions "/MD"
             optimize "On"
 
         filter "configurations:Distribution"
             defines "SPK_DISTRIBUTION"
+            buildoptions "/MD"
             optimize "On"
 
 
@@ -117,12 +120,15 @@ project "Sandbox"
         -- 创建过滤器
         filter "configurations:Debug"
             defines "SPK_DEBUG"
+            buildoptions "/MDd"
             symbols "On"
 
         filter "configurations:Release"
             defines "SPK_RELEASE"
+            buildoptions "/MD"
             optimize "On"
 
         filter "configurations:Distribution"
             defines "SPK_DISTRIBUTION"
+            buildoptions "/MD"
             optimize "On"

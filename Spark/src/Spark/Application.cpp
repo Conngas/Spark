@@ -30,6 +30,27 @@ namespace Spark {
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 
 		SPK_CORE_TRACE("{0}", e);
+
+		// Layer部分
+		for (auto it = m_LayerStock.end(); it != m_LayerStock.end();)
+		{
+			(*--it)->OnEvent(e);
+			if (e.m_Handled)
+				break;
+		}
+	}
+
+	/// <summary>
+	/// Layer部分
+	/// </summary>
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStock.PushLayer(layer);
+	}
+
+	void Application::PushOverlay(Layer* layer)
+	{
+		m_LayerStock.PushOverLay(layer);
 	}
 
 	void Application::Run()
@@ -38,6 +59,11 @@ namespace Spark {
 		{
 			glClearColor(1, 0, 1, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			// 获取layer事件
+			for (Layer* layer : m_LayerStock)
+				layer->OnUpdate();
+
 			m_Window->OnUpdate();
 		}
 	}

@@ -2,6 +2,7 @@
 #include "Core.h"
 #include "Window.h"
 #include "Event/Event.h"
+#include "LayerStack.h"
 #include "Event/ApplicationEvent.h"
 
 namespace Spark {
@@ -15,11 +16,14 @@ namespace Spark {
 		void Run();
 
 		void OnEvent(Event& e);
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* layer);
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
 		bool m_windowRunning = true;
+		LayerStack m_LayerStock;
 	};
 
 	/// <summary>
