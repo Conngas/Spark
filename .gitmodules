@@ -4,3 +4,6 @@
 [submodule "Spark/vendor/GLFW"]
 	path = Spark/vendor/GLFW
 	url = git@github.com:TheCherno/glfw.git
+[submodule "Spark/vendor/imgui"]
+	path = Spark/vendor/imgui
+	url = git@github.com:TheCherno/imgui.git

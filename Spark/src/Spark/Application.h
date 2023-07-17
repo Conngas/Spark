@@ -18,12 +18,18 @@ namespace Spark {
 		void OnEvent(Event& e);
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
+
+
+		inline static Application& Get() { return *s_Instance; }
+		inline Window& GetWindow() { return *m_Window; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
 		bool m_windowRunning = true;
 		LayerStack m_LayerStock;
+		// 单个应用仅有一个App，因此采取静态实例
+		static Application* s_Instance;
 	};
 
 	/// <summary>

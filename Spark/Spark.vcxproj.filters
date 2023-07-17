@@ -13,6 +13,9 @@
     <Filter Include="Spark\Event">
       <UniqueIdentifier>{F78DECE4-6343-65DA-EC37-5FB158EC5BDE}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Spark\ImGui">
+      <UniqueIdentifier>{D0812FE5-3C37-A8DA-C52B-A2B131E09EDE}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
@@ -40,6 +43,15 @@
     <ClInclude Include="src\Spark\Event\MouseEvent.h">
       <Filter>Spark\Event</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\ImGui\ImGuiLayer.h">
+      <Filter>Spark\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Layer.h">
+      <Filter>Spark</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\LayerStack.h">
+      <Filter>Spark</Filter>
+    </ClInclude>
     <ClInclude Include="src\Spark\Log.h">
       <Filter>Spark</Filter>
     </ClInclude>
@@ -47,8 +59,7 @@
       <Filter>Spark</Filter>
     </ClInclude>
     <ClInclude Include="src\spkpch.h" />
-    <ClInclude Include="src\Spark\Layer.h" />
-    <ClInclude Include="src\Spark\LayerStack.h" />
+    <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
@@ -57,11 +68,19 @@
     <ClCompile Include="src\Spark\Application.cpp">
       <Filter>Spark</Filter>
     </ClCompile>
+    <ClCompile Include="src\Spark\ImGui\ImGuiLayer.cpp">
+      <Filter>Spark\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Layer.cpp">
+      <Filter>Spark</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\LayerStack.cpp">
+      <Filter>Spark</Filter>
+    </ClCompile>
     <ClCompile Include="src\Spark\Log.cpp">
       <Filter>Spark</Filter>
     </ClCompile>
     <ClCompile Include="src\spkpch.cpp" />
-    <ClCompile Include="src\Spark\Layer.cpp" />
-    <ClCompile Include="src\Spark\LayerStack.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
   </ItemGroup>
 </Project>

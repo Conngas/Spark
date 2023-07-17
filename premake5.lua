@@ -14,7 +14,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- 复制GLFW lua配置到本配置中
 IncludeDir = {}
 IncludeDir["GLFW"] = "Spark/vendor/GLFW/include"
+IncludeDir["Glad"] = "Spark/vendor/Glad/include"
+IncludeDir["ImGui"] = "Spark/vendor/imgui"
 include "Spark/vendor/GLFW"
+include "Spark/vendor/Glad"
+include "Spark/vendor/imgui"
 
 project "Spark"
     location "Spark"
@@ -39,12 +43,16 @@ project "Spark"
     {
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
-        "%{IncludeDir.GLFW}"
+        "%{IncludeDir.GLFW}",
+        "%{IncludeDir.Glad}",
+        "%{IncludeDir.ImGui}"
     }
     -- link文件
     links
     {
         "GLFW",
+        "Glad",
+        "ImGui",
         "opengl32.lib"
     }
 
@@ -57,7 +65,8 @@ project "Spark"
         defines
         {
             "SPK_PLATFORM_WINDOWS",
-            "SPK_BUILD_DLL"
+            "SPK_BUILD_DLL",
+            "GLFW_INCLUDE_NONE"
         }
 
         -- 自动拷贝连接dll命令

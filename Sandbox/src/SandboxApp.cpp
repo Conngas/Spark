@@ -30,6 +30,7 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
+		PushOverlay(new Spark::ImGuiLayer());
 	}
 
 	~Sandbox()

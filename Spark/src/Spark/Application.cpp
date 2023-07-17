@@ -1,14 +1,19 @@
 #include "spkpch.h"
 #include "Application.h"
 #include "Log.h" 
-#include "GLFW/glfw3.h"
+
+#include <glad/glad.h>
 
 namespace Spark {
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x,this,std::placeholders::_1)
 
+	Application* Application::s_Instance = nullptr;
+
 	Application::Application()
 	{
+		SPK_CORE_ASSERT(!s_Instance, "Application already exists!");
+		s_Instance = this;
 		// 创建Window
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		// 将事件处理程序绑定到WindowData的一个变量，这样通过该变量即可调用该函数
@@ -18,7 +23,7 @@ namespace Spark {
 	Application::~Application()
 	{
 
-	}
+	} 
 
 	/// <summary>
 	/// 事件响应函数
@@ -46,11 +51,13 @@ namespace Spark {
 	void Application::PushLayer(Layer* layer)
 	{
 		m_LayerStock.PushLayer(layer);
+		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* layer)
 	{
 		m_LayerStock.PushOverLay(layer);
+		layer->OnAttach();
 	}
 
 	void Application::Run()
