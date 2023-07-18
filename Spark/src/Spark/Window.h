@@ -1,7 +1,6 @@
 #pragma once
-#include "spkpch.h"
 
-#include "Spark/Core.h"
+//#include "Spark/Core.h"
 #include "Event/Event.h"
 
 namespace Spark {

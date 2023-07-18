@@ -22,3 +22,5 @@
 // Event---------------
 // 左移运算符相当于乘2
 #define BIT(x) (1 << x)
+// 将函数绑定在对象上，绑定需要自定义域
+#define SPK_BIND_EVENT_FN(x) std::bind(&x,this,std::placeholders::_1)
