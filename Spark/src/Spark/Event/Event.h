@@ -18,7 +18,7 @@ namespace Spark {
 		// App---------------
 		AppTick,AppUpdate,AppRender,
 		// Key---------------
-		KeyPressed,KeyReleased,
+		KeyPressed,KeyReleased,KeyTyped,
 		// Mouse-------------
 		MouseButtonPressed,MouseButtonReleased,MouseMoved,MouseScrolled
 	};

@@ -25,7 +25,8 @@ namespace Spark {
 		bool OnMouseMovedEvent(MouseMovedEvent& e);
 		bool OnMouseScrollEvent(MousScrollEvent& e);
 		bool OnKeyPressedEvent(KeyPressedEvent& e);
-		// bool OnKeyTypedEvent(KeyTypedEvent& e);
+		bool OnKeyReleasedEvent(KeyReleasedEvent& e);
+		bool OnKeyTypedEvent(KeyTypedEvent& e);
 		bool OnWindowResizeEvent(WindowResizeEvent& e);
 
 	private:

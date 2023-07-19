@@ -45,18 +45,37 @@ namespace Spark {
 	/// <summary>
 	/// 键盘释放事件
 	/// </summary>
-	class SPARK_API KeyReleaseEvent : public KeyEvent
+	class SPARK_API KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyReleaseEvent(int keycode) : KeyEvent(keycode){}
+		KeyReleasedEvent(int keycode) : KeyEvent(keycode){}
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyReleaseEvent: " << m_KeyCode;
+			ss << "KeyReleasedEvent: " << m_KeyCode;
 			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(KeyReleased)
+	};
+
+	/// <summary>
+	/// 键盘按键事件
+	/// </summary>
+	class SPARK_API KeyTypedEvent : public KeyEvent
+	{
+	public:
+		KeyTypedEvent(int keycode)
+			: KeyEvent(keycode) {}
+
+		std::string ToString() const override
+		{
+			std::stringstream ss;
+			ss << "KeyTypedEvent:" << m_KeyCode;
+			return ss.str();
+		}
+
+		EVENT_CLASS_TYPE(KeyTyped)
 	};
 }
 

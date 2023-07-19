@@ -82,7 +82,7 @@ namespace Spark {
 								}
 							case GLFW_RELEASE:
 								{
-									KeyReleaseEvent event(key);
+									KeyReleasedEvent event(key);
 									data.EventCallback(event);
 									break;
 								}
@@ -93,6 +93,12 @@ namespace Spark {
 									break;
 								}
 							}});
+		// 按键按下事件
+		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
+							{WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+							KeyTypedEvent event(keycode);
+							data.EventCallback(event);});
+
 		// 鼠标事件
 		glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window,int button,int action,int mods)
 								{WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
@@ -131,6 +137,7 @@ namespace Spark {
 
 	void WindowsWindow::OnUpdate()
 	{
+		// 调用事件（输入的EventCallback用于调用）
 		glfwPollEvents();
 		glfwSwapBuffers (m_Window);
 	}

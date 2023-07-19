@@ -11,7 +11,7 @@ public:
 
 	void OnUpdate() override
 	{
-		SPK_INFO("Example::Update");
+		SPK_INFO("ExampleLayer::Update");
 	}
 
 	void OnEvent(Spark::Event& event) override
