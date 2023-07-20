@@ -1,6 +1,6 @@
 workspace "Spark"
     architecture "x64"
-
+    startproject "Sandbox"
     configurations
     {
         "Debug",
@@ -8,22 +8,24 @@ workspace "Spark"
         "Distribution"
     }
 
--- 输出目录
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+    -- 输出目录
+    outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
--- 复制GLFW lua配置到本配置中
-IncludeDir = {}
-IncludeDir["GLFW"] = "Spark/vendor/GLFW/include"
-IncludeDir["Glad"] = "Spark/vendor/Glad/include"
-IncludeDir["ImGui"] = "Spark/vendor/imgui"
-include "Spark/vendor/GLFW"
-include "Spark/vendor/Glad"
-include "Spark/vendor/imgui"
+    -- 复制GLFW lua配置到本配置中
+    IncludeDir = {}
+    IncludeDir["GLFW"] = "Spark/vendor/GLFW/include"
+    IncludeDir["Glad"] = "Spark/vendor/Glad/include"
+    IncludeDir["ImGui"] = "Spark/vendor/imgui"
+    include "Spark/vendor/GLFW"
+    include "Spark/vendor/Glad"
+    include "Spark/vendor/imgui"
+        
 
 project "Spark"
     location "Spark"
     kind "SharedLib"
     language "C++"
+    staticruntime "off"
     -- 设置编译输出目录
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("binInt/" .. outputdir .. "/%{prj.name}")
@@ -59,7 +61,6 @@ project "Spark"
     -- IDE编译器设置
     filter "system:windows"
         cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines
@@ -78,17 +79,17 @@ project "Spark"
         -- 创建过滤器
         filter "configurations:Debug"
             defines "SPK_DEBUG"
-            buildoptions "/MDd"
+            runtime "Debug"
             symbols "On"
 
         filter "configurations:Release"
             defines "SPK_RELEASE"
-            buildoptions "/MD"
+            runtime "Release"
             optimize "On"
 
         filter "configurations:Distribution"
             defines "SPK_DISTRIBUTION"
-            buildoptions "/MD"
+            runtime "Release"
             optimize "On"
 
 
@@ -96,6 +97,7 @@ project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
+    staticruntime "off"
     -- 设置编译输出目录
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("binInt/" .. outputdir .. "/%{prj.name}")
@@ -119,7 +121,6 @@ project "Sandbox"
     -- IDE编译器设置
     filter "system:windows"
         cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines
@@ -129,15 +130,15 @@ project "Sandbox"
         -- 创建过滤器
         filter "configurations:Debug"
             defines "SPK_DEBUG"
-            buildoptions "/MDd"
+            runtime "Debug"
             symbols "On"
 
         filter "configurations:Release"
             defines "SPK_RELEASE"
-            buildoptions "/MD"
+            runtime "Release"
             optimize "On"
 
         filter "configurations:Distribution"
             defines "SPK_DISTRIBUTION"
-            buildoptions "/MD"
+            runtime "Release"
             optimize "On"

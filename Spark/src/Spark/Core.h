@@ -10,6 +10,10 @@
 	#error Spark only support windows!
 #endif // SPK_PLATFROM_WINDOWS
 
+#ifdef SPK_DEBUG
+	#define SPK_ENABLE_ASSERTS
+#endif // HZ_DEBUG
+
 #ifdef SPK_ENABLE_ASSERTS
 	// 出错打印，并在错误处中断
 	#define SPK_ASSERT(x,...) {if(!(x)) { SPK_ERROR("Assertion Faild: {0}",__VA_ARGS__); __debugbreak(); }}
