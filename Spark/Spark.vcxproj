@@ -94,7 +94,7 @@
       <ImportLibrary>..\bin\Debug-windows-x86_64\Spark\Spark.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Debug-windows-x86_64\Spark\Spark.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Spark\Spark.dll ..\bin\Debug-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Spark\Spark.dll ..\bin\Debug-windows-x86_64\Sandbox &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Debug-windows-x86_64\Spark\Spark.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Spark\Spark.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Spark\Spark.dll "..\bin\Debug-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -121,7 +121,7 @@
       <ImportLibrary>..\bin\Release-windows-x86_64\Spark\Spark.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Release-windows-x86_64\Spark\Spark.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Spark\Spark.dll ..\bin\Release-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Spark\Spark.dll ..\bin\Release-windows-x86_64\Sandbox &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Release-windows-x86_64\Spark\Spark.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Spark\Spark.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Spark\Spark.dll "..\bin\Release-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'">
@@ -148,11 +148,12 @@
       <ImportLibrary>..\bin\Distribution-windows-x86_64\Spark\Spark.lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>IF EXIST ..\bin\Distribution-windows-x86_64\Spark\Spark.dll\ (xcopy /Q /E /Y /I ..\bin\Distribution-windows-x86_64\Spark\Spark.dll ..\bin\Distribution-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Distribution-windows-x86_64\Spark\Spark.dll ..\bin\Distribution-windows-x86_64\Sandbox &gt; nul)</Command>
+      <Command>IF EXIST ..\bin\Distribution-windows-x86_64\Spark\Spark.dll\ (xcopy /Q /E /Y /I ..\bin\Distribution-windows-x86_64\Spark\Spark.dll "..\bin\Distribution-windows-x86_64\Sandbox\" &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Distribution-windows-x86_64\Spark\Spark.dll "..\bin\Distribution-windows-x86_64\Sandbox\" &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Spark.h" />
     <ClInclude Include="src\Spark\Application.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="src\Spark\Event\KeyEvent.h" />
     <ClInclude Include="src\Spark\Event\MouseEvent.h" />
     <ClInclude Include="src\Spark\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Spark\Input.h" />
     <ClInclude Include="src\Spark\Layer.h" />
     <ClInclude Include="src\Spark\LayerStack.h" />
     <ClInclude Include="src\Spark\Log.h" />
@@ -171,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Spark\Application.cpp" />
     <ClCompile Include="src\Spark\ImGui\ImGuiLayer.cpp" />

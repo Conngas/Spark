@@ -3,6 +3,7 @@
 #include "Log.h" 
 
 #include <glad/glad.h>
+#include "Input.h"
 
 namespace Spark {
 
@@ -72,6 +73,9 @@ namespace Spark {
 			// 获取layer事件
 			for (Layer* layer : m_LayerStock)
 				layer->OnUpdate();
+
+			auto [xpos, ypos] = Input::GetMousePosition();
+			SPK_CORE_TRACE("{0},{1}", xpos, ypos);
 
 			m_Window->OnUpdate();
 		}

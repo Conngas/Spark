@@ -19,7 +19,7 @@ namespace Spark {
 	};
 
 
-	// 桌面系统的窗口
+	// 桌面系统的窗口API
 	class SPARK_API Window
 	{
 	public:
@@ -34,6 +34,9 @@ namespace Spark {
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
 		virtual void SetVSync(bool enable) = 0;
 		virtual bool IsVSync() const = 0;
+
+		// 提供Window指针调用
+		virtual void* GetNativeWindow() const = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());
 	};

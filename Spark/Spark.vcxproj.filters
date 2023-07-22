@@ -65,6 +65,8 @@
       <Filter>Spark</Filter>
     </ClInclude>
     <ClInclude Include="src\spkpch.h" />
+    <ClInclude Include="src\Spark\Input.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
@@ -89,5 +91,6 @@
       <Filter>Spark</Filter>
     </ClCompile>
     <ClCompile Include="src\spkpch.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
   </ItemGroup>
 </Project>

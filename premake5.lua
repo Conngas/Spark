@@ -16,9 +16,15 @@ workspace "Spark"
     IncludeDir["GLFW"] = "Spark/vendor/GLFW/include"
     IncludeDir["Glad"] = "Spark/vendor/Glad/include"
     IncludeDir["ImGui"] = "Spark/vendor/imgui"
-    include "Spark/vendor/GLFW"
-    include "Spark/vendor/Glad"
-    include "Spark/vendor/imgui"
+
+    -- 组依赖（include）
+    -- include "Spark/vendor/GLFW"
+    -- include "Spark/vendor/Glad"
+    -- include "Spark/vendor/imgui"
+    group "Dependencies"
+        include "Spark/vendor/GLFW"
+        include "Spark/vendor/Glad"
+        include "Spark/vendor/imgui"
         
 
 project "Spark"
@@ -73,7 +79,7 @@ project "Spark"
         -- 自动拷贝连接dll命令
         postbuildcommands
         {
-            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
         }
 
         -- 创建过滤器
