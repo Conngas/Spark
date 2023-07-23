@@ -37,8 +37,6 @@ namespace Spark {
 		// 判定对象是否为WindowCloseEvent，若是则执行OnWindowClose操作
 		dispatcher.Dispatch<WindowCloseEvent>(SPK_BIND_EVENT_FN(Application::OnWindowClose));
 
-		SPK_CORE_TRACE("{0}", e);
-
 		// Layer部分
 		for (auto it = m_LayerStock.end(); it != m_LayerStock.begin();)
 		{
@@ -73,10 +71,6 @@ namespace Spark {
 			// 获取layer事件
 			for (Layer* layer : m_LayerStock)
 				layer->OnUpdate();
-
-			auto [xpos, ypos] = Input::GetMousePosition();
-			SPK_CORE_TRACE("{0},{1}", xpos, ypos);
-
 			m_Window->OnUpdate();
 		}
 	}

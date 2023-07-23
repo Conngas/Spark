@@ -7,3 +7,6 @@
 [submodule "Spark/vendor/imgui"]
 	path = Spark/vendor/imgui
 	url = git@github.com:TheCherno/imgui.git
+[submodule "Spark/vendor/glm"]
+	path = Spark/vendor/glm
+	url = git@github.com:g-truc/glm.git

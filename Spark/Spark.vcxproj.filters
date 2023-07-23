@@ -24,6 +24,9 @@
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h">
       <Filter>Platform\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
@@ -52,6 +55,12 @@
     <ClInclude Include="src\Spark\ImGui\ImGuiLayer.h">
       <Filter>Spark\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\Input.h">
+      <Filter>Spark</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\KeyCodes.h">
+      <Filter>Spark</Filter>
+    </ClInclude>
     <ClInclude Include="src\Spark\Layer.h">
       <Filter>Spark</Filter>
     </ClInclude>
@@ -61,16 +70,20 @@
     <ClInclude Include="src\Spark\Log.h">
       <Filter>Spark</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\MouseButtonCodes.h">
+      <Filter>Spark</Filter>
+    </ClInclude>
     <ClInclude Include="src\Spark\Window.h">
       <Filter>Spark</Filter>
     </ClInclude>
     <ClInclude Include="src\spkpch.h" />
-    <ClInclude Include="src\Spark\Input.h" />
-    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
       <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
+      <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>Platform\Windows</Filter>
@@ -91,6 +104,5 @@
       <Filter>Spark</Filter>
     </ClCompile>
     <ClCompile Include="src\spkpch.cpp" />
-    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
   </ItemGroup>
 </Project>

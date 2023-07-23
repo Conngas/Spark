@@ -16,6 +16,7 @@ workspace "Spark"
     IncludeDir["GLFW"] = "Spark/vendor/GLFW/include"
     IncludeDir["Glad"] = "Spark/vendor/Glad/include"
     IncludeDir["ImGui"] = "Spark/vendor/imgui"
+    IncludeDir["glm"] = "Spark/vendor/glm"
 
     -- 组依赖（include）
     -- include "Spark/vendor/GLFW"
@@ -44,7 +45,10 @@ project "Spark"
     files
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/glm/gml/**.hpp",
+        "%{prj.name}/vendor/glm/gml/**.inl"
+
     }
     -- include文件
     includedirs
@@ -53,7 +57,8 @@ project "Spark"
         "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
-        "%{IncludeDir.ImGui}"
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.glm}"
     }
     -- link文件
     links
@@ -117,7 +122,8 @@ project "Sandbox"
     includedirs
     {
         "Spark/vendor/spdlog/include",
-        "Spark/src"
+        "Spark/src",
+        "%{IncludeDir.glm}"
     }
     -- 连接Sandbox到Spark
     links
