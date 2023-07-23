@@ -152,7 +152,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
     <ClInclude Include="src\Spark.h" />
@@ -174,10 +173,10 @@
     <ClInclude Include="src\spkpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\Spark\Application.cpp" />
+    <ClCompile Include="src\Spark\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Spark\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Spark\Layer.cpp" />
     <ClCompile Include="src\Spark\LayerStack.cpp" />

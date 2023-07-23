@@ -5,6 +5,8 @@
 #include "LayerStack.h"
 #include "Event/ApplicationEvent.h"
 
+#include "Spark/ImGui/ImGuiLayer.h"
+
 namespace Spark {
 	class SPARK_API Application								// DLL类导出
 	{
@@ -26,6 +28,7 @@ namespace Spark {
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_windowRunning = true;
 		LayerStack m_LayerStock;
 		// 单个应用仅有一个App，因此采取静态实例

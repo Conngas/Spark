@@ -123,6 +123,7 @@ project "Sandbox"
     {
         "Spark/vendor/spdlog/include",
         "Spark/src",
+        "Spark/vendor",
         "%{IncludeDir.glm}"
     }
     -- 连接Sandbox到Spark
