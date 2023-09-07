@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform">
+      <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\OpenGL">
+      <UniqueIdentifier>{35A49437-A105-7245-2A73-B8F796D3A804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\Windows">
+      <UniqueIdentifier>{5B054582-4794-CE4B-F0B2-E246DC20DFF1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Spark">
+      <UniqueIdentifier>{7D16D9B3-E980-8D2A-32BF-3ED09E686B7F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Spark\Core">
+      <UniqueIdentifier>{F5D0047C-E19E-F881-CA32-69A8B69FD4E6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Spark\Event">
+      <UniqueIdentifier>{8EC1C6FC-FA4C-34C1-035E-B7B56F6890C1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Spark\ImGui">
+      <UniqueIdentifier>{67B509FD-D340-77C1-DC51-FAB5485CD3C1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Spark\Renderer">
+      <UniqueIdentifier>{C3F62570-AFDA-E6C5-183B-E118043ED147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\stb_image">
+      <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h">
+      <Filter>src\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>src\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Core\Application.h">
+      <Filter>src\Spark\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Core\Core.h">
+      <Filter>src\Spark\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Core\EntryPoint.h">
+      <Filter>src\Spark\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Core\Input.h">
+      <Filter>src\Spark\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Core\KeyCodes.h">
+      <Filter>src\Spark\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Core\Layer.h">
+      <Filter>src\Spark\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Core\LayerStack.h">
+      <Filter>src\Spark\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Core\Log.h">
+      <Filter>src\Spark\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Core\MouseButtonCodes.h">
+      <Filter>src\Spark\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Core\Timestep.h">
+      <Filter>src\Spark\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Core\Window.h">
+      <Filter>src\Spark\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Event\ApplicationEvent.h">
+      <Filter>src\Spark\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Event\Event.h">
+      <Filter>src\Spark\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Event\KeyEvent.h">
+      <Filter>src\Spark\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Event\MouseEvent.h">
+      <Filter>src\Spark\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\ImGui\ImGuiLayer.h">
+      <Filter>src\Spark\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\Buffer.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\GraphicsContext.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\OrthographicCamera.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\OrthographicCameraController.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\RenderCommand.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\Renderer.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\RendererAPI.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\Shader.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\Texture.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\VertexArray.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\spkpch.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\stb_image\stb_image.h">
+      <Filter>vendor\stb_image</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Core\Application.cpp">
+      <Filter>src\Spark\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Core\Layer.cpp">
+      <Filter>src\Spark\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Core\LayerStack.cpp">
+      <Filter>src\Spark\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Core\Log.cpp">
+      <Filter>src\Spark\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\ImGui\ImGuiBuild.cpp">
+      <Filter>src\Spark\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\ImGui\ImGuiLayer.cpp">
+      <Filter>src\Spark\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Renderer\Buffer.cpp">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Renderer\OrthographicCamera.cpp">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Renderer\OrthographicCameraController.cpp">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Renderer\RenderCommand.cpp">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Renderer\Renderer.cpp">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Renderer\RendererAPI.cpp">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Renderer\Shader.cpp">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Renderer\Texture.cpp">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Renderer\VertexArray.cpp">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\spkpch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\stb_image\stb_image.cpp">
+      <Filter>vendor\stb_image</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
