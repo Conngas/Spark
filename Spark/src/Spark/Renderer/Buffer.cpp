@@ -10,7 +10,7 @@ namespace Spark {
 	// VertexBuffer
 	/////////////////////////////////////////////////////////////////////
 
-	VertexBuffer* VertexBuffer::Create(float* vertice, uint32_t size)
+	Ref<VertexBuffer> VertexBuffer::Create(float* vertice, uint32_t size)
 	{
 		switch (Renderer::GetAPI())
 		{
@@ -18,7 +18,7 @@ namespace Spark {
 			SPK_CORE_ASSERT(false, "RenderAPI::None is currently NOT supported!");
 			return nullptr;
 		case RendererAPI::API::OpenGL:
-			return new OpenGLVertexBuffer(vertice, size);
+			return std::make_shared<OpenGLVertexBuffer>(vertice, size);
 			break;
 		}
 
@@ -30,7 +30,7 @@ namespace Spark {
 	// IndexBuffer
 	/////////////////////////////////////////////////////////////////////
 
-	IndexBuffer* IndexBuffer::Create(uint32_t* indice, uint32_t size)
+	Ref<IndexBuffer> IndexBuffer::Create(uint32_t* indice, uint32_t size)
 	{
 		switch(Renderer::GetAPI())
 		{
@@ -38,7 +38,7 @@ namespace Spark {
 			SPK_CORE_ASSERT(false, "RendererAPI::None is currently NOT supported!");
 			return nullptr;
 		case RendererAPI::API::OpenGL:
-			return new OpenGLIndexBuffer(indice, size);
+			return std::make_shared<OpenGLIndexBuffer>(indice, size);
 		}
 
 		SPK_CORE_ASSERT(false, "Unknown RendererAPI!");

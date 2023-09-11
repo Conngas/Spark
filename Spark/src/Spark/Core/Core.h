@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 #ifdef SPK_PLATFORM_WINDOWS
 #if SPARK_DYNAMIC_LINK
