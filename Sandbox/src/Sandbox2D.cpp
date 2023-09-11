@@ -28,7 +28,8 @@ void Sandbox2D::OnUpdate(Spark::Timestep ts)
 	Spark::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 
 	Spark::Renderer2D::BeginScene(m_CameraController.GetCamera());
-	Spark::Renderer2D::DrawQuad({ 0.0f,0.0f }, { 1.0f,1.0f },m_SquareColor);
+	Spark::Renderer2D::DrawQuad({ -1.0f,0.0f }, { 0.8f,0.8f },m_SquareColor);
+	Spark::Renderer2D::DrawQuad({ 0.5f,-0.5f }, { 0.5f,0.75f },m_SquareColor);
 
 	// End Scene
 	Spark::Renderer::EndScene();

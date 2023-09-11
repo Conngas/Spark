@@ -2,12 +2,9 @@
 #include <Spark/Core/EntryPoint.h>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Sandbox2D.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include "imgui/imgui.h"
-
-//Temp
-#include "Platform/OpenGL/OpenGLShader.h"
-#include "Sandbox2D.h"
 
 
 class ExampleLayer : public Spark::Layer
@@ -139,8 +136,8 @@ public:
 		m_Texture = Spark::Texture2D::Create("Assets/Texture/Checkerboard.png");
 		m_LogoTexture = Spark::Texture2D::Create("Assets/Texture/ChernoLogo.png");
 
-		std::dynamic_pointer_cast<Spark::OpenGLShader>(textureShader)->Bind();
-		std::dynamic_pointer_cast<Spark::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
+		textureShader->Bind();
+		textureShader->SetInt("u_Texture", 0);
 	}
 
 	void OnUpdate(Spark::Timestep ts) override
@@ -161,8 +158,8 @@ public:
 		// Material Test
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f)) * scale;
 
-		std::dynamic_pointer_cast<Spark::OpenGLShader>(m_SquareShader)->Bind();
-		std::dynamic_pointer_cast<Spark::OpenGLShader>(m_SquareShader)->UploadUniformFloat3("u_Color", m_CustomColor);
+		m_SquareShader->Bind();
+		m_SquareShader->SetFloat3("u_Color", m_CustomColor);
 
 		for (int j = 0; j < 20; ++j)
 		{

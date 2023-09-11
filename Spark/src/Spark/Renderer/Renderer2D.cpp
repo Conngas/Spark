@@ -1,10 +1,11 @@
 #include "spkpch.h"
 #include "Spark/Renderer/Renderer2D.h"
+#include <glm/gtc/matrix_transform.hpp>
 // Renderer
 #include "Spark/Renderer/VertexArray.h"
 #include "Spark/Renderer/Shader.h"
 #include "Spark/Renderer/RenderCommand.h"
-#include "Platform/OpenGL/OpenGLShader.h"
+
 
 namespace Spark {
 	struct Renderer2DStorage
@@ -53,11 +54,9 @@ namespace Spark {
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->QuadShader)->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->QuadShader)->UploadUniformMat4("u_ViewProjection", 
-																	 camera.GetViewProjectionMatrix());
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->QuadShader)->UploadUniformMat4("u_Transform",
-																	 glm::mat4(1.0f));
+		s_Data->QuadShader->Bind();
+		s_Data->QuadShader->SetMat4("u_ViewProjection",camera.GetViewProjectionMatrix());
+		s_Data->QuadShader->SetMat4("u_Transform",glm::mat4(1.0f));
 	}
 
 	void Renderer2D::EndScene()
@@ -76,9 +75,13 @@ namespace Spark {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->QuadShader)->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(s_Data->QuadShader)->UploadUniformFloat4("u_Color", color);
+		s_Data->QuadShader->Bind();
+		s_Data->QuadShader->SetFloat4("u_Color", color);
 		
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * 
+							  glm::scale(glm::mat4(1.0f), {size.x,size.y,1.0f});
+		s_Data->QuadShader->SetMat4("u_Transform", transform);
+
 		// »æÖÆÁ÷³Ì
 		s_Data->QuadVertexArray->Bind();
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
