@@ -1,11 +1,13 @@
-#include "spkpch.h"
 #include <Spark.h>
+#include <Spark/Core/EntryPoint.h>
 #include <glm/gtc/type_ptr.hpp>
+
 #include <glm/gtc/matrix_transform.hpp>
 #include "imgui/imgui.h"
 
 //Temp
-#include "platform/OpenGL/OpenGLShader.h"
+#include "Platform/OpenGL/OpenGLShader.h"
+#include "Sandbox2D.h"
 
 
 class ExampleLayer : public Spark::Layer
@@ -13,7 +15,7 @@ class ExampleLayer : public Spark::Layer
 public:
 	ExampleLayer() :Layer("Example"), m_CameraController(1280.0f / 720.0f,true)
 	{
-		m_VertexArray.reset(Spark::VertexArray::Create());
+		m_VertexArray = (Spark::VertexArray::Create());
 
 		float vertices[3 * 7] =
 		{
@@ -22,7 +24,7 @@ public:
 			0.0f,	0.5f,	0.0f, 1.0f, 0.0f, 1.0f, 1.0f
 		};
 
-		m_VertexBuffer.reset(Spark::VertexBuffer::Create(vertices, sizeof(vertices)));
+		m_VertexBuffer = Spark::VertexBuffer::Create(vertices, sizeof(vertices));
 		// 封装layout
 		{
 			Spark::BufferLayout layout =
@@ -37,7 +39,7 @@ public:
 
 
 		uint32_t indices[3] = { 0,1,2 };
-		m_IndexBuffer.reset(Spark::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		m_IndexBuffer = Spark::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
 		// Shader语言，采用R"( 即可实现跨行字符串，v_变化字符串用于多个着色器沟通变量
@@ -83,7 +85,7 @@ public:
 		//////////////////////////////////////////////////////////////////////////
 		// 1. h中添加变量
 		// 2. 创建VertexArray
-		m_SquareVartexArray.reset(Spark::VertexArray::Create());
+		m_SquareVartexArray = Spark::VertexArray::Create();
 		// 3. 创建顶点
 		float squareVertices[5 * 4] =
 		{
@@ -93,7 +95,7 @@ public:
 			-0.05f,	0.05f,	0.0f, 0.0f, 1.0f
 		};
 		// 4. SVB设定
-		m_SquareVertexBuffer.reset(Spark::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
+		m_SquareVertexBuffer = Spark::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
 		m_SquareVertexBuffer->SetLayout({ 
 				{Spark::ShaderDataType::Float3,"a_Position"},
 				{Spark::ShaderDataType::Float2,"a_TexCoord"}
@@ -101,7 +103,7 @@ public:
 		m_SquareVartexArray->AddVertexBuffer(m_SquareVertexBuffer);
 		// 5. 设定顺序
 		uint32_t squareIndice[6] = { 0,1,2,2,3,0 };
-		m_SquareIndexBuffer.reset(Spark::IndexBuffer::Create(squareIndice, sizeof(squareIndice) / sizeof(uint32_t)));
+		m_SquareIndexBuffer = Spark::IndexBuffer::Create(squareIndice, sizeof(squareIndice) / sizeof(uint32_t));
 		m_SquareVartexArray->SetIndexBuffer(m_SquareIndexBuffer);
 		// 6. 写Shader
 		std::string SquareShaderVertexSrc = R"(
@@ -230,7 +232,10 @@ class Sandbox : public Spark::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());		
+		// 测试部分
+		// PushLayer(new ExampleLayer());		
+		// 2D 渲染器准备
+		PushLayer(new Sandbox2D());
 	}
 
 	~Sandbox()

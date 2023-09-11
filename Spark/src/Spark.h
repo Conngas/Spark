@@ -17,6 +17,7 @@
 #include "Spark/ImGui/ImGuiLayer.h"
 
 #include "Spark/Renderer/Renderer.h"
+#include "Spark/Renderer/Renderer2D.h"
 #include "Spark/Renderer/RenderCommand.h"
 
 #include "Spark/Renderer/Buffer.h"
@@ -25,8 +26,4 @@
 #include "Spark/Renderer/VertexArray.h"
 
 #include "Spark/Renderer/OrthographicCamera.h"
-// -----------------------------------------------------
-
-// ---Entry Point---------------------------------------
-#include "Spark/Core/EntryPoint.h"
 // -----------------------------------------------------

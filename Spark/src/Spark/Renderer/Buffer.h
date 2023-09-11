@@ -119,7 +119,7 @@ namespace Spark{
 		virtual const BufferLayout& GetLayout() const = 0;
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 
-		static VertexBuffer* Create(float* vertice, uint32_t size);
+		static Ref<VertexBuffer> Create(float* vertice, uint32_t size);
 
 	};
 
@@ -134,6 +134,6 @@ namespace Spark{
 		// ¼ÆÊýIndex
 		virtual uint32_t Count() const = 0;
 
-		static IndexBuffer* Create(uint32_t* indice, uint32_t size);
+		static Ref<IndexBuffer> Create(uint32_t* indice, uint32_t size);
 	};
 }
