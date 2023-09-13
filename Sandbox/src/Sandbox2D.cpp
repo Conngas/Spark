@@ -11,7 +11,7 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
-	
+	m_SquareTexture = Spark::Texture2D::Create("Assets/Texture/Checkerboard.png");
 }
 
 void Sandbox2D::OnDetach()
@@ -30,6 +30,7 @@ void Sandbox2D::OnUpdate(Spark::Timestep ts)
 	Spark::Renderer2D::BeginScene(m_CameraController.GetCamera());
 	Spark::Renderer2D::DrawQuad({ -1.0f,0.0f }, { 0.8f,0.8f },m_SquareColor);
 	Spark::Renderer2D::DrawQuad({ 0.5f,-0.5f }, { 0.5f,0.75f },m_SquareColor);
+	Spark::Renderer2D::DrawQuad({ 0.0f,0.0f, -0.1f}, { 5.0f,5.0f }, m_SquareTexture);
 
 	// End Scene
 	Spark::Renderer::EndScene();
