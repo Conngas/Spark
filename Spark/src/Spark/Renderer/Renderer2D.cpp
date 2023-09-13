@@ -12,6 +12,7 @@ namespace Spark {
 	{
 		Ref<VertexArray> QuadVertexArray;
 		Ref<Shader> QuadShader;
+		Ref<Shader> TextureShader;
 	};
 
 	static Renderer2DStorage* s_Data;
@@ -22,18 +23,19 @@ namespace Spark {
 
 		// VertexArray
 		s_Data->QuadVertexArray = VertexArray::Create();
-		float squareVertice[3 * 4] = {
-			-0.5f,	-0.5f,	0.0f,
-			0.5f,	-0.5f,	0.0f,
-			0.5f,	0.5f,	0.0f,
-			-0.5f,	0.5f,	0.0f
+		float squareVertice[5 * 4] = {
+			-0.5f,	-0.5f,	0.0f, 0.0f, 0.0f,
+			0.5f,	-0.5f,	0.0f, 1.0f, 0.0f,
+			0.5f,	0.5f,	0.0f, 1.0f, 1.0f,
+			-0.5f,	0.5f,	0.0f, 0.0f, 1.0f
 		};
 
 		// VertexBuffer
 		Ref<VertexBuffer> squareVB;
 		squareVB = VertexBuffer::Create(squareVertice, sizeof(squareVertice));
 		squareVB->SetLayout({
-			{ ShaderDataType::Float3, "m_Position"}
+				{ ShaderDataType::Float3, "m_Position"},
+				{ ShaderDataType::Float2, "a_TexCoord"}			
 			});
 		s_Data->QuadVertexArray->AddVertexBuffer(squareVB);
 
@@ -44,7 +46,8 @@ namespace Spark {
 		s_Data->QuadVertexArray->SetIndexBuffer(squareIB);
 
 		// 创建Shader
-		s_Data->QuadShader = Shader::Create("assets/Shader/FlatColor.glsl");
+		s_Data->QuadShader = Shader::Create("Assets/Shader/FlatColor.glsl");
+		s_Data->TextureShader = Shader::Create("Assets/Shader/Texture.glsl");
 	}
 
 	void Renderer2D::ShutDown()
@@ -57,6 +60,11 @@ namespace Spark {
 		s_Data->QuadShader->Bind();
 		s_Data->QuadShader->SetMat4("u_ViewProjection",camera.GetViewProjectionMatrix());
 		s_Data->QuadShader->SetMat4("u_Transform",glm::mat4(1.0f));
+
+		s_Data->TextureShader->Bind();
+		s_Data->TextureShader->SetMat4("u_Transform", glm::mat4(1.0f));
+		s_Data->TextureShader->SetInt("u_Texture", 0);
+		s_Data->TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 	}
 
 	void Renderer2D::EndScene()
@@ -84,6 +92,24 @@ namespace Spark {
 
 		// 绘制流程
 		s_Data->QuadVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture)
+	{
+		DrawQuad({ position.x, position.y, 0.0f }, size, texture);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
+	{
+		s_Data->TextureShader->Bind();
+		texture->Bind();
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) *
+			glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
+		s_Data->TextureShader->SetMat4("u_Transform", transform);
+		
+		// 绘制流程
+		s_Data->TextureShader->Bind();
 		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
 	}
 
