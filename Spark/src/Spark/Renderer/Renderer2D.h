@@ -1,6 +1,6 @@
 #pragma once
-#include "Spark/Renderer/OrthographicCamera.h"
 #include "Spark/Renderer/Texture.h"
+#include "Spark/Renderer/OrthographicCamera.h"
 
 namespace Spark {
 	

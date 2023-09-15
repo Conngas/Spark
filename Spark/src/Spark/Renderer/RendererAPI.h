@@ -1,6 +1,7 @@
 #pragma once
+#include "Spark/Renderer/VertexArray.h"
+
 #include <glm/glm.hpp>
-#include "VertexArray.h"
 
 namespace Spark {
 	class RendererAPI
@@ -19,7 +20,10 @@ namespace Spark {
 		virtual void Clear() = 0;
 
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) = 0;
+		
 		static inline API GetAPI() { return s_API; }
+		static Scope<RendererAPI> Create();
+
 	private:
 		static API s_API;
 	};

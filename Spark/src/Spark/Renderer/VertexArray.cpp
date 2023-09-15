@@ -1,7 +1,6 @@
 #include "spkpch.h"
-#include "VertexArray.h"
-
-#include "Renderer.h"
+#include "Spark/Renderer/Renderer.h"
+#include "Spark/Renderer/VertexArray.h"
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace Spark {
@@ -10,7 +9,7 @@ namespace Spark {
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None:	SPK_CORE_ASSERT(false, "RendererAPI::None is currently not supported!");
-			case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLVertexArray>();
+			case RendererAPI::API::OpenGL:	return CreateRef<OpenGLVertexArray>();
 		}
 		SPK_CORE_ASSERT(false, "Unkonwn RendererAPI!");
 		return nullptr;

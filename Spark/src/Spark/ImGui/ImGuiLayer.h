@@ -1,7 +1,7 @@
 #pragma once
 #include "Spark/Core/Layer.h"
 
-#include "Spark//Event/ApplicationEvent.h"
+#include "Spark/Event/ApplicationEvent.h"
 #include "Spark/Event/KeyEvent.h"
 #include "Spark/Event/MouseEvent.h"
 

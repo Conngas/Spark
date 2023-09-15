@@ -226,5 +226,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Spark\Renderer\Renderer2D.cpp" />
+    <ClCompile Include="src\Spark\Renderer\GraphicsContext.cpp" />
   </ItemGroup>
 </Project>

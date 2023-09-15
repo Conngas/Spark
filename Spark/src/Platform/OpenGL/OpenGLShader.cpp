@@ -1,9 +1,9 @@
 #include "spkpch.h"
-#include "OpenGLShader.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 #include <fstream>
 #include <glad/glad.h>
-#include "glm/gtc/type_ptr.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Spark {
 
@@ -55,14 +55,20 @@ namespace Spark {
 		{
 			// 读取到文件末尾
 			in.seekg(0, std::ios::end);
-			readInRes.resize(in.tellg());							// Resize 调整字符串结果大小，reserve 预留大小需要指定
-			in.seekg(0, std::ios::beg);
-			in.read(&readInRes[0], readInRes.size());
-			in.close();
+			size_t size = in.tellg();
+			if (size != -1)
+			{
+				readInRes.resize(in.tellg());						// Resize 调整字符串结果大小，reserve 预留大小需要指定
+				in.seekg(0, std::ios::beg);
+				in.read(&readInRes[0], readInRes.size());
+				in.close();
+			}
+			else
+				SPK_CORE_ASSERT("File '{0}' is Empty", filepath);
 		}
 		else
 		{
-			SPK_CORE_ASSERT("Could not open file '{0}'", filepath);
+			SPK_CORE_ASSERT("Could Not Open File '{0}'", filepath);
 		}
 		return readInRes;
 	}
@@ -170,6 +176,11 @@ namespace Spark {
 	void OpenGLShader::SetInt(const std::string& name, int value)
 	{
 		UploadUniformInt(name, value);
+	}
+
+	void OpenGLShader::SetFloat(const std::string& name, float value)
+	{
+		UploadUniformFloat(name, value);
 	}
 
 	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& value)

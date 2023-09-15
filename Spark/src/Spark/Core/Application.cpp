@@ -1,16 +1,14 @@
 #include "spkpch.h"
-#include "Application.h"
-#include "Log.h" 
-#include "Spark/Renderer/Renderer.h"
 
 #include <glad/glad.h>
 #include "glfw/glfw3.h"
-#include "Input.h"
+
+#include "Spark/Core/Log.h" 
+#include "Spark/Core/Input.h"
+#include "Spark/Core/Application.h"
+#include "Spark/Renderer/Renderer.h"
 
 namespace Spark {
-
-	// Temp
-	// #define BIND_EVENT_FN(x) std::bind(&Application::x,this,std::placeholders::_1)
 
 	Application* Application::s_Instance = nullptr;
 
@@ -19,7 +17,7 @@ namespace Spark {
 		SPK_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		// 创建Window
-		m_Window = std::unique_ptr<Window>(Window::Create());
+		m_Window = Window::Create();
 		// 将事件处理程序绑定到WindowData的一个变量，这样通过该变量即可调用该函数
 		m_Window->SetEventCallback(SPK_BIND_EVENT_FN(Application::OnEvent));
 
@@ -32,7 +30,7 @@ namespace Spark {
 
 	Application::~Application()
 	{
-
+		Renderer::ShutDown();
 	} 
 
 	/// <summary>

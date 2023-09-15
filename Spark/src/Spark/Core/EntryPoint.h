@@ -1,4 +1,5 @@
 #pragma once
+#include "Spark/Core/Core.h"
 #ifdef SPK_PLATFORM_WINDOWS
 // 外部声明函数
 extern Spark::Application* Spark::CreateApplication();

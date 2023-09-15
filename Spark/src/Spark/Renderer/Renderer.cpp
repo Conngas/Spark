@@ -1,10 +1,21 @@
 #include "spkpch.h"
-#include "Renderer.h"
-#include "Renderer2D.h"
+#include "Spark/Renderer/Renderer.h"
+#include "Spark/Renderer/Renderer2D.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Spark {
-	Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData;
+	Scope<Renderer::SceneData> Renderer::s_SceneData = CreateScope<Renderer::SceneData>();
+
+	void Renderer::Init()
+	{
+		RenderCommand::Init();
+		Renderer2D::Init();
+	}
+
+	void Renderer::ShutDown()
+	{
+		Renderer2D::ShutDown();
+	}
 
 	void Renderer::BeginScene(OrthographicCamera& camera)
 	{
@@ -21,18 +32,13 @@ namespace Spark {
 							const glm::mat4& transform)
 	{
 		shader->Bind();
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_Transform", transform);
+		shader->SetMat4("u_Transform", transform);
+		shader->SetMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
 
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
 	}
 
-	void Renderer::Init()
-	{
-		RenderCommand::Init();
-		Renderer2D::Init();
-	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
 	{

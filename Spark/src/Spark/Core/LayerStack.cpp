@@ -1,12 +1,10 @@
 #include "spkpch.h"
-#include "LayerStack.h"
+#include "Spark/Core/LayerStack.h"
 
 namespace Spark {
 	
 	LayerStack::LayerStack()
-	{
-		
-	}
+	{}
 
 	LayerStack::~LayerStack()
 	{

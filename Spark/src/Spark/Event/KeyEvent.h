@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Event.h"
+#include "Spark/Event/Event.h"
 
 namespace Spark {
 

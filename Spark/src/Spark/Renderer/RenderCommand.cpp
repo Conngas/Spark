@@ -1,5 +1,5 @@
 #include "spkpch.h"
-#include "RenderCommand.h"
+#include "Spark/Renderer/RenderCommand.h"
 #include "Platform/OpenGL/OpenGLRendererAPI.h"
 
 namespace Spark {

@@ -1,8 +1,7 @@
 #pragma once
 #include "spkpch.h"
-#include "Shader.h"
-
-#include "Renderer.h"
+#include "Spark/Renderer/Shader.h"
+#include "Spark/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 #include <string>
@@ -19,7 +18,7 @@ namespace Spark {
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None:	SPK_CORE_ASSERT(false, "RendererAPI:: None is currently not supported!");
-			case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLShader>(filepath);
+			case RendererAPI::API::OpenGL:	return CreateRef<OpenGLShader>(filepath);
 		}
 	}
 
@@ -28,7 +27,7 @@ namespace Spark {
 		switch (Renderer::GetAPI())
 		{
 			case RendererAPI::API::None:	SPK_CORE_ASSERT(false, "RendererAPI:: None is currently not supported!");
-			case RendererAPI::API::OpenGL:	return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
+			case RendererAPI::API::OpenGL:	return CreateRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
 		}
 
 		SPK_CORE_ASSERT(false, "Unkown RendererAPI!");

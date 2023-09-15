@@ -1,6 +1,7 @@
 #pragma once
-#include <memory>
 #include "Spark/Renderer/Buffer.h"
+
+#include <memory>
 
 namespace Spark {
 	class VertexArray
