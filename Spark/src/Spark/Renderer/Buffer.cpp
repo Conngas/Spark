@@ -1,6 +1,6 @@
 #include "spkpch.h"
-#include "Buffer.h"
-#include "Renderer.h"
+#include "Spark/Renderer/Buffer.h"
+#include "Spark/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
 //#include "Platform/Direct"
 
@@ -18,7 +18,7 @@ namespace Spark {
 			SPK_CORE_ASSERT(false, "RenderAPI::None is currently NOT supported!");
 			return nullptr;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLVertexBuffer>(vertice, size);
+			return CreateRef<OpenGLVertexBuffer>(vertice, size);
 			break;
 		}
 
@@ -38,7 +38,7 @@ namespace Spark {
 			SPK_CORE_ASSERT(false, "RendererAPI::None is currently NOT supported!");
 			return nullptr;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLIndexBuffer>(indice, size);
+			return CreateRef<OpenGLIndexBuffer>(indice, size);
 		}
 
 		SPK_CORE_ASSERT(false, "Unknown RendererAPI!");

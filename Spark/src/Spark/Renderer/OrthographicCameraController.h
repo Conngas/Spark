@@ -1,6 +1,7 @@
 #pragma once
-#include "Spark/Renderer/OrthographicCamera.h"
 #include "Spark/Core/Timestep.h"
+#include "Spark/Renderer/OrthographicCamera.h"
+
 #include "Spark/Event/ApplicationEvent.h"
 #include "Spark/Event/MouseEvent.h"
 

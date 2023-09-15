@@ -1,7 +1,7 @@
 #include "spkpch.h"
-#include "OrthographicCamera.h"
+#include "Spark/Renderer/OrthographicCamera.h"
 
-#include "glm/gtc/matrix_transform.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Spark {
 

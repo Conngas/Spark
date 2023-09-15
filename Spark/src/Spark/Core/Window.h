@@ -1,6 +1,5 @@
 #pragma once
 
-//#include "Spark/Core.h"
 #include "Spark/Event/Event.h"
 
 namespace Spark {
@@ -38,7 +37,7 @@ namespace Spark {
 		// 提供Window指针调用
 		virtual void* GetNativeWindow() const = 0;
 
-		static Window* Create(const WindowProps& props = WindowProps());
+		static Scope<Window> Create(const WindowProps& props = WindowProps());
 	};
 }
 

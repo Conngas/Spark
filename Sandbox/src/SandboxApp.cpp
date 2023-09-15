@@ -1,10 +1,10 @@
+#include "Sandbox2D.h"
+#include <imgui/imgui.h>
 #include <Spark.h>
 #include <Spark/Core/EntryPoint.h>
-#include <glm/gtc/type_ptr.hpp>
 
-#include "Sandbox2D.h"
+#include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "imgui/imgui.h"
 
 
 class ExampleLayer : public Spark::Layer
@@ -148,7 +148,7 @@ public:
 		m_CameraController.OnUpdate(ts);
 
 		//////////////////////////////////////////////////////////////////////////
-		// Renderer抽象部分！
+		// Renderer 抽象部分！
 		//////////////////////////////////////////////////////////////////////////
 		Spark::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Spark::RenderCommand::Clear();

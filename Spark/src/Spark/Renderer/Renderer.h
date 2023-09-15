@@ -1,13 +1,14 @@
 #pragma once
-#include "RenderCommand.h"
-#include "Shader.h"
-#include "OrthographicCamera.h"
+#include "Spark/Renderer/Shader.h"
+#include "Spark/Renderer/RenderCommand.h"
+#include "Spark/Renderer/OrthographicCamera.h"
 
 namespace Spark {
 	class Renderer
 	{
 	public:
 		static void Init();
+		static void ShutDown();
 		static void OnWindowResize(uint32_t width, uint32_t height);
 
 		static void BeginScene(OrthographicCamera& camera);
@@ -23,6 +24,6 @@ namespace Spark {
 			glm::mat4 ViewProjectionMatrix;
 		};
 		
-		static SceneData* s_SceneData;
+		static Scope<SceneData> s_SceneData;
 	};
 }

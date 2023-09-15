@@ -1,6 +1,7 @@
 #pragma once
 
 /// 仅供Sandbox客户端使用
+#include "Spark/Core/Core.h"
 
 #include "Spark/Core/Application.h"
 #include "Spark/Core/Layer.h"

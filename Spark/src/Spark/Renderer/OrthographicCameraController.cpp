@@ -1,5 +1,5 @@
 #include "spkpch.h"
-#include "OrthographicCameraController.h"
+#include "Spark/Renderer/OrthographicCameraController.h"
 
 #include "Spark/Core/Input.h"
 #include "Spark/Core/KeyCodes.h"

@@ -1,13 +1,13 @@
 #include "spkpch.h"
 #include "Spark/Core/Application.h"
-#include "WindowsInput.h"
+#include "Platform/Windows/WindowsInput.h"
 
 #include <GLFW/glfw3.h>
 
 namespace Spark {
 
 	// ≥ı ºªØInstance
-	Input* Input::s_Instance = new WindowsInput();
+	Scope<Input> Input::s_Instance = CreateScope<WindowsInput>();
 
 
 	bool WindowsInput::IsKeyPressedImpl(int keycode)

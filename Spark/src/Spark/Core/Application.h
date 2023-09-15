@@ -1,11 +1,11 @@
 #pragma once
-#include "Core.h"
-#include "Window.h"
-#include "Spark/Event/Event.h"
-#include "LayerStack.h"
-#include "Spark/Event/ApplicationEvent.h"
-
+#include "Spark/Core/Core.h"
+#include "Spark/Core/Window.h"
 #include "Spark/Core/Timestep.h"
+#include "Spark/Core/LayerStack.h"
+
+#include "Spark/Event/Event.h"
+#include "Spark/Event/ApplicationEvent.h"
 
 #include "Spark/ImGui/ImGuiLayer.h"
 
@@ -30,7 +30,7 @@ namespace Spark {
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 	private:
-		std::unique_ptr<Window> m_Window;
+		Scope<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_windowRunning = true;
 		bool m_minimized = false;

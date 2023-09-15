@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Layer.h"
+#include "Spark/Core/Core.h"
+#include "Spark/Core/Layer.h"
 
 namespace Spark {
 	
