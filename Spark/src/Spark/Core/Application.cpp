@@ -1,7 +1,7 @@
 #include "spkpch.h"
 
 #include <glad/glad.h>
-#include "glfw/glfw3.h"
+#include <glfw/glfw3.h>
 
 #include "Spark/Core/Log.h" 
 #include "Spark/Core/Input.h"
