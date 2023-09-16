@@ -34,6 +34,9 @@
 // 将函数绑定在对象上，绑定需要自定义域
 #define SPK_BIND_EVENT_FN(x) std::bind(&x,this,std::placeholders::_1)
 
+// Profile//////////////////////////////////////////////////////////////////////////
+#define PROFILE_SCOPE(name) Timer timer##__LINE__(name, [&](ProfileResult profileResult) { m_ProfileResults.push_back(profileResult); })
+
 /// Ref 指针
 namespace Spark {
 	template<typename T>
