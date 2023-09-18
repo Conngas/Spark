@@ -16,6 +16,8 @@
 #include "Spark/Core/Log.h"
 #include "Spark/Core/Core.h"
 
+#include "Spark/Debug/Instrumentation.h"
+
 #ifdef SPK_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif // SPK_PLATFORM_WINDOWS

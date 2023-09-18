@@ -8,6 +8,8 @@ namespace Spark {
 
 	void Renderer::Init()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		RenderCommand::Init();
 		Renderer2D::Init();
 	}

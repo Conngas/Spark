@@ -2,31 +2,18 @@
 
 #include <string>
 #include <chrono>
-#include <algorithm>
-#include <fstream>
-
 #include <thread>
-
-
-#define SPK_PROFILE 1
-#if SPK_PROFILE
-	#define SPK_PROFILE_BEGIN_SESSION(name,filepath) ::Spark::Instrumentor::Get().BeginSession(name, filepath)
-	#define SPK_PROFILE_END_SESSION() ::Spark::Instrumentor::Get().EndSession();
-	#define SPK_PROFILE_SCOPE(name) ::Spark::InstrumentationTimer timer##__LINE__(name);
-	#define SPK_PROFILE_FUNCTION() SPK_PROFILE_SCOPE(__FUNCSIG__)
-#else
-	#define SPK_PROFILE_BEGIN_SESSION
-	#define SPK_PROFILE_END_SESSION()
-	#define SPK_PROFILE_SCOPE(name)
-	#define SPK_PROFILE_FUNCTION()
-#endif
+#include <iomanip>
+#include <fstream>
+#include <algorithm>
 
 namespace Spark {
 	struct ProfileResult
 	{
 		std::string Name;
-		long long Start, End;
-		uint32_t ThreadID;
+		std::chrono::duration<double, std::micro> Start;
+		std::chrono::microseconds ElapsedTime;
+		std::thread::id ThreadID;
 	};
 
 	struct InstrumentationSession
@@ -37,50 +24,79 @@ namespace Spark {
 	class Instrumentor
 	{
 	public:
-		Instrumentor() : m_CurSession(nullptr), m_ProfileCount(0)
+		Instrumentor() : m_CurSession(nullptr)
 		{}
 
 		void BeginSession(const std::string& name, const std::string& filepath = "results.json")
 		{
+			// 开始后锁住线程
+			std::lock_guard lock(m_Mutex);
+			// 存在线程
+			if (m_CurSession)
+			{
+				if (Log::GetCoreLogger())
+					SPK_CORE_ERROR("Instrumentor::BeginSession('{0}') When Session '{1}' Already Open.", name, m_CurSession->Name);
+				InternalEndSession();
+			}
 			m_OutputStream.open(filepath);
-			WriteHeader();
 			m_CurSession = new InstrumentationSession{ name };
+			if (m_OutputStream.is_open())
+			{
+				m_CurSession = new InstrumentationSession({ name });
+				WriteHeader();
+			}
+			else
+			{
+				if (Log::GetCoreLogger())
+				{
+					SPK_CORE_ERROR("Instrumentor Could Not Open Result File '{0}'.", filepath);
+				}
+			}
 		}
 
 		void EndSession()
 		{
-			WriteFooter();
-			m_OutputStream.close();
-			delete m_CurSession;
-			m_CurSession = nullptr;
-			m_ProfileCount = 0;
+			std::lock_guard lock(m_Mutex);
+			InternalEndSession();
 		}
 
 		void WriteProfile(const ProfileResult& result)
 		{
-			if (m_ProfileCount++ > 0)
-				m_OutputStream << ",";
+			std::stringstream json;
 
 			std::string name = result.Name;
 			std::replace(name.begin(), name.end(), '"', '\'');
 
-			m_OutputStream << "{";
-			m_OutputStream << "\"cat\":\"function\", ";
-			m_OutputStream << "\"dur\":" << (result.End - result.Start) << ',';
-			m_OutputStream << "\"name\":\"" << name << "\",";
-			m_OutputStream << "\"ph\":\"X\",";
-			m_OutputStream << "\"pid\":0,";
-			m_OutputStream << "\"tid\":" << result.ThreadID << ",";
-			m_OutputStream << "\"ts\":" << result.Start;
-			m_OutputStream << "}";
+			json << std::setprecision(3) << std::fixed;
+			json << "{";
+			json << "\"cat\":\"function\", ";
+			json << "\"dur\":" << (result.ElapsedTime.count()) << ',';
+			json << "\"name\":\"" << name << "\",";
+			json << "\"ph\":\"X\",";
+			json << "\"pid\":0,";
+			json << "\"tid\":" << result.ThreadID << ",";
+			json << "\"ts\":" << result.Start.count();
+			json << "}";
 
-			// 及时更新，防止程序崩溃时数据丢失
-			m_OutputStream.flush();
+			std::lock_guard lock(m_Mutex);
+			if (m_CurSession)
+			{
+				// 及时更新，防止程序崩溃时数据丢失
+				m_OutputStream << json.str();
+				m_OutputStream.flush();
+			}
 		}
 
+		static Instrumentor& Get()
+		{
+			static Instrumentor instance;
+			return instance;
+		}
+
+	private:
 		void WriteHeader()
 		{
-			m_OutputStream << "{\"otherData\": {}, \"traceEvents\":[";
+			m_OutputStream << "{\"otherData\": {}, \"traceEvents\":[{}";
 			m_OutputStream.flush();
 		}
 
@@ -90,12 +106,18 @@ namespace Spark {
 			m_OutputStream.flush();
 		}
 
-		static Instrumentor& Get()
+		void InternalEndSession()
 		{
-			static Instrumentor instance;
-			return instance;
+			if (m_CurSession)
+			{
+				WriteFooter();
+				m_OutputStream.close();
+				delete m_CurSession;
+				m_CurSession = nullptr;
+			}
 		}
 	private:
+		std::mutex m_Mutex;
 		InstrumentationSession* m_CurSession;
 		std::ofstream m_OutputStream;
 		int m_ProfileCount;
@@ -107,7 +129,7 @@ namespace Spark {
 		InstrumentationTimer(const char* name)
 			: m_Name(name), m_Stopped(false)
 		{
-			m_StartTimepoint = std::chrono::high_resolution_clock::now();
+			m_StartTimepoint = std::chrono::steady_clock::now();
 		}
 
 		~InstrumentationTimer()
@@ -118,13 +140,12 @@ namespace Spark {
 
 		void Stop()
 		{
-			auto endTimepoint = std::chrono::high_resolution_clock::now();
+			auto endTimepoint = std::chrono::steady_clock::now();
+			auto highResStart = std::chrono::duration<double, std::micro>{ m_StartTimepoint.time_since_epoch() };
+			auto elapsedTime =	std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch()-
+								std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch();
 
-			long long start = std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch().count();
-			long long end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().count();
-
-			uint32_t threadID = std::hash<std::thread::id>{}(std::this_thread::get_id());
-			Instrumentor::Get().WriteProfile({m_Name, start, end, threadID});
+			Instrumentor::Get().WriteProfile({m_Name, highResStart, elapsedTime, std::this_thread::get_id()});
 
 			m_Stopped = true;
 		}
@@ -132,6 +153,39 @@ namespace Spark {
 	private:
 		bool m_Stopped;
 		const char* m_Name;
-		std::chrono::time_point <std::chrono::high_resolution_clock> m_StartTimepoint;
+		std::chrono::time_point <std::chrono::steady_clock> m_StartTimepoint;
 	};
 }
+
+
+#define SPK_PROFILE 1
+#if SPK_PROFILE
+// 兼容实现__FUNCSIG__
+#if defined(__GNUC__) || (defined(__MWERKS__) && (__MWERKS__ >= 0x3000)) || (defined(__ICC) && (__ICC >= 600)) || defined(__ghs__)
+#define SPK_FUNC_SIG __PRETTY_FUNCTION__
+#elif defined(__DMC__) && (__DMC__ >= 0x810)
+#define SPK_FUNC_SIG __PRETTY_FUNCTION__
+#elif defined(__FUNCSIG__)
+#define SPK_FUNC_SIG __FUNCSIG__
+#elif (defined(__INTEL_COMPILER) && (__INTEL_COMPILER >= 600)) || (defined(__IBMCPP__) && (__IBMCPP__ >= 500))
+#define SPK_FUNC_SIG __FUNCTION__
+#elif defined(__BORLANDC__) && (__BORLANDC__ >= 0x550)
+#define SPK_FUNC_SIG __FUNC__
+#elif defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
+#define SPK_FUNC_SIG __func__
+#elif defined(__cplusplus) && (__cplusplus >= 201103)
+#define SPK_FUNC_SIG __func__
+#else
+#define SPK_FUNC_SIG "HZ_FUNC_SIG unknown!"
+#endif
+
+#define SPK_PROFILE_BEGIN_SESSION(name,filepath) ::Spark::Instrumentor::Get().BeginSession(name, filepath)
+#define SPK_PROFILE_END_SESSION() ::Spark::Instrumentor::Get().EndSession();
+#define SPK_PROFILE_SCOPE(name) ::Spark::InstrumentationTimer timer##__LINE__(name);
+#define SPK_PROFILE_FUNCTION() SPK_PROFILE_SCOPE(SPK_FUNC_SIG)
+#else
+#define SPK_PROFILE_BEGIN_SESSION
+#define SPK_PROFILE_END_SESSION()
+#define SPK_PROFILE_SCOPE(name)
+#define SPK_PROFILE_FUNCTION()
+#endif

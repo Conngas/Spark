@@ -18,6 +18,8 @@ namespace Spark {
 
 	void Renderer2D::Init()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		s_Data = new Renderer2DStorage();
 
 		// VertexArray
@@ -58,13 +60,15 @@ namespace Spark {
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		s_Data->QuadShader->Bind();
 		s_Data->QuadShader->SetMat4("u_ViewProjection",camera.GetViewProjectionMatrix());
 	}
 
 	void Renderer2D::EndScene()
 	{
-
+		SPK_PROFILE_FUNCTION();
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec3& color)
@@ -78,6 +82,8 @@ namespace Spark {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		s_Data->QuadShader->SetFloat("u_TextureScale", 10.0f);
 		s_Data->QuadShader->SetFloat4("u_Color", color);
 		s_Data->WhiteTexture2D->Bind();
@@ -100,6 +106,8 @@ namespace Spark {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		// °ó¶¨
 		s_Data->QuadShader->SetFloat4("u_Color", glm::vec4(1.0f));
 		texture->Bind();

@@ -228,5 +228,7 @@
     </ClCompile>
     <ClCompile Include="src\Spark\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Spark\Renderer\GraphicsContext.cpp" />
+    <ClCompile Include="src\Spark\Core\Input.cpp" />
+    <ClCompile Include="src\Spark\Core\Window.cpp" />
   </ItemGroup>
 </Project>

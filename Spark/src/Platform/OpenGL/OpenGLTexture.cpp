@@ -8,6 +8,8 @@ namespace Spark {
 	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 		: m_Width(width), m_Height(height)
 	{
+		SPK_PROFILE_FUNCTION();
+			
 		m_InternalFormat = GL_RGBA8;
 		m_DataFormat = GL_RGBA;
 
@@ -24,10 +26,16 @@ namespace Spark {
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 		: m_Path(path)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		int width, height, channels;
 		// 解决翻转
 		stbi_set_flip_vertically_on_load(1);
-		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		stbi_uc* data = nullptr;
+		{
+			SPK_PROFILE_FUNCTION();
+			data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		}
 		SPK_CORE_ASSERT(data, "Failed to load image !");
 		m_Width = width;
 		m_Height = height;
@@ -66,11 +74,15 @@ namespace Spark {
 
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		glDeleteTextures(1, &m_RendererID);
 	}
 
 	void OpenGLTexture2D::SetData(void* data, uint32_t size)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		uint32_t bytePerPixels = m_DataFormat == GL_RGBA ? 4 : 3;
 		SPK_CORE_ASSERT(size == m_Width * m_Height * bytePerPixels,"Data Must Be Entire Texture!");
 		// 没用到size因为OpenGL是通过大小与偏移确定数据长度的，而其他接口则需要size
@@ -79,11 +91,15 @@ namespace Spark {
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
+		SPK_PROFILE_FUNCTION();
+
 		glBindTextureUnit(slot, m_RendererID);
 	}
 
 	void OpenGLTexture2D::UnBind() const
 	{
+		SPK_PROFILE_FUNCTION();
+
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 

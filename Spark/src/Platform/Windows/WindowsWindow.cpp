@@ -15,24 +15,25 @@ namespace Spark {
 	{
 		SPK_CORE_ERROR("GLFW Error ({0}),{1}", error, description);
 	}
-
-	Scope<Window> Window::Create(const WindowProps& props)
-	{
-		return CreateScope<WindowsWindow>(props);
-	}
 	
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		Init(props);
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		Shutdown();
 	}
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		m_Data.Title = props.Title;
 		m_Data.Height = props.Height;
 		m_Data.Width = props.Width;
@@ -42,13 +43,19 @@ namespace Spark {
 		// 对初始化情况断言
 		if (s_GLFWWindowCount == 0)
 		{
+			SPK_PROFILE_SCOPE("glfwInit");
+
 			int success = glfwInit();
 			SPK_CORE_ASSERT(success, "Could not initalize GLFW");
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}
 
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		++s_GLFWWindowCount;
+		{
+			SPK_PROFILE_SCOPE("glCreateWindow");
+
+			m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+			++s_GLFWWindowCount;
+		}
 
 		m_Context = GraphicsContext::Create(m_Window);
 		m_Context->Init();
@@ -132,6 +139,8 @@ namespace Spark {
 
 	void WindowsWindow::Shutdown()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		glfwDestroyWindow(m_Window);
 		--s_GLFWWindowCount;
 
@@ -144,6 +153,8 @@ namespace Spark {
 
 	void WindowsWindow::OnUpdate()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		// 调用事件（输入的EventCallback用于调用）
 		glfwPollEvents();
 		m_Context->SwapBuffers();
@@ -151,6 +162,8 @@ namespace Spark {
 
 	void WindowsWindow::SetVSync(bool enable)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		if (enable)
 			// 开启同步，必须等待渲染完成后继续渲染
 			glfwSwapInterval(1);
