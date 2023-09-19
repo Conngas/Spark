@@ -3,7 +3,9 @@
 bin/
 binInt/
 
+# other file
 .user/
+*.log
 
 # Ingore IDE File Use premake5.exe instead
 *.sln

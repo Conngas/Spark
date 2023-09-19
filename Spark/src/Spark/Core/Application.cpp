@@ -14,6 +14,8 @@ namespace Spark {
 
 	Application::Application()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		SPK_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		// 创建Window
@@ -30,6 +32,8 @@ namespace Spark {
 
 	Application::~Application()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		Renderer::ShutDown();
 	} 
 
@@ -39,15 +43,17 @@ namespace Spark {
 	/// <param name="e"></param>
 	void Application::OnEvent(Event& e)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		// 判定对象是否为WindowCloseEvent，若是则执行OnWindowClose操作
 		dispatcher.Dispatch<WindowCloseEvent>(SPK_BIND_EVENT_FN(Application::OnWindowClose));
 		dispatcher.Dispatch<WindowResizeEvent>(SPK_BIND_EVENT_FN(Application::OnWindowResize));
 
 		// Layer部分
-		for (auto it = m_LayerStock.end(); it != m_LayerStock.begin();)
+		for (auto it = m_LayerStock.rbegin(); it != m_LayerStock.rend(); ++it)
 		{
-			(*--it)->OnEvent(e);
+			(*it)->OnEvent(e);
 			if (e.m_Handled)
 				break;
 		}
@@ -58,20 +64,28 @@ namespace Spark {
 	/// </summary>
 	void Application::PushLayer(Layer* layer)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		m_LayerStock.PushLayer(layer);
 		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* layer)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		m_LayerStock.PushOverLay(layer);
 		layer->OnAttach();
 	}
 
 	void Application::Run()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		while (m_windowRunning)
 		{
+			SPK_PROFILE_SCOPE("RunLoop");
+
 			// Platform 实现，获取DeltaTime
 			float time = (float)glfwGetTime();
 			Timestep timestep = time - m_LastFrameTime;
@@ -79,16 +93,24 @@ namespace Spark {
 
 			if (!m_minimized)
 			{
-				// 获取layer事件
-				for (Layer* layer : m_LayerStock)
-					layer->OnUpdate(timestep);
-			}
-			// UI层更新
-			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_LayerStock)
-				layer->OnImGuiRender();
-			m_ImGuiLayer->End();
+				{
+					SPK_PROFILE_SCOPE("LayerStock::LayerOnUpdate");
 
+					// 获取layer事件
+					for (Layer* layer : m_LayerStock)
+						layer->OnUpdate(timestep);
+				}
+			}
+
+			// 最小化时UI层正常更新
+			m_ImGuiLayer->Begin();
+			{
+				SPK_PROFILE_SCOPE("LayerStock::OnImGuiRenderer");
+
+				for (Layer* layer : m_LayerStock)
+					layer->OnImGuiRender();
+				m_ImGuiLayer->End();
+			}
 			// 主程序循环类型
 			m_Window->OnUpdate();
 		}
@@ -102,6 +124,8 @@ namespace Spark {
 
 	bool Application::OnWindowResize(WindowResizeEvent& e)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		if (e.GetWidth() == 0 || e.GetHeight() == 0)
 		{
 			m_minimized = true;

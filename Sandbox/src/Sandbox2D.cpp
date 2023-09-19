@@ -13,11 +13,14 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
+	SPK_PROFILE_FUNCTION();
+
 	m_SquareTexture = Spark::Texture2D::Create("Assets/Texture/Checkerboard.png");
 }
 
 void Sandbox2D::OnDetach()
 {
+	SPK_PROFILE_FUNCTION();
 }
 
 void Sandbox2D::OnUpdate(Spark::Timestep ts)
@@ -27,7 +30,6 @@ void Sandbox2D::OnUpdate(Spark::Timestep ts)
 
 	// Update
 	{
-		SPK_PROFILE_SCOPE("CameraController::OnUpdate");
 		m_CameraController.OnUpdate(ts);
 	}
 

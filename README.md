@@ -5,7 +5,7 @@ Based in Hazel Engine by The Cherno
 
 # Usage
 
-* git clone in your repository
+* git clone in your repository use `git clone --recursive git@github.com:Conngas/Spark.git`
 * Run file `GenerateProject_vs2022.bat`
 * Open with Visual Studio 2022
 

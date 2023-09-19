@@ -16,6 +16,8 @@ namespace Spark {
 
 	void OpenGLContext::Init()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		char* str = "This is a test";
 
 		glfwMakeContextCurrent(m_windowHandle);
@@ -30,6 +32,8 @@ namespace Spark {
 
 	void OpenGLContext::SwapBuffers()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		glfwSwapBuffers(m_windowHandle);
 	}
 

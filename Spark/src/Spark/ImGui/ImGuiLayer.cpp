@@ -27,6 +27,8 @@ namespace Spark {
 
 	void ImGuiLayer::OnAttach()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		// 设置ImGui上下文
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -54,8 +56,25 @@ namespace Spark {
 		ImGui_ImplOpenGL3_Init("#version 410");
 	}
 
+	void ImGuiLayer::OnDetach()
+	{
+		SPK_PROFILE_FUNCTION();
+
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+	}
+
+	void ImGuiLayer::OnImGuiRender()
+	{
+		static bool show = true;
+		ImGui::ShowDemoWindow(&show);
+	}
+
 	void ImGuiLayer::Begin()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
@@ -63,6 +82,8 @@ namespace Spark {
 
 	void ImGuiLayer::End()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
 		io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(),(float)app.GetWindow().GetHeight());
@@ -79,16 +100,4 @@ namespace Spark {
 		}
 	}
 
-	void ImGuiLayer::OnDetach()
-	{
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
-	}
-
-	void ImGuiLayer::OnImGuiRender()
-	{
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
-	}
 }

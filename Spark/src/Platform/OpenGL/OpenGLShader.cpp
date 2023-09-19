@@ -9,6 +9,8 @@ namespace Spark {
 
 	static GLenum ShaderTypeFromString(std::string& type)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		if (type == "vertex")
 			return GL_VERTEX_SHADER;
 		if (type == "fragment" || type == "pixel")
@@ -20,6 +22,8 @@ namespace Spark {
 
 	OpenGLShader::OpenGLShader(const std::string& filepath)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		// ∂¡»°≤¢∑÷¿ÎShader
 		std::string source = ReadFile(filepath);
 		auto shaderSource = PreProcess(source);
@@ -36,6 +40,8 @@ namespace Spark {
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
 		: m_Name(name)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> source;
 		source[GL_VERTEX_SHADER] = vertexSrc;
 		source[GL_FRAGMENT_SHADER] = fragmentSrc;
@@ -44,11 +50,15 @@ namespace Spark {
 
 	OpenGLShader::~OpenGLShader()
 	{
+		SPK_PROFILE_FUNCTION();
+
 		glDeleteProgram(m_RendererID);
 	}
 
 	std::string OpenGLShader::ReadFile(const std::string& filepath)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		std::string readInRes;
 		std::ifstream in(filepath, std::ios::in | std::ios::binary);
 		if (in)
@@ -75,6 +85,8 @@ namespace Spark {
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSource;
 
 		const char* typeToken = "#type";
@@ -99,6 +111,8 @@ namespace Spark {
 
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSource)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		SPK_CORE_ASSERT(shaderSource.size() >0 && shaderSource.size() <=2, "Wrong Shader Number, Please Check Shader!");
 		GLuint program = glCreateProgram();
 		std::array<GLuint, 2> glShaderIDs;
@@ -165,39 +179,53 @@ namespace Spark {
 
 	void OpenGLShader::Bind() const
 	{
+		SPK_PROFILE_FUNCTION();
+
 		glUseProgram(m_RendererID);
 	}
 
 	void OpenGLShader::UnBind() const
 	{
+		SPK_PROFILE_FUNCTION();
+
 		glUseProgram(0);
 	}
 
 	void OpenGLShader::SetInt(const std::string& name, int value)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		UploadUniformInt(name, value);
 	}
 
 	void OpenGLShader::SetFloat(const std::string& name, float value)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		UploadUniformFloat(name, value);
 	}
 
 	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& value)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		UploadUniformFloat3(name, value);
 	}
 		
 	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4& value)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		UploadUniformFloat4(name, value);
 	}
 		
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& value)
 	{
+		SPK_PROFILE_FUNCTION();
+
 		UploadUniformMat4(name, value);
 	}
-
+	//////////////////////////////////////////////////////////////////////////
 	void OpenGLShader::UploadUniformInt(const std::string& name, int value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());

@@ -9,6 +9,8 @@
 
 #include "Spark/ImGui/ImGuiLayer.h"
 
+int main(int argc, char** argv);
+
 namespace Spark {
 	class Application
 	{
@@ -17,16 +19,13 @@ namespace Spark {
 		virtual ~Application();
 
 	public:
-		void Run();
-
 		void OnEvent(Event& e);
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
-
-
 		inline static Application& Get() { return *s_Instance; }
 		inline Window& GetWindow() { return *m_Window; }
 	private:
+		void Run();
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 	private:
@@ -40,6 +39,7 @@ namespace Spark {
 	private:
 		// 单个应用仅有一个App，因此采取静态实例
 		static Application* s_Instance;
+		friend int ::main(int argc, char** argv);
 	};
 
 	/// <summary>
