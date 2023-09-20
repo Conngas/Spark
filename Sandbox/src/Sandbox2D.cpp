@@ -37,16 +37,16 @@ void Sandbox2D::OnUpdate(Spark::Timestep ts)
 	{
 		SPK_PROFILE_SCOPE("RenderCommand::Renderer Prep");
 		Spark::RenderCommand::Clear();
-		Spark::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		Spark::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	}
 
 	// Draw
 	{
 		SPK_PROFILE_SCOPE("Renderer2D::Renderer Draw");
 		Spark::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		Spark::Renderer2D::DrawQuad({ -1.0f,0.0f }, { 0.8f,0.8f },m_SquareColor);
-		Spark::Renderer2D::DrawQuad({ 0.5f,-0.5f }, { 0.5f,0.75f },m_SquareColor);
-		Spark::Renderer2D::DrawQuad({ 0.0f,0.0f, -0.1f}, { 5.0f,5.0f }, m_SquareTexture);
+		Spark::Renderer2D::DrawQuad({ -1.0f,0.0f }, { 0.8f,0.8f }, m_SquareColor);
+		Spark::Renderer2D::DrawRotationQuad({ 0.5f,-0.5f }, { 0.5f,0.75f }, m_SquareColor, glm::radians(45.0f));
+		Spark::Renderer2D::DrawQuad({ 0.0f,0.0f, -0.1f}, { 5.0f,5.0f }, m_SquareTexture, 10.0f);
 		// End Scene
 		Spark::Renderer::EndScene();
 	}

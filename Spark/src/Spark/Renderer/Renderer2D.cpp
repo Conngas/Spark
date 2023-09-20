@@ -71,20 +71,19 @@ namespace Spark {
 		SPK_PROFILE_FUNCTION();
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec3& color)
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec3& color, float textureScale)
 	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, { color.r,color.g,color.b,1.0f });
+		DrawQuad({ position.x, position.y, 0.0f }, size, { color.r,color.g,color.b,1.0f }, textureScale);
 	}
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, float textureScale)
 	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, color);
+		DrawQuad({ position.x, position.y, 0.0f }, size, { color.r,color.g,color.b,1.0f }, textureScale);
 	}
-
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float textureScale)
 	{
 		SPK_PROFILE_FUNCTION();
 
-		s_Data->QuadShader->SetFloat("u_TextureScale", 10.0f);
+		s_Data->QuadShader->SetFloat("u_TextureScale", textureScale);
 		s_Data->QuadShader->SetFloat4("u_Color", color);
 		s_Data->WhiteTexture2D->Bind();
 		
@@ -98,18 +97,17 @@ namespace Spark {
 		
 		s_Data->WhiteTexture2D->UnBind();
 	}
-
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture)
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float textureScale, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
 	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, texture);
+		DrawQuad({ position.x, position.y, 0.0f }, size, texture, textureScale, textureColor);
 	}
-
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float textureScale, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
 	{
 		SPK_PROFILE_FUNCTION();
 
 		// 绑定
-		s_Data->QuadShader->SetFloat4("u_Color", glm::vec4(1.0f));
+		s_Data->QuadShader->SetFloat("u_TextureScale", textureScale);
+		s_Data->QuadShader->SetFloat4("u_Color", textureColor);
 		texture->Bind();
 		// transform 绘制
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) *
@@ -122,4 +120,54 @@ namespace Spark {
 		texture->UnBind();
 	}
 
+	void Renderer2D::DrawRotationQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec3& color, float rotation, float textureScale /*= 1.0f*/)
+	{
+		DrawRotationQuad({ position.x, position.y, 0.0f }, size, { color.r,color.g,color.b,1.0f }, rotation, textureScale);
+	}
+	void Renderer2D::DrawRotationQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, float rotation, float textureScale /*= 1.0f*/)
+	{
+		DrawRotationQuad({ position.x, position.y, 0.0f }, size, { color.r,color.g,color.b,1.0f }, rotation, textureScale);
+	}
+	void Renderer2D::DrawRotationQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float rotation, float textureScale /*= 1.0f*/)
+	{
+		SPK_PROFILE_FUNCTION();
+
+		s_Data->QuadShader->SetFloat("u_TextureScale", textureScale);
+		s_Data->QuadShader->SetFloat4("u_Color", color);
+		s_Data->WhiteTexture2D->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f})
+			* glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
+		s_Data->QuadShader->SetMat4("u_Transform", transform);
+
+		// 绘制流程
+		s_Data->QuadVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+
+		s_Data->WhiteTexture2D->UnBind();
+	}
+	void Renderer2D::DrawRotationQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float rotation, float textureScale /*= 1.0f*/, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
+	{
+		DrawRotationQuad({ position.x, position.y, 1.0f }, size, texture, rotation, textureScale, textureColor);
+	}
+	void Renderer2D::DrawRotationQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float rotation, float textureScale /*= 1.0f*/, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
+	{
+		SPK_PROFILE_FUNCTION();
+
+		// 绑定
+		s_Data->QuadShader->SetFloat("u_TextureScale", textureScale);
+		s_Data->QuadShader->SetFloat4("u_Color", textureColor);
+		texture->Bind();
+		// transform 绘制
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) 
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
+		s_Data->QuadShader->SetMat4("u_Transform", transform);
+
+		// 绘制流程
+		s_Data->QuadShader->Bind();
+		RenderCommand::DrawIndexed(s_Data->QuadVertexArray);
+		texture->UnBind();
+	}
 }
