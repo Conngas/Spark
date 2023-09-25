@@ -47,7 +47,7 @@ void Sandbox2D::OnUpdate(Spark::Timestep ts)
 		Spark::Renderer2D::DrawQuad({ -1.0f,0.0f }, { 0.8f,0.8f }, m_SquareColor);
 		Spark::Renderer2D::DrawQuad({ 1.0f,0.0f }, { 0.2f,0.2f }, m_SquareColor);
 		// Spark::Renderer2D::DrawRotationQuad({ 0.5f,-0.5f }, { 0.5f,0.75f }, m_SquareColor, glm::radians(45.0f));
-		// Spark::Renderer2D::DrawQuad({ 0.0f,0.0f, -0.1f}, { 5.0f,5.0f }, m_SquareTexture, 10.0f);
+		Spark::Renderer2D::DrawQuad({ -5.0f,-5.0f, -0.1f}, { 10.0f,10.0f }, m_SquareTexture, 10.0f);
 		// End Scene
 		Spark::Renderer2D::EndScene();
 	}
