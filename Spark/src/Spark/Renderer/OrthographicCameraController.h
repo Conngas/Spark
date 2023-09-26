@@ -6,6 +6,15 @@
 #include "Spark/Event/MouseEvent.h"
 
 namespace Spark {
+
+	struct OrthographicCameraBounds
+	{
+		float Left, Right;
+		float Bottom, Top;
+		float GetWidth() { return Right - Left; }
+		float GetHeight() { return Top - Bottom; }
+	};
+
 	class OrthographicCameraController
 	{
 	public:
@@ -18,12 +27,14 @@ namespace Spark {
 
 		float GetZoomLevel() { return m_ZoomLevel; }
 		void SetZoomLevel(float level) { m_ZoomLevel = level; }
+		const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
 	private:
 		bool OnMouseScrolled(MouseScrollEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);
 	private:
 		float m_AspectRatio;				// 横纵比
 		float m_ZoomLevel = 1.0f;			// 缩放级别
+		OrthographicCameraBounds m_Bounds;	// 获取相机边界，第一帧立即响应
 		OrthographicCamera m_Camera;		// 相机成员，需要在参数后初始化
 		bool m_Rotation;
 		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };

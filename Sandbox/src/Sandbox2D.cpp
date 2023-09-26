@@ -17,6 +17,14 @@ void Sandbox2D::OnAttach()
 
 	m_SquareTexture = Spark::Texture2D::Create("Assets/Texture/Checkerboard.png");
 	m_QuadRotationTexture = Spark::Texture2D::Create("Assets/Texture/ChernoLogo.png");
+
+	m_Particale.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
+	m_Particale.ColorEnd = { 254 / 255.0f, 109 / 255.0f,41 / 255.0f,1.0f };
+	m_Particale.SizeBegine = 0.5f, m_Particale.SizeVariaion = 0.3f, m_Particale.SizeEnd = 0.0f;
+	m_Particale.LifeTime = 1.0f;
+	m_Particale.Velocity = { 0.0f, 0.0f };
+	m_Particale.VelocityVariation = { 3.0f, 1.0f };
+	m_Particale.Postion = { 0.0f, 0.0f };
 }
 
 void Sandbox2D::OnDetach()
@@ -65,6 +73,24 @@ void Sandbox2D::OnUpdate(Spark::Timestep ts)
 		}
 		Spark::Renderer2D::EndScene();
 	}
+
+	// ≤‚ ‘ParticaleSystem
+	if (Spark::Input::IsMouseButtonPress(SPK_MOUSE_BUTTON_LEFT))
+	{
+		auto [x, y] = Spark::Input::GetMousePosition();
+		auto width = Spark::Application::Get().GetWindow().GetWidth();
+		auto height = Spark::Application::Get().GetWindow().GetHeight();
+		auto bounds = m_CameraController.GetBounds();
+		auto pos = m_CameraController.GetCamera().GetPosition();
+		x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+		m_Particale.Postion = { x + pos.x, y + pos.y };
+		for (int i = 0; i < 5; ++i)
+			m_ParticaleSystem.Emit(m_Particale);
+	}
+	m_ParticaleSystem.OnUpdate(ts);
+	m_ParticaleSystem.OnRender(m_CameraController.GetCamera());
+
 }
 
 void Sandbox2D::OnImGuiRender()
