@@ -1,5 +1,6 @@
 #pragma once
 #include "Spark.h"
+#include "Spark/SubSystem/ParticaleSystem.h"
 
 class Sandbox2D : public Spark::Layer
 {
@@ -23,4 +24,7 @@ private:
 	Spark::Ref<Spark::Texture2D> m_QuadRotationTexture;
 	
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f , 1.0f};
+
+	Spark::ParticaleSystem m_ParticaleSystem;
+	Spark::ParticaleProps m_Particale;
 };

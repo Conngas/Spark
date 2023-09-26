@@ -5,6 +5,13 @@ namespace Spark {
 	class OrthographicCamera
 	{
 	public:
+		/// <summary>
+		/// 正交相机参数（左右、下上）
+		/// </summary>
+		/// <param name="left"></param>
+		/// <param name="right"></param>
+		/// <param name="bottom"></param>
+		/// <param name="top"></param>
 		OrthographicCamera(float left, float right, float bottom, float top);
 		void SetProjection(float left, float right, float bottom, float top);
 
