@@ -19,9 +19,9 @@ namespace Spark {
 
 	struct Renderer2DStorage
 	{
-		const uint32_t MaxQuads = 10000;
-		const uint32_t MaxVertices = MaxQuads * 4;
-		const uint32_t MaxIndice = MaxQuads * 6;
+		static const uint32_t MaxQuads = 10000;
+		static const uint32_t MaxVertices = MaxQuads * 4;
+		static const uint32_t MaxIndice = MaxQuads * 6;
 		static const int32_t MaxTextureSlots = 32;				// TODO RenderCaps
 
 		Ref<Shader> QuadShader;
@@ -33,8 +33,14 @@ namespace Spark {
 		QuadVertex* QuadVertexBufferBase = nullptr;
 		QuadVertex* QuadVertexBufferPtr = nullptr;
 
+		// TEXTURE
 		std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
 		uint32_t TextureSlotIndex = 1;							// 0 White Texture
+		// ROTATION
+		glm::vec4 QuadVertexPosition[4];
+
+		// Statistics
+		Renderer2D::Statistics Stats;
 	};
 
 	static Renderer2DStorage s_Data;
@@ -94,13 +100,17 @@ namespace Spark {
 
 		// Set Zero
 		s_Data.TextureSlots[0] = s_Data.WhiteTexture2D;
+
+		s_Data.QuadVertexPosition[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPosition[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPosition[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPosition[3] = { -0.5f, 0.5f, 0.0f, 1.0f };
 	}
 
 	void Renderer2D::ShutDown()
 	{
 		SPK_PROFILE_FUNCTION();
 	}
-
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
@@ -130,6 +140,9 @@ namespace Spark {
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; ++i)
 			s_Data.TextureSlots[i]->Bind(i);
 		RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndiceCount);
+
+		//Statistics Count 
+		s_Data.Stats.DrawCalls++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec3& color, float tileCount)
@@ -143,30 +156,37 @@ namespace Spark {
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float tileCount)
 	{
 		SPK_PROFILE_FUNCTION();
+		// 边界判定
+		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxIndice)
+			FlushAndReset();
+
 		// 设定参数，TexIndex 0.0 是纯白Texture
 		const float texIndex = 0.0f;
-		s_Data.QuadVertexBufferPtr->Positon = position;
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) 
+			* glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
+
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[0];
 		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
 		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Positon = { position.x + size.x, position.y, 0.0f };
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[1];
 		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
 		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Positon = { position.x + size.x, position.y + size.y, 0.0f };
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[2];
 		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
 		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Positon = { position.x, position.y + size.y, 0.0f };
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[3];
 		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
 		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
@@ -174,21 +194,9 @@ namespace Spark {
 		s_Data.QuadVertexBufferPtr++;
 
 		s_Data.QuadIndiceCount += 6;
-#ifdef OLD_PATH
-		s_Data.QuadShader->SetFloat("u_TextureScale", textureScale);
-		s_Data.QuadShader->SetFloat4("u_Color", color);
-		s_Data.WhiteTexture2D->Bind();
-		
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * 
-							  glm::scale(glm::mat4(1.0f), {size.x,size.y,1.0f});
-		s_Data.QuadShader->SetMat4("u_Transform", transform);
 
-		// 绘制流程
-		s_Data.QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(s_Data.QuadVertexArray);
-		
-		s_Data.WhiteTexture2D->UnBind();
-#endif // OLD_PATH
+		//Statistics Count 
+		s_Data.Stats.QuadCount++;
 	}
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tileCount, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
 	{
@@ -197,6 +205,10 @@ namespace Spark {
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tileCount, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
 	{
 		SPK_PROFILE_FUNCTION();
+		// 边界判定
+		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxIndice)
+			FlushAndReset();
+
 		// 设定参数
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		float texIndex = 0.0f;
@@ -215,101 +227,194 @@ namespace Spark {
 			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
 			s_Data.TextureSlotIndex++;
 		}
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
 		// 批处理填入数据
-		s_Data.QuadVertexBufferPtr->Positon = position;
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[0];
 		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
 		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Positon = { position.x + size.x, position.y, 0.0f };
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[1];
 		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
 		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Positon = { position.x + size.x, position.y + size.y, 0.0f };
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[2];
 		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
 		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadVertexBufferPtr->Positon = { position.x, position.y + size.y, 0.0f };
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[3];
 		s_Data.QuadVertexBufferPtr->Color = color;
 		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
 		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
 		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.QuadIndiceCount += 6;		
-#ifdef OLD_PATH
-		// 绑定
-		s_Data.QuadShader->SetFloat("u_TextureScale", textureScale);
-		s_Data.QuadShader->SetFloat4("u_Color", textureColor);
-		texture->Bind();
-		// transform 绘制
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) *
-			glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
-		s_Data.QuadShader->SetMat4("u_Transform", transform);
-		
-		// 绘制流程
-		s_Data.QuadShader->Bind();
-		RenderCommand::DrawIndexed(s_Data.QuadVertexArray);
-		texture->UnBind();
-#endif // OLD_PATH
+		s_Data.QuadIndiceCount += 6;	
+
+		//Statistics Count 
+		s_Data.Stats.QuadCount++;
 	}
 
-	void Renderer2D::DrawRotationQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec3& color, float rotation, float textureScale /*= 1.0f*/)
+	/// <summary>
+	/// 绘制旋转的Quad
+	/// </summary>
+	/// <param name="position">位置坐标</param>
+	/// <param name="size">大小</param>
+	/// <param name="color">颜色（RGB数值）</param>
+	/// <param name="rotation">旋转（角度值°）</param>
+	/// <param name="tileCount">密度</param>
+	void Renderer2D::DrawRotationQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec3& color, float rotation, float tileCount /*= 1.0f*/)
 	{
-		DrawRotationQuad({ position.x, position.y, 0.0f }, size, { color.r,color.g,color.b,1.0f }, rotation, textureScale);
+		DrawRotationQuad({ position.x, position.y, 0.0f }, size, { color.r,color.g,color.b,1.0f }, rotation, tileCount);
 	}
-	void Renderer2D::DrawRotationQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, float rotation, float textureScale /*= 1.0f*/)
+	void Renderer2D::DrawRotationQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, float rotation, float tileCount /*= 1.0f*/)
 	{
-		DrawRotationQuad({ position.x, position.y, 0.0f }, size, { color.r,color.g,color.b,1.0f }, rotation, textureScale);
+		DrawRotationQuad({ position.x, position.y, 0.0f }, size, { color.r,color.g,color.b,1.0f }, rotation, tileCount);
 	}
-	void Renderer2D::DrawRotationQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float rotation, float textureScale /*= 1.0f*/)
+	void Renderer2D::DrawRotationQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float rotation, float tileCount /*= 1.0f*/)
 	{
 		SPK_PROFILE_FUNCTION();
+		// 边界判定
+		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxIndice)
+			FlushAndReset();
 
-		s_Data.QuadShader->SetFloat("u_TextureScale", textureScale);
-		s_Data.QuadShader->SetFloat4("u_Color", color);
-		s_Data.WhiteTexture2D->Bind();
+		// 设定参数
+		float texIndex = 0.0f;
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		// 批处理填入数据
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[0];
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[1];
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[2];
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[3];
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadIndiceCount += 6;
+
+		//Statistics Count 
+		s_Data.Stats.QuadCount++;
+	}
+	void Renderer2D::DrawRotationQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float rotation, float tileCount /*= 1.0f*/, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
+	{
+		DrawRotationQuad({ position.x, position.y, 1.0f }, size, texture, rotation, tileCount, textureColor);
+	}
+	void Renderer2D::DrawRotationQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float rotation, float tileCount /*= 1.0f*/, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
+	{
+		SPK_PROFILE_FUNCTION();
+		// 边界判定
+		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxIndice)
+			FlushAndReset();
+
+		// 设定参数
+		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		float texIndex = 0.0f;
+		// 确定当前texIndex
+		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
+		{
+			if (*s_Data.TextureSlots[i].get() == *texture.get())
+			{
+				texIndex = (float)i;
+				break;
+			}
+		}
+		if (texIndex == 0.0f)
+		{
+			texIndex = (float)s_Data.TextureSlotIndex;
+			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
+			s_Data.TextureSlotIndex++;
+		}
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f})
-			* glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
-		s_Data.QuadShader->SetMat4("u_Transform", transform);
+			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		// 绘制流程
-		s_Data.QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(s_Data.QuadVertexArray);
+		// 批处理填入数据
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[0];
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+		s_Data.QuadVertexBufferPtr++;
 
-		s_Data.WhiteTexture2D->UnBind();
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[1];
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[2];
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[3];
+		s_Data.QuadVertexBufferPtr->Color = color;
+		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
+		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+		s_Data.QuadVertexBufferPtr++;
+
+		s_Data.QuadIndiceCount += 6;
+
+		//Statistics Count 
+		s_Data.Stats.QuadCount++;
 	}
-	void Renderer2D::DrawRotationQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float rotation, float textureScale /*= 1.0f*/, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
+
+	// Statistics
+	void Renderer2D::ResetStats()
 	{
-		DrawRotationQuad({ position.x, position.y, 1.0f }, size, texture, rotation, textureScale, textureColor);
+		memset(&s_Data.Stats, 0, sizeof(Renderer2D::Statistics));
 	}
-	void Renderer2D::DrawRotationQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float rotation, float textureScale /*= 1.0f*/, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
+
+	Renderer2D::Statistics Renderer2D::GetStats()
 	{
-		SPK_PROFILE_FUNCTION();
+		return s_Data.Stats;
+	}
 
-		// 绑定
-		s_Data.QuadShader->SetFloat("u_TextureScale", textureScale);
-		s_Data.QuadShader->SetFloat4("u_Color", textureColor);
-		texture->Bind();
-		// transform 绘制
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) 
-			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { size.x,size.y,1.0f });
-		s_Data.QuadShader->SetMat4("u_Transform", transform);
-
-		// 绘制流程
-		s_Data.QuadShader->Bind();
-		RenderCommand::DrawIndexed(s_Data.QuadVertexArray);
-		texture->UnBind();
+	void Renderer2D::FlushAndReset()
+	{
+		EndScene();
+		//记住VB位置
+		s_Data.QuadIndiceCount = 0;
+		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+		s_Data.TextureSlotIndex = 1;
 	}
 }

@@ -20,6 +20,7 @@ private:
 	Spark::Ref<Spark::Shader> m_SquareShader;
 	Spark::Ref<Spark::VertexArray> m_SquareVA;
 	Spark::Ref<Spark::Texture2D> m_SquareTexture;
+	Spark::Ref<Spark::Texture2D> m_QuadRotationTexture;
 	
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f , 1.0f};
 };
