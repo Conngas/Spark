@@ -46,7 +46,7 @@ namespace Spark {
 			SPK_PROFILE_SCOPE("glfwInit");
 
 			int success = glfwInit();
-			SPK_CORE_ASSERT(success, "Could not initalize GLFW");
+			SPK_CORE_ASSERT(success, "Could not initialize GLFW");
 			glfwSetErrorCallback(GLFWErrorCallback);
 		}
 
