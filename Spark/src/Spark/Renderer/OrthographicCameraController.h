@@ -26,7 +26,8 @@ namespace Spark {
 		const OrthographicCamera& GetCamera() const { return m_Camera; }
 
 		float GetZoomLevel() { return m_ZoomLevel; }
-		void SetZoomLevel(float level) { m_ZoomLevel = level; }
+		void SetZoomLevel(float level) { m_ZoomLevel = level; CaculateView(); }
+		void CaculateView();
 		const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
 	private:
 		bool OnMouseScrolled(MouseScrollEvent& e);

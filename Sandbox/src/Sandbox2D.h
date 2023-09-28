@@ -29,4 +29,7 @@ private:
 
 	Spark::ParticaleSystem m_ParticaleSystem;
 	Spark::ParticaleProps m_Particale;
+
+	uint32_t m_MapWidth, m_MapHeight;
+	std::unordered_map<char, Spark::Ref<Spark::SubTexture2D>> s_TextureMap;
 };
