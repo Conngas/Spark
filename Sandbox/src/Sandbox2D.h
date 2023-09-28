@@ -23,9 +23,13 @@ private:
 	Spark::Ref<Spark::Texture2D> m_SquareTexture;
 	Spark::Ref<Spark::Texture2D> m_QuadRotationTexture;
 	Spark::Ref<Spark::Texture2D> m_SpriteSheet;
+	Spark::Ref<Spark::SubTexture2D> m_SubTex;
 	
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f , 1.0f};
 
 	Spark::ParticaleSystem m_ParticaleSystem;
 	Spark::ParticaleProps m_Particale;
+
+	uint32_t m_MapWidth, m_MapHeight;
+	std::unordered_map<char, Spark::Ref<Spark::SubTexture2D>> s_TextureMap;
 };

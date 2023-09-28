@@ -149,6 +149,55 @@ namespace Spark {
 		s_Data.Stats.DrawCalls++;
 	}
 
+	void Renderer2D::DrawPart(const glm::vec3& position, const glm::vec2& size, const glm::vec2* texCoords, const size_t qVCount,
+							  const Ref<Texture2D>& texture,
+							  float rotation , float tileCount ,
+							  const glm::vec4& color )
+	{
+		// 边界判定
+		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxTextureSlots)
+			FlushAndReset();
+		if (!texture)
+			SPK_CORE_ASSERT(false, "No Texture to Draw!");
+
+		// 确定当前texIndex
+		// 设定参数
+		float texIndex = 0.0f;
+		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
+		{
+			if (*s_Data.TextureSlots[i].get() == *texture.get())
+			{
+				texIndex = (float)i;
+				break;
+			}
+		}
+		if (texIndex == 0.0f)
+		{
+			texIndex = (float)s_Data.TextureSlotIndex;
+			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
+			s_Data.TextureSlotIndex++;
+		}
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		// 批处理填入数据
+		for (size_t i = 0; i < qVCount; i++)
+		{
+			s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[i];
+			s_Data.QuadVertexBufferPtr->Color = color;
+			s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
+			s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+			s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+			s_Data.QuadVertexBufferPtr++;
+		}
+		s_Data.QuadIndiceCount += 6;
+
+		//Statistics Count 
+		s_Data.Stats.QuadCount++;
+	}
+
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec3& color, float tileCount)
 	{
 		DrawQuad({ position.x, position.y, 0.0f }, size, { color.r,color.g,color.b,1.0f }, tileCount);
@@ -205,59 +254,28 @@ namespace Spark {
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tileCount, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
 	{
 		SPK_PROFILE_FUNCTION();
-		// 材质剪裁
-		constexpr float x = 2.0f, y = 3.0f;
-		constexpr float sheetWidth = 2560, sheetHeight = 1664;
-		constexpr float spriteWidth = 128, spriteHeight = 128;
 		// 设定参数
 		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		constexpr glm::vec2 texCoords[] = 
-		{ 
-			{(x * spriteWidth)/sheetWidth, (y * spriteHeight)/sheetHeight},
-			{((x+1)*spriteWidth)/sheetWidth, (y * spriteHeight) / sheetHeight},
-			{((x + 1) * spriteWidth) / sheetWidth, ((y+1) * spriteHeight) / sheetHeight},
-			{(x * spriteWidth) / sheetWidth, ((y+1) * spriteHeight) / sheetHeight}
-		};
+		constexpr glm::vec2 texCoords[] = {{0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f}};
 
-		// 边界判定
-		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxTextureSlots)
-			FlushAndReset();
+		DrawPart(position, size, texCoords, quadVertexCount,texture);
+	}
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, float tileCount, const glm::vec4& textureColor)
+	{
+		DrawQuad({ position.x, position.y, 0.0f }, size, subtexture, tileCount, textureColor);
+	}
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, float tileCount, const glm::vec4& textureColor)
+	{
+		SPK_PROFILE_FUNCTION();
+		// 设定参数
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		const glm::vec2* texCoords = subtexture->GetTexCoords();
+		const Ref<Texture2D> texture = subtexture->GetTexture();
 
-		// 确定当前texIndex
-		float texIndex = 0.0f;
-		for (uint32_t i = 1; i<s_Data.TextureSlotIndex;++i)
-		{
-			if (*s_Data.TextureSlots[i].get() == *texture.get())
-			{
-				texIndex = (float)i;
-				break;
-			}
-		}
-		if (texIndex == 0.0f)
-		{
-			texIndex = (float)s_Data.TextureSlotIndex;
-			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
-			s_Data.TextureSlotIndex++;
-		}
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-
-		// 批处理填入数据
-		for (size_t i = 0; i < quadVertexCount; i++)
-		{
-			s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[i];
-			s_Data.QuadVertexBufferPtr->Color = color;
-			s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
-			s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-			s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-			s_Data.QuadVertexBufferPtr++;
-		}
-		s_Data.QuadIndiceCount += 6;	
-
-		//Statistics Count 
-		s_Data.Stats.QuadCount++;
+		// 调用绘制Texture函数
+		DrawPart(position, size, texCoords, quadVertexCount, texture);
 	}
 
 	/// <summary>
@@ -340,48 +358,9 @@ namespace Spark {
 			{(x * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight}
 		};
 
-		// 边界判定
-		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxTextureSlots)
-			FlushAndReset();
-
-		// 确定当前texIndex
-		// 设定参数
-		float texIndex = 0.0f;
-		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
-		{
-			if (*s_Data.TextureSlots[i].get() == *texture.get())
-			{
-				texIndex = (float)i;
-				break;
-			}
-		}
-		if (texIndex == 0.0f)
-		{
-			texIndex = (float)s_Data.TextureSlotIndex;
-			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
-			s_Data.TextureSlotIndex++;
-		}
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		
-		// 批处理填入数据
-		for (size_t i = 0; i < quadVertexCount; i++)
-		{
-			s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[i];
-			s_Data.QuadVertexBufferPtr->Color = color;
-			s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
-			s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-			s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-			s_Data.QuadVertexBufferPtr++;
-		}
-		s_Data.QuadIndiceCount += 6;
-
-		//Statistics Count 
-		s_Data.Stats.QuadCount++;
+		DrawPart(position, size, texCoords, quadVertexCount, texture, rotation);
 	}
-
+	
 	// Statistics
 	void Renderer2D::ResetStats()
 	{
@@ -401,4 +380,5 @@ namespace Spark {
 		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
 		s_Data.TextureSlotIndex = 1;
 	}
+
 }

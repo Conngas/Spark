@@ -65,5 +65,4 @@ namespace Spark {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-
 }
