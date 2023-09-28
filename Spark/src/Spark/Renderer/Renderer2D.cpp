@@ -110,6 +110,7 @@ namespace Spark {
 	void Renderer2D::ShutDown()
 	{
 		SPK_PROFILE_FUNCTION();
+		delete[] s_Data.QuadVertexBufferBase;
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
@@ -128,7 +129,7 @@ namespace Spark {
 	void Renderer2D::EndScene()
 	{
 		SPK_PROFILE_FUNCTION();
-		uint32_t dataSize = (uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase;
+		uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
 		// Buffer 绑定
 		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
 		Flush();
@@ -136,6 +137,9 @@ namespace Spark {
 
 	void Renderer2D::Flush()
 	{
+		if (s_Data.QuadIndiceCount == 0)
+			return;
+
 		// 绑定Texture
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; ++i)
 			s_Data.TextureSlots[i]->Bind(i);
@@ -156,6 +160,20 @@ namespace Spark {
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float tileCount)
 	{
 		SPK_PROFILE_FUNCTION();
+		// 材质剪裁
+		constexpr float x = 2.0f, y = 3.0f;
+		constexpr float sheetWidth = 2560, sheetHeight = 1664;
+		constexpr float spriteWidth = 128, spriteHeight = 128;
+		// 设定参数
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec2 texCoords[] =
+		{
+			{(x * spriteWidth) / sheetWidth, (y * spriteHeight) / sheetHeight},
+			{((x + 1) * spriteWidth) / sheetWidth, (y * spriteHeight) / sheetHeight},
+			{((x + 1) * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight},
+			{(x * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight}
+		};
+
 		// 边界判定
 		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxIndice)
 			FlushAndReset();
@@ -164,35 +182,17 @@ namespace Spark {
 		const float texIndex = 0.0f;
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) 
 			* glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
-
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[0];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[1];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[2];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[3];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
+		
+		// 批处理填入数据
+		for (size_t i = 0; i < quadVertexCount; i++)
+		{
+			s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[i];
+			s_Data.QuadVertexBufferPtr->Color = color;
+			s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
+			s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+			s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+			s_Data.QuadVertexBufferPtr++;
+		}
 		s_Data.QuadIndiceCount += 6;
 
 		//Statistics Count 
@@ -205,14 +205,27 @@ namespace Spark {
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tileCount, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
 	{
 		SPK_PROFILE_FUNCTION();
+		// 材质剪裁
+		constexpr float x = 2.0f, y = 3.0f;
+		constexpr float sheetWidth = 2560, sheetHeight = 1664;
+		constexpr float spriteWidth = 128, spriteHeight = 128;
+		// 设定参数
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		constexpr glm::vec2 texCoords[] = 
+		{ 
+			{(x * spriteWidth)/sheetWidth, (y * spriteHeight)/sheetHeight},
+			{((x+1)*spriteWidth)/sheetWidth, (y * spriteHeight) / sheetHeight},
+			{((x + 1) * spriteWidth) / sheetWidth, ((y+1) * spriteHeight) / sheetHeight},
+			{(x * spriteWidth) / sheetWidth, ((y+1) * spriteHeight) / sheetHeight}
+		};
+
 		// 边界判定
-		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxIndice)
+		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxTextureSlots)
 			FlushAndReset();
 
-		// 设定参数
-		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		float texIndex = 0.0f;
 		// 确定当前texIndex
+		float texIndex = 0.0f;
 		for (uint32_t i = 1; i<s_Data.TextureSlotIndex;++i)
 		{
 			if (*s_Data.TextureSlots[i].get() == *texture.get())
@@ -232,34 +245,15 @@ namespace Spark {
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
 		// 批处理填入数据
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[0];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[1];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[2];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[3];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
+		for (size_t i = 0; i < quadVertexCount; i++)
+		{
+			s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[i];
+			s_Data.QuadVertexBufferPtr->Color = color;
+			s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
+			s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+			s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+			s_Data.QuadVertexBufferPtr++;
+		}
 		s_Data.QuadIndiceCount += 6;	
 
 		//Statistics Count 
@@ -285,8 +279,22 @@ namespace Spark {
 	void Renderer2D::DrawRotationQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float rotation, float tileCount /*= 1.0f*/)
 	{
 		SPK_PROFILE_FUNCTION();
+		// 材质剪裁
+		constexpr float x = 2.0f, y = 3.0f;
+		constexpr float sheetWidth = 2560, sheetHeight = 1664;
+		constexpr float spriteWidth = 128, spriteHeight = 128;
+		// 设定参数
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec2 texCoords[] =
+		{
+			{(x * spriteWidth) / sheetWidth, (y * spriteHeight) / sheetHeight},
+			{((x + 1) * spriteWidth) / sheetWidth, (y * spriteHeight) / sheetHeight},
+			{((x + 1) * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight},
+			{(x * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight}
+		};
+
 		// 边界判定
-		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxIndice)
+		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxTextureSlots)
 			FlushAndReset();
 
 		// 设定参数
@@ -294,36 +302,17 @@ namespace Spark {
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-
+		
 		// 批处理填入数据
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[0];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[1];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[2];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[3];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
+		for (size_t i = 0; i < quadVertexCount; i++)
+		{
+			s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[i];
+			s_Data.QuadVertexBufferPtr->Color = color;
+			s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
+			s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+			s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+			s_Data.QuadVertexBufferPtr++;
+		}
 		s_Data.QuadIndiceCount += 6;
 
 		//Statistics Count 
@@ -336,14 +325,28 @@ namespace Spark {
 	void Renderer2D::DrawRotationQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float rotation, float tileCount /*= 1.0f*/, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
 	{
 		SPK_PROFILE_FUNCTION();
+		// 材质剪裁
+		constexpr float x = 2.0f, y = 3.0f;
+		constexpr float sheetWidth = 2560, sheetHeight = 1664;
+		constexpr float spriteWidth = 128, spriteHeight = 128;
+		// 设定参数
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		constexpr glm::vec2 texCoords[] =
+		{
+			{(x * spriteWidth) / sheetWidth, (y * spriteHeight) / sheetHeight},
+			{((x + 1) * spriteWidth) / sheetWidth, (y * spriteHeight) / sheetHeight},
+			{((x + 1) * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight},
+			{(x * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight}
+		};
+
 		// 边界判定
-		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxIndice)
+		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxTextureSlots)
 			FlushAndReset();
 
-		// 设定参数
-		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		float texIndex = 0.0f;
 		// 确定当前texIndex
+		// 设定参数
+		float texIndex = 0.0f;
 		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
 		{
 			if (*s_Data.TextureSlots[i].get() == *texture.get())
@@ -362,36 +365,17 @@ namespace Spark {
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-
+		
 		// 批处理填入数据
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[0];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 0.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[1];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 0.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[2];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 1.0f, 1.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
-		s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[3];
-		s_Data.QuadVertexBufferPtr->Color = color;
-		s_Data.QuadVertexBufferPtr->TexCoord = { 0.0f, 1.0f };
-		s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-		s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-		s_Data.QuadVertexBufferPtr++;
-
+		for (size_t i = 0; i < quadVertexCount; i++)
+		{
+			s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[i];
+			s_Data.QuadVertexBufferPtr->Color = color;
+			s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
+			s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+			s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+			s_Data.QuadVertexBufferPtr++;
+		}
 		s_Data.QuadIndiceCount += 6;
 
 		//Statistics Count 

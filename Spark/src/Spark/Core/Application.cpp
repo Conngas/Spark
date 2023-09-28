@@ -1,7 +1,7 @@
 #include "spkpch.h"
 
 #include <glad/glad.h>
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 
 #include "Spark/Core/Log.h" 
 #include "Spark/Core/Input.h"
@@ -53,9 +53,9 @@ namespace Spark {
 		// Layer²¿·Ö
 		for (auto it = m_LayerStock.rbegin(); it != m_LayerStock.rend(); ++it)
 		{
-			(*it)->OnEvent(e);
 			if (e.m_Handled)
 				break;
+			(*it)->OnEvent(e);
 		}
 	}
 	

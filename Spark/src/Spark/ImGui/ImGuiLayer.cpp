@@ -65,6 +65,13 @@ namespace Spark {
 		ImGui::DestroyContext();
 	}
 
+	void ImGuiLayer::OnEvent(Event& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		e.m_Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+		e.m_Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+	}
+
 	void ImGuiLayer::OnImGuiRender()
 	{
 		static bool show = true;

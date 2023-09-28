@@ -1,6 +1,6 @@
 #include "spkpch.h"
 #include "Sandbox2D.h"
-#include "Spark/Core/Core.h"
+#include "Spark/Core/Base.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 #include <imgui/imgui.h>
@@ -17,6 +17,7 @@ void Sandbox2D::OnAttach()
 
 	m_SquareTexture = Spark::Texture2D::Create("Assets/Texture/Checkerboard.png");
 	m_QuadRotationTexture = Spark::Texture2D::Create("Assets/Texture/ChernoLogo.png");
+	m_SpriteSheet = Spark::Texture2D::Create("Assets/Game/Texture/RPGpack_sheet_2X.png");	
 
 	m_Particale.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
 	m_Particale.ColorEnd = { 254 / 255.0f, 109 / 255.0f,41 / 255.0f,1.0f };
@@ -50,6 +51,7 @@ void Sandbox2D::OnUpdate(Spark::Timestep ts)
 		Spark::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 	}
 
+#if 0 // Test Debug Scene
 	// Draw
 	{
 		SPK_PROFILE_SCOPE("Renderer2D::Renderer Draw");
@@ -73,7 +75,7 @@ void Sandbox2D::OnUpdate(Spark::Timestep ts)
 		}
 		Spark::Renderer2D::EndScene();
 	}
-
+#endif
 	// ≤‚ ‘ParticaleSystem
 	if (Spark::Input::IsMouseButtonPress(SPK_MOUSE_BUTTON_LEFT))
 	{
@@ -91,6 +93,11 @@ void Sandbox2D::OnUpdate(Spark::Timestep ts)
 	m_ParticaleSystem.OnUpdate(ts);
 	m_ParticaleSystem.OnRender(m_CameraController.GetCamera());
 
+	// ≤‚ ‘TextureSheet
+	// GAME RPG TEST
+	Spark::Renderer2D::BeginScene(m_CameraController.GetCamera());
+	Spark::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.1f }, { 20.0f,20.0f }, m_SpriteSheet, 1.0f);
+	Spark::Renderer2D::EndScene();
 }
 
 void Sandbox2D::OnImGuiRender()
