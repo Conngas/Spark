@@ -16,13 +16,23 @@
 #endif // SPK_PLATFROM_WINDOWS
 
 #ifdef SPK_DEBUG
+	#if defined(SPK_PLATFORM_WINDOWS)
+		#define SPK_DEBUGBREAK() __debugbreak()
+	#elif defined(SPK_PLATFORM_LINUX)
+		#include <signal.h>
+		#define SPK_DEBUGBREAK() raise(SIGTRAP)
+	#else
+		#error "Platform Does Not Support DebugBreak"
+	#endif
 	#define SPK_ENABLE_ASSERTS
+#else
+	#define SPK_DEBUGBREAK()
 #endif // HZ_DEBUG
 
 #ifdef SPK_ENABLE_ASSERTS
 	// 出错打印，并在错误处中断
-	#define SPK_ASSERT(x,...) {if(!(x)) { SPK_ERROR("Assertion Faild: {0}",__VA_ARGS__); __debugbreak(); }}
-	#define SPK_CORE_ASSERT(x,...) {if(!(x)) {SPK_CORE_ERROR("Assertion Faild: {0}",__VA_ARGS__); __debugbreak(); }}
+	#define SPK_ASSERT(x,...) {if(!(x)) { SPK_ERROR("Assertion Faild: {0}",__VA_ARGS__); SPK_DEBUGBREAK(); }}
+	#define SPK_CORE_ASSERT(x,...) {if(!(x)) {SPK_CORE_ERROR("Assertion Faild: {0}",__VA_ARGS__); SPK_DEBUGBREAK(); }}
 #else
 	#define SPK_ASSERT(x,...)
 	#define SPK_CORE_ASSERT(x,...)

@@ -71,7 +71,7 @@ namespace Spark {
 			json << "{";
 			json << "\"cat\":\"function\", ";
 			json << "\"dur\":" << (result.ElapsedTime.count()) << ',';
-			json << "\"name\":\"" << name << "\",";
+			json << "\"name\":\"" << result.Name << "\",";
 			json << "\"ph\":\"X\",";
 			json << "\"pid\":0,";
 			json << "\"tid\":" << result.ThreadID << ",";
