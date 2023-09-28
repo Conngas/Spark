@@ -19,6 +19,8 @@ void Sandbox2D::OnAttach()
 	m_QuadRotationTexture = Spark::Texture2D::Create("Assets/Texture/ChernoLogo.png");
 	m_SpriteSheet = Spark::Texture2D::Create("Assets/Game/Texture/RPGpack_sheet_2X.png");	
 
+	m_SubTex = Spark::SubTexture2D::CreateFromCoords(m_SpriteSheet, { 2,1 }, { 128,128 }, {1, 2});
+
 	m_Particale.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
 	m_Particale.ColorEnd = { 254 / 255.0f, 109 / 255.0f,41 / 255.0f,1.0f };
 	m_Particale.SizeBegine = 0.5f, m_Particale.SizeVariaion = 0.3f, m_Particale.SizeEnd = 0.0f;
@@ -96,7 +98,9 @@ void Sandbox2D::OnUpdate(Spark::Timestep ts)
 	// ≤‚ ‘TextureSheet
 	// GAME RPG TEST
 	Spark::Renderer2D::BeginScene(m_CameraController.GetCamera());
-	Spark::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.1f }, { 20.0f,20.0f }, m_SpriteSheet, 1.0f);
+	// Spark::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.1f }, { 1.0f,1.0f }, m_SpriteSheet, 1.0f);
+	// Spark::Renderer2D::DrawRotationQuad({ 0.0f, 0.0f, 0.1f }, { 1.0f,1.0f }, m_SpriteSheet, 45.0f);
+	Spark::Renderer2D::DrawQuad({ 0.0f, 0.0f, 1.0f }, { 1.0f, 2.0f }, m_SubTex);
 	Spark::Renderer2D::EndScene();
 }
 
