@@ -15,7 +15,7 @@ namespace Spark {
 	class Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Spark Editor");
 		virtual ~Application();
 
 	public:

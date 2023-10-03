@@ -23,7 +23,6 @@ private:
 	Spark::Ref<Spark::Texture2D> m_SquareTexture;
 	Spark::Ref<Spark::Texture2D> m_QuadRotationTexture;
 	Spark::Ref<Spark::Texture2D> m_SpriteSheet;
-	Spark::Ref<Spark::FrameBuffer> m_FrameBuffer;
 	Spark::Ref<Spark::SubTexture2D> m_SubTex;
 	
 	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f , 1.0f};
