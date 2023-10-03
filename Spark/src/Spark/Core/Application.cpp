@@ -78,6 +78,11 @@ namespace Spark {
 		layer->OnAttach();
 	}
 
+	void Application::Close()
+	{
+		m_windowRunning = false;
+	}
+
 	void Application::Run()
 	{
 		SPK_PROFILE_FUNCTION();

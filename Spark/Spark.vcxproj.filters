@@ -151,6 +151,8 @@
     <ClInclude Include="src\Spark\Debug\Instrumentation.h" />
     <ClInclude Include="src\Spark\SubSystem\ParticaleSystem.h" />
     <ClInclude Include="src\Spark\Renderer\SubTexture2D.h" />
+    <ClInclude Include="src\Spark\Renderer\FrameBuffer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLFrameBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
@@ -234,5 +236,7 @@
     <ClCompile Include="src\Spark\Core\Window.cpp" />
     <ClCompile Include="src\Spark\SubSystem\ParticaleSystem.cpp" />
     <ClCompile Include="src\Spark\Renderer\SubTexture2D.cpp" />
+    <ClCompile Include="src\Spark\Renderer\FrameBuffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLFrameBuffer.cpp" />
   </ItemGroup>
 </Project>
