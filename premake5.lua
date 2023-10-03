@@ -166,3 +166,55 @@ project "Sandbox"
             defines "SPK_DISTRIBUTION"
             runtime "Release"
             optimize "on"
+
+project "Spark-Editor"
+    location "Spark-Editor"
+    kind "ConsoleApp"
+    language "C++"
+    cppdialect "C++17"
+    staticruntime "on"
+    -- 设置编译输出目录
+    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("binInt/" .. outputdir .. "/%{prj.name}")
+    -- 归纳源代码文件
+    files
+    {
+        "%{prj.name}/src/**.h",
+        "%{prj.name}/src/**.cpp"
+    }
+    -- include文件
+    includedirs
+    {
+        "Spark/vendor/spdlog/include",
+        "Spark/src",
+        "Spark/vendor",
+        "%{IncludeDir.glm}"
+    }
+    -- 连接Sandbox到Spark
+    links
+    {
+        "Spark"
+    }
+    -- IDE编译器设置
+    filter "system:windows"
+        systemversion "latest"
+
+        defines
+        {
+            "SPK_PLATFORM_WINDOWS"
+        }
+        -- 创建过滤器
+        filter "configurations:Debug"
+            defines "SPK_DEBUG"
+            runtime "Debug"
+            symbols "on"
+
+        filter "configurations:Release"
+            defines "SPK_RELEASE"
+            runtime "Release"
+            optimize "on"
+
+        filter "configurations:Distribution"
+            defines "SPK_DISTRIBUTION"
+            runtime "Release"
+            optimize "on"

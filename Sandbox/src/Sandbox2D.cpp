@@ -139,12 +139,11 @@ void Sandbox2D::OnUpdate(Spark::Timestep ts)
 			Spark::Renderer2D::DrawQuad({ x - m_MapWidth / 2.0f,y - m_MapHeight / 2.0f,0.5f }, { 1.0f,1.0f }, subtexture);
 		}
 	}
-
 	Spark::Renderer2D::EndScene();
 }
 
 void Sandbox2D::OnImGuiRender()
-{
+{	
 	ImGui::Begin("Settings");
 	// Statistics
 	auto stats = Spark::Renderer2D::GetStats();
@@ -153,7 +152,6 @@ void Sandbox2D::OnImGuiRender()
 	ImGui::Text("Quads: %d", stats.QuadCount);
 	ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 	ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
 	ImGui::End();
 }

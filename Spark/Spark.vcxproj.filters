@@ -19,6 +19,9 @@
     <Filter Include="src\Spark\Core">
       <UniqueIdentifier>{F5D0047C-E19E-F881-CA32-69A8B69FD4E6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Spark\Debug">
+      <UniqueIdentifier>{B34AABFC-1FD6-18C1-28E7-9BB594F174C1}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Spark\Event">
       <UniqueIdentifier>{8EC1C6FC-FA4C-34C1-035E-B7B56F6890C1}</UniqueIdentifier>
     </Filter>
@@ -27,6 +30,9 @@
     </Filter>
     <Filter Include="src\Spark\Renderer">
       <UniqueIdentifier>{C3F62570-AFDA-E6C5-183B-E118043ED147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Spark\SubSystem">
+      <UniqueIdentifier>{7BB786EB-E718-64F9-7086-AAABDCE69AB8}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
@@ -40,6 +46,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLFrameBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
@@ -96,6 +105,9 @@
     <ClInclude Include="src\Spark\Core\Window.h">
       <Filter>src\Spark\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\Debug\Instrumentation.h">
+      <Filter>src\Spark\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\Spark\Event\ApplicationEvent.h">
       <Filter>src\Spark\Event</Filter>
     </ClInclude>
@@ -114,6 +126,9 @@
     <ClInclude Include="src\Spark\Renderer\Buffer.h">
       <Filter>src\Spark\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\FrameBuffer.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Spark\Renderer\GraphicsContext.h">
       <Filter>src\Spark\Renderer</Filter>
     </ClInclude>
@@ -129,10 +144,16 @@
     <ClInclude Include="src\Spark\Renderer\Renderer.h">
       <Filter>src\Spark\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\Renderer2D.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Spark\Renderer\RendererAPI.h">
       <Filter>src\Spark\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Spark\Renderer\Shader.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\SubTexture2D.h">
       <Filter>src\Spark\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Spark\Renderer\Texture.h">
@@ -141,22 +162,24 @@
     <ClInclude Include="src\Spark\Renderer\VertexArray.h">
       <Filter>src\Spark\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\SubSystem\ParticaleSystem.h">
+      <Filter>src\Spark\SubSystem</Filter>
+    </ClInclude>
     <ClInclude Include="src\spkpch.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Spark\Renderer\Renderer2D.h" />
-    <ClInclude Include="src\Spark\Debug\Instrumentation.h" />
-    <ClInclude Include="src\Spark\SubSystem\ParticaleSystem.h" />
-    <ClInclude Include="src\Spark\Renderer\SubTexture2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLFrameBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
@@ -180,6 +203,9 @@
     <ClCompile Include="src\Spark\Core\Application.cpp">
       <Filter>src\Spark\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Spark\Core\Input.cpp">
+      <Filter>src\Spark\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Spark\Core\Layer.cpp">
       <Filter>src\Spark\Core</Filter>
     </ClCompile>
@@ -189,6 +215,9 @@
     <ClCompile Include="src\Spark\Core\Log.cpp">
       <Filter>src\Spark\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Spark\Core\Window.cpp">
+      <Filter>src\Spark\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Spark\ImGui\ImGuiBuild.cpp">
       <Filter>src\Spark\ImGui</Filter>
     </ClCompile>
@@ -196,6 +225,12 @@
       <Filter>src\Spark\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Spark\Renderer\Buffer.cpp">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Renderer\FrameBuffer.cpp">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Renderer\GraphicsContext.cpp">
       <Filter>src\Spark\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Spark\Renderer\OrthographicCamera.cpp">
@@ -210,10 +245,16 @@
     <ClCompile Include="src\Spark\Renderer\Renderer.cpp">
       <Filter>src\Spark\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Spark\Renderer\Renderer2D.cpp">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Spark\Renderer\RendererAPI.cpp">
       <Filter>src\Spark\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Spark\Renderer\Shader.cpp">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Renderer\SubTexture2D.cpp">
       <Filter>src\Spark\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Spark\Renderer\Texture.cpp">
@@ -222,17 +263,14 @@
     <ClCompile Include="src\Spark\Renderer\VertexArray.cpp">
       <Filter>src\Spark\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Spark\SubSystem\ParticaleSystem.cpp">
+      <Filter>src\Spark\SubSystem</Filter>
+    </ClCompile>
     <ClCompile Include="src\spkpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Spark\Renderer\Renderer2D.cpp" />
-    <ClCompile Include="src\Spark\Renderer\GraphicsContext.cpp" />
-    <ClCompile Include="src\Spark\Core\Input.cpp" />
-    <ClCompile Include="src\Spark\Core\Window.cpp" />
-    <ClCompile Include="src\Spark\SubSystem\ParticaleSystem.cpp" />
-    <ClCompile Include="src\Spark\Renderer\SubTexture2D.cpp" />
   </ItemGroup>
 </Project>

@@ -12,14 +12,14 @@ namespace Spark {
 
 	Application* Application::s_Instance = nullptr;
 
-	Application::Application()
+	Application::Application(const std::string& name)
 	{
 		SPK_PROFILE_FUNCTION();
 
 		SPK_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 		// 创建Window
-		m_Window = Window::Create();
+		m_Window = Window::Create(WindowProps(name));
 		// 将事件处理程序绑定到WindowData的一个变量，这样通过该变量即可调用该函数
 		m_Window->SetEventCallback(SPK_BIND_EVENT_FN(Application::OnEvent));
 
@@ -38,7 +38,7 @@ namespace Spark {
 	} 
 
 	/// <summary>
-	/// 事件响应函数
+	/// 事件响应函数ndow
 	/// </summary>
 	/// <param name="e"></param>
 	void Application::OnEvent(Event& e)
@@ -76,6 +76,11 @@ namespace Spark {
 
 		m_LayerStock.PushOverLay(layer);
 		layer->OnAttach();
+	}
+
+	void Application::Close()
+	{
+		m_windowRunning = false;
 	}
 
 	void Application::Run()
