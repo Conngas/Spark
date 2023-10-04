@@ -16,6 +16,7 @@ namespace Spark {
 	public:
 		virtual void Bind() const = 0;
 		virtual void UnBind() const = 0;
+		virtual void Resize(uint32_t width, uint32_t height) = 0;
 
 		virtual const uint32_t GetColorAttchment() const = 0;
 		virtual const FrameBufferSpecification& GetSpecification() const = 0;
