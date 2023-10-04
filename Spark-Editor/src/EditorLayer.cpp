@@ -208,7 +208,7 @@ namespace Spark {
 		{
 			if (ImGui::BeginMenu("File"))
 			{
-				// Disabling fullscreen would allow the window to be moved to the front of other windows, 
+				// Disabling full screen would allow the window to be moved to the front of other windows, 
 				// which we can't undo at the moment without finer window depth/z control.
 				//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
 
@@ -228,11 +228,25 @@ namespace Spark {
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
-
-		// 获取渲染器
-		uint32_t textureID = m_FrameBuffer->GetColorAttchment();
-		ImGui::Image((void*)textureID, ImVec2{ 800.0f, 600.0f },ImVec2{0,1},ImVec2{1,0});
 		ImGui::End();
+
+		// 窗口铺满
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
+		ImGui::Begin("ViewPort");
+		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+		// 获取渲染器自适应窗口大小（vp强制转换为ViewportSize）
+		if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize))
+		{
+			m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+			m_FrameBuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
+
+			m_CameraController.OnResize((uint32_t)viewportPanelSize.x, viewportPanelSize.y);
+		}
+		uint32_t textureID = m_FrameBuffer->GetColorAttchment();
+		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y },ImVec2{0,1},ImVec2{1,0});
+		ImGui::End();
+		ImGui::PopStyleVar();
+
 		ImGui::End();
 	}
 
