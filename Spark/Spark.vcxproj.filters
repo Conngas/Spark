@@ -63,9 +63,6 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Windows\WindowsInput.h">
-      <Filter>src\Platform\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
       <Filter>src\Platform\Windows</Filter>
     </ClInclude>
@@ -94,9 +91,6 @@
       <Filter>src\Spark\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Spark\Core\Log.h">
-      <Filter>src\Spark\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Spark\Core\MouseButtonCodes.h">
       <Filter>src\Spark\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Spark\Core\Timestep.h">
@@ -171,6 +165,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\Core\MouseCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
@@ -201,9 +196,6 @@
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Spark\Core\Application.cpp">
-      <Filter>src\Spark\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Spark\Core\Input.cpp">
       <Filter>src\Spark\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Spark\Core\Layer.cpp">

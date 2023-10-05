@@ -74,9 +74,8 @@ namespace Spark {
 		SPK_PROFILE_FUNCTION();
 
 		// Update
-		{
+		if(m_ViewportFocused)
 			m_CameraController.OnUpdate(ts);
-		}
 
 		Spark::Renderer2D::ResetStats();
 		// Render
@@ -115,7 +114,7 @@ namespace Spark {
 		}
 	#endif
 		// 测试ParticaleSystem
-		if (Spark::Input::IsMouseButtonPress(SPK_MOUSE_BUTTON_LEFT))
+		if (Spark::Input::IsMouseButtonPressed(SPK_MOUSE_BUTTON_LEFT))
 		{
 			auto [x, y] = Spark::Input::GetMousePosition();
 			auto width = Spark::Application::Get().GetWindow().GetWidth();
@@ -233,6 +232,10 @@ namespace Spark {
 		// 窗口铺满
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 		ImGui::Begin("ViewPort");
+		// 更新窗口聚焦状态
+		m_ViewportFocused = ImGui::IsWindowFocused();
+		m_ViewportHovered = ImGui::IsWindowHovered();
+		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		// 获取渲染器自适应窗口大小（vp强制转换为ViewportSize）
 		if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize))
