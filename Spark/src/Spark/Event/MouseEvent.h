@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Event.h"
+#include "Spark/Event/Event.h"
+#include "Spark/Core/Input.h"
 
 namespace Spark {
 	/// <summary>
@@ -58,13 +59,13 @@ namespace Spark {
 	class SPARK_API MouseButtonEvent : public Event
 	{
 	public:
-		inline int GetMouseButton() const { return m_Button; }
+		inline MouseCode GetMouseButton() const { return m_Button; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	
 	protected:
-		MouseButtonEvent(int button) : m_Button(button){}
-		int m_Button;
+		MouseButtonEvent(MouseCode button) : m_Button(button){}
+		MouseCode m_Button;
 	};
 
 	/// <summary>
@@ -73,7 +74,7 @@ namespace Spark {
 	class SPARK_API MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonPressedEvent(int button): MouseButtonEvent(button) {}
+		MouseButtonPressedEvent(MouseCode button): MouseButtonEvent(button) {}
 
 		std::string ToString() const override
 		{
@@ -91,7 +92,7 @@ namespace Spark {
 	class SPARK_API MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
-		MouseButtonReleasedEvent(int button) : MouseButtonEvent(button) {}
+		MouseButtonReleasedEvent(MouseCode button) : MouseButtonEvent(button) {}
 
 		std::string ToString() const override
 		{

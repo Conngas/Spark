@@ -12,7 +12,7 @@
 
 #include "Spark/Core/Input.h"
 #include "Spark/Core/KeyCodes.h"
-#include "Spark/Core/MouseButtonCodes.h"
+#include "Spark/Core/MouseCodes.h"
 #include "Spark/Renderer/OrthographicCameraController.h"
 
 //////////////////////////////////////////////////////////////////////////

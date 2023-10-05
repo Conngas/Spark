@@ -20,7 +20,9 @@ namespace Spark {
 
 		void Begin();
 		void End();
+		void BlockEvents(bool block) { m_BlockEvent = block; }
 	private:
+		float m_BlockEvent = true;
 		float m_Time = 0.0f;
 	};
 }

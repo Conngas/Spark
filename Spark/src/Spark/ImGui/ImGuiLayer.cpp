@@ -67,10 +67,12 @@ namespace Spark {
 
 	void ImGuiLayer::OnEvent(Event& e)
 	{
-		// 注销掉之后可以在视窗内操作，但是所有视窗都能操作，不符合常理
-		ImGuiIO& io = ImGui::GetIO();
-		e.m_Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
-		e.m_Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		if (m_BlockEvent)
+		{
+			ImGuiIO& io = ImGui::GetIO();
+			e.m_Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+			e.m_Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+		}
 	}
 
 	void ImGuiLayer::OnImGuiRender()

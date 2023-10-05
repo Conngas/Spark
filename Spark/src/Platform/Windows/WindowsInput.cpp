@@ -1,26 +1,26 @@
 #include "spkpch.h"
 #include "Spark/Core/Application.h"
-#include "Platform/Windows/WindowsInput.h"
+#include "Spark/Core/Input.h"
 
 #include <GLFW/glfw3.h>
 
 namespace Spark {
 
-	bool WindowsInput::IsKeyPressedImpl(int keycode)
+	bool Input::IsKeyPressed(KeyCode keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
-		auto statue = glfwGetKey(window, keycode);
+		auto statue = glfwGetKey(window, static_cast<int32_t>(keycode));
 		return statue == GLFW_PRESS || statue == GLFW_REPEAT;
 	}
 
-	bool WindowsInput::IsMouseButtonPressedImpl(int button)
+	bool Input::IsMouseButtonPressed(MouseCode button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
-		auto statue = glfwGetMouseButton(window, button);
+		auto statue = glfwGetMouseButton(window, static_cast<int32_t>(button));
 		return statue == GLFW_PRESS || statue == GLFW_REPEAT;
 	}
 
-	std::pair<float, float> WindowsInput::GetMousePositionImpl()
+	std::pair<float, float> Input::GetMousePosition()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		double xpos, ypos;
@@ -28,19 +28,19 @@ namespace Spark {
 		return { (float)xpos,(float)ypos };
 	}
 
-	float WindowsInput::GetMouseXImpl()
+	float Input::GetMouseX()
 	{
 		// C++14 й╣ож
-		// auto v = GetMousePositionImpl();
+		// auto v = GetMousePosition();
 		// return std::get<0>(v);
 		// C++17
-		auto [x, y] = GetMousePositionImpl();
+		auto [x, y] = GetMousePosition();
 		return x;
 	}
 
-	float WindowsInput::GetMouseYImpl()
+	float Input::GetMouseY()
 	{
-		auto [x, y] = GetMousePositionImpl();
+		auto [x, y] = GetMousePosition();
 		return y;
 	}
 }
