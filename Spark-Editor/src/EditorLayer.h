@@ -28,6 +28,9 @@ namespace Spark {
 		Ref<Texture2D> m_SpriteSheet;
 		Ref<FrameBuffer> m_FrameBuffer;
 		Ref<SubTexture2D> m_SubTex;
+
+		Ref<Scene> m_ActiveScene;
+		entt::entity m_SquareEntity;
 		
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 		glm::vec2 m_ViewportSize;

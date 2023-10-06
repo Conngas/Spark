@@ -8,7 +8,7 @@ namespace Spark {
 	/// <summary>
 	/// KeyEvent基类
 	/// </summary>
-	class SPARK_API KeyEvent : public Event
+	class KeyEvent : public Event
 	{
 	public:
 		inline KeyCode GetKeyCode() const { return m_KeyCode; }
@@ -23,7 +23,7 @@ namespace Spark {
 	/// <summary>
 	/// 键盘按下事件
 	/// </summary>
-	class SPARK_API KeyPressedEvent : public KeyEvent
+	class KeyPressedEvent : public KeyEvent
 	{
 	public:
 		KeyPressedEvent(KeyCode keycode,int repeatCount): KeyEvent(keycode), m_RepeatCount(repeatCount) {}
@@ -46,7 +46,7 @@ namespace Spark {
 	/// <summary>
 	/// 键盘释放事件
 	/// </summary>
-	class SPARK_API KeyReleasedEvent : public KeyEvent
+	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
 		KeyReleasedEvent(KeyCode keycode) : KeyEvent(keycode){}
@@ -63,7 +63,7 @@ namespace Spark {
 	/// <summary>
 	/// 键盘按键事件
 	/// </summary>
-	class SPARK_API KeyTypedEvent : public KeyEvent
+	class KeyTypedEvent : public KeyEvent
 	{
 	public:
 		KeyTypedEvent(KeyCode keycode)

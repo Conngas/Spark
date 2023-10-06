@@ -61,6 +61,13 @@ namespace Spark {
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_FrameBuffer = Spark::FrameBuffer::Create(fbSpec);
+
+		m_ActiveScene = CreateRef<Scene>();
+
+		auto square = m_ActiveScene->CreateEntity();
+		m_ActiveScene->Reg().emplace<TransformComponent>(square);
+		m_ActiveScene->Reg().emplace<SpriteRendererComponent>(square, glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
+		m_SquareEntity = square;
 	}
 
 	void EditorLayer::OnDetach()
@@ -68,12 +75,21 @@ namespace Spark {
 		SPK_PROFILE_FUNCTION();
 	}
 
-	void EditorLayer::OnUpdate(Spark::Timestep ts)
+	void EditorLayer::OnUpdate(Timestep ts)
 	{
 		// Instrument
 		SPK_PROFILE_FUNCTION();
 
-		// Update
+		// Resize 当屏幕比例不相等时立即Resize
+		if (Spark::FrameBufferSpecification spec = m_FrameBuffer->GetSpecification();
+			m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
+			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+		{
+			m_FrameBuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+		}
+
+		// Update Cam
 		if(m_ViewportFocused)
 			m_CameraController.OnUpdate(ts);
 
@@ -133,10 +149,11 @@ namespace Spark {
 		// 测试TextureSheet
 		// GAME RPG TEST
 		Spark::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		// Spark::Renderer2D::DrawQuad({ 0.0f, 0.0f, 0.1f }, { 1.0f,1.0f }, m_SpriteSheet, 1.0f);
-		// Spark::Renderer2D::DrawRotationQuad({ 0.0f, 0.0f, 0.1f }, { 1.0f,1.0f }, m_SpriteSheet, 45.0f);
-		// Spark::Renderer2D::DrawQuad({ 0.0f, 0.0f, 1.0f }, { 1.0f, 2.0f }, m_SubTex);
 
+		// Update Scene
+		m_ActiveScene->OnUpdate(ts);
+
+		// Update Map Tile
 		for (uint32_t y = 0; y < m_MapHeight; ++y)
 		{
 			for (uint32_t x = 0; x < m_MapWidth; ++x)
@@ -148,7 +165,7 @@ namespace Spark {
 				else
 					subtexture = m_SubTex;
 
-				Spark::Renderer2D::DrawQuad({ x - m_MapWidth / 2.0f,y - m_MapHeight / 2.0f,0.5f }, { 1.0f,1.0f }, subtexture);
+				Renderer2D::DrawQuad({ x - m_MapWidth / 2.0f,y - m_MapHeight / 2.0f, -1.0f }, { 1.0f,1.0f }, subtexture);
 			}
 		}
 		Spark::Renderer2D::EndScene();
@@ -226,7 +243,10 @@ namespace Spark {
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+
+		auto& squareColor = m_ActiveScene->Reg().get<SpriteRendererComponent>(m_SquareEntity).Color;
+		ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
+
 		ImGui::End();
 
 		// 窗口铺满
@@ -237,14 +257,7 @@ namespace Spark {
 		m_ViewportHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		// 获取渲染器自适应窗口大小（vp强制转换为ViewportSize）
-		if (m_ViewportSize != *((glm::vec2*)&viewportPanelSize))
-		{
-			m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-			m_FrameBuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
-
-			m_CameraController.OnResize((uint32_t)viewportPanelSize.x, viewportPanelSize.y);
-		}
+		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 		uint32_t textureID = m_FrameBuffer->GetColorAttchment();
 		ImGui::Image((void*)textureID, ImVec2{ m_ViewportSize.x, m_ViewportSize.y },ImVec2{0,1},ImVec2{1,0});
 		ImGui::End();

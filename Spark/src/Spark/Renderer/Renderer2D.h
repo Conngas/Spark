@@ -14,11 +14,10 @@ namespace Spark {
 		static void BeginScene(const OrthographicCamera& camera);
 		static void EndScene();
 		static void Flush();
-		static void DrawPart(const glm::vec3& position, const glm::vec2& size, const glm::vec2* texCoords, const size_t qVCount,
-							 const Ref<Texture2D>& texture,
-							 float rotation = 0.0f , float tileCount = 1.0f, 
-							 const glm::vec4& color = glm::vec4(1.0f));
 
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color, float tileCount = 1.0f);
+		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tileCount = 1.0f, const glm::vec4& textureColor = glm::vec4(1.0f));
+		static void DrawQuad(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float tileCount = 1.0f, const glm::vec4& textureColor = glm::vec4(1.0f));
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec3& color, float tileCount = 1.0f);
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, float tileCount = 1.0f);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float tileCount = 1.0f);
@@ -27,6 +26,8 @@ namespace Spark {
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, float tileCount = 1.0f, const glm::vec4& textureColor = glm::vec4(1.0f));
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, float tileCount = 1.0f, const glm::vec4& textureColor = glm::vec4(1.0f));
 
+		static void DrawRotationQuad(const glm::mat4& transform, const glm::vec4& color, float tileCount, float textureScale = 1.0f);
+		static void DrawRotationQuad(const glm::mat4& transform, const Ref<Texture2D>& texture,float tileCount = 1.0f, const glm::vec4& textureColor = glm::vec4(1.0f));
 		static void DrawRotationQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec3& color, float tileCount, float textureScale = 1.0f);
 		static void DrawRotationQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color, float tileCount, float textureScale = 1.0f);
 		static void DrawRotationQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float tileCount, float textureScale = 1.0f);
@@ -46,6 +47,20 @@ namespace Spark {
 		static void ResetStats();
 		static Statistics GetStats();
 	private:
+		static void DrawPart(const glm::vec3& position, const glm::vec2& size, const glm::vec2* texCoords, const size_t qVCount,
+							 float rotation, float tileCount,
+							 const glm::vec4& color);
+		static void DrawPart(const glm::mat4& transform, const glm::vec2* texCoords, const size_t qVCount,
+							 float tileCount,
+							 const glm::vec4& color);
+		static void DrawPart(const glm::vec3& position, const glm::vec2& size, const glm::vec2* texCoords, const size_t qVCount,
+							 const Ref<Texture2D>& texture,
+							 float rotation = 0.0f , float tileCount = 1.0f, 
+							 const glm::vec4& color = glm::vec4(1.0f));
+		static void DrawPart(const glm::mat4& transform, const glm::vec2* texCoords, const size_t qVCount,
+							 const Ref<Texture2D>& texture,
+							 float tileCount = 1.0f,
+							 const glm::vec4& color = glm::vec4(1.0f));
 		static void FlushAndReset();
 
 	};

@@ -5,7 +5,7 @@
 
 namespace Spark {
 	
-	class SPARK_API LayerStack
+	class LayerStack
 	{
 	public:
 		LayerStack();

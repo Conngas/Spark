@@ -48,7 +48,7 @@ namespace Spark {
 	/// <summary>
 	/// 事件系统基类
 	/// </summary>
-	class SPARK_API Event
+	class Event
 	{
 		friend class EventDispatcher;
 	public:

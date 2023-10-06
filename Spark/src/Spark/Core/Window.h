@@ -19,7 +19,7 @@ namespace Spark {
 
 
 	// 桌面系统的窗口API
-	class SPARK_API Window
+	class Window
 	{
 	public:
 		using EventCallbackFn = std::function<void(Event&)>;
