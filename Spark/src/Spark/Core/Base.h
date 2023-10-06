@@ -31,7 +31,7 @@
 #endif
 
 #ifdef SPK_DEBUG
-	#if defined(SPK_PLATFORM_WINDOWS)
+	#ifdef SPK_PLATFORM_WINDOWS
 		#define SPK_DEBUGBREAK() __debugbreak()
 	#elif defined(SPK_PLATFORM_LINUX)
 		#include <signal.h>

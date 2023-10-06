@@ -16,6 +16,7 @@
 #include "Spark/Renderer/OrthographicCameraController.h"
 
 #include "Spark/Scenes/Scene.h"
+#include "Spark/Scenes/Entity.h"
 #include "Spark/Scenes/Component.h"
 
 //////////////////////////////////////////////////////////////////////////
