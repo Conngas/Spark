@@ -93,6 +93,9 @@
     <ClInclude Include="src\Spark\Core\Log.h">
       <Filter>src\Spark\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\Core\MouseCodes.h">
+      <Filter>src\Spark\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Spark\Core\Timestep.h">
       <Filter>src\Spark\Core</Filter>
     </ClInclude>
@@ -165,7 +168,8 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Spark\Core\MouseCodes.h" />
+    <ClInclude Include="src\Spark\Scenes\Scene.h" />
+    <ClInclude Include="src\Spark\Scenes\Component.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
@@ -264,5 +268,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Spark\Scenes\Scene.cpp" />
   </ItemGroup>
 </Project>

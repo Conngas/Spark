@@ -18,6 +18,8 @@ workspace "Spark"
     IncludeDir["ImGui"] = "Spark/vendor/imgui"
     IncludeDir["glm"] = "Spark/vendor/glm"
     IncludeDir["stb_image"] = "Spark/vendor/stb_image"
+    
+    IncludeDir["entt"] = "Spark/vendor/entt/include"
 
     -- 组依赖（include）
     -- include "Spark/vendor/GLFW"
@@ -69,7 +71,8 @@ project "Spark"
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.stb_image}"
+        "%{IncludeDir.stb_image}",
+        "%{IncludeDir.entt}"
     }
 
     -- link文件
@@ -136,7 +139,8 @@ project "Sandbox"
         "Spark/vendor/spdlog/include",
         "Spark/src",
         "Spark/vendor",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.entt}"
     }
     -- 连接Sandbox到Spark
     links
@@ -188,7 +192,8 @@ project "Spark-Editor"
         "Spark/vendor/spdlog/include",
         "Spark/src",
         "Spark/vendor",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.entt}"
     }
     -- 连接Sandbox到Spark
     links

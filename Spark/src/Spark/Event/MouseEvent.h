@@ -7,7 +7,7 @@ namespace Spark {
 	/// <summary>
 	/// 鼠标移动事件
 	/// </summary>
-	class SPARK_API MouseMovedEvent : public Event
+	class MouseMovedEvent : public Event
 	{
 	public:
 		MouseMovedEvent(float x,float y):m_MouseX(x),m_MouseY(y){}
@@ -31,7 +31,7 @@ namespace Spark {
 	/// <summary>
 	/// 鼠标滚轮事件
 	/// </summary>
-	class SPARK_API MouseScrollEvent : public Event
+	class MouseScrollEvent : public Event
 	{
 	public:
 		MouseScrollEvent(float xOffset,float yOffset):m_XOffset(xOffset),m_YOffset(yOffset){}
@@ -56,7 +56,7 @@ namespace Spark {
 	/// <summary>
 	/// 鼠标按钮事件基类
 	/// </summary>
-	class SPARK_API MouseButtonEvent : public Event
+	class MouseButtonEvent : public Event
 	{
 	public:
 		inline MouseCode GetMouseButton() const { return m_Button; }
@@ -71,7 +71,7 @@ namespace Spark {
 	/// <summary>
 	/// 鼠标按钮按下事件
 	/// </summary>
-	class SPARK_API MouseButtonPressedEvent : public MouseButtonEvent
+	class MouseButtonPressedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonPressedEvent(MouseCode button): MouseButtonEvent(button) {}
@@ -89,7 +89,7 @@ namespace Spark {
 	/// <summary>
 	/// 鼠标按钮释放事件
 	/// </summary>
-	class SPARK_API MouseButtonReleasedEvent : public MouseButtonEvent
+	class MouseButtonReleasedEvent : public MouseButtonEvent
 	{
 	public:
 		MouseButtonReleasedEvent(MouseCode button) : MouseButtonEvent(button) {}

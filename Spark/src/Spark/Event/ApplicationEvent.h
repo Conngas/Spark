@@ -6,7 +6,7 @@ namespace Spark {
 	/// <summary>
 	/// WindowResize 事件
 	/// </summary>
-	class SPARK_API WindowResizeEvent : public Event
+	class WindowResizeEvent : public Event
 	{
 	public:
 		WindowResizeEvent(unsigned int width,unsigned int height)
@@ -33,7 +33,7 @@ namespace Spark {
 	/// <summary>
 	/// 窗口关闭事件
 	/// </summary>
-	class SPARK_API WindowCloseEvent : public Event
+	class WindowCloseEvent : public Event
 	{
 	public:
 		WindowCloseEvent() = default;
@@ -45,7 +45,7 @@ namespace Spark {
 	/// <summary>
 	/// App 同步事件
 	/// </summary>
-	class SPARK_API AppTickEvent : public Event
+	class AppTickEvent : public Event
 	{
 	public:
 		AppTickEvent() = default;
@@ -57,7 +57,7 @@ namespace Spark {
 	/// <summary>
 	/// App 更新事件
 	/// </summary>
-	class SPARK_API AppUpdateEvent : public Event
+	class AppUpdateEvent : public Event
 	{
 	public:
 		AppUpdateEvent() = default;
@@ -69,7 +69,7 @@ namespace Spark {
 	/// <summary>
 	/// App 渲染事件
 	/// </summary>
-	class SPARK_API AppRenderEvent : public Event
+	class AppRenderEvent : public Event
 	{
 	public:
 		AppRenderEvent() = default;

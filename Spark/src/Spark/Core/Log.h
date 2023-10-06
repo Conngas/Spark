@@ -6,7 +6,7 @@
 #include <spdlog/fmt/ostr.h>
 
 namespace Spark {
-	class SPARK_API Log
+	class Log
 	{
 	public:
 		static void Init();

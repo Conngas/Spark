@@ -150,9 +150,55 @@ namespace Spark {
 	}
 
 	void Renderer2D::DrawPart(const glm::vec3& position, const glm::vec2& size, const glm::vec2* texCoords, const size_t qVCount,
+							  float rotation, float tileCount,
+							  const glm::vec4& color)
+	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		DrawPart(transform, texCoords, qVCount, tileCount, color);
+	}
+	void Renderer2D::DrawPart(const glm::mat4& transform, const glm::vec2* texCoords, const size_t qVCount,
+							  float tileCount,
+							  const glm::vec4& color)
+	{
+		// 边界判定
+		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxIndice)
+			FlushAndReset();
+
+		// 设定参数，TexIndex 0.0 是纯白Texture
+		const float texIndex = 0.0f;
+
+		// 批处理填入数据
+		for (size_t i = 0; i < qVCount; i++)
+		{
+			s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[i];
+			s_Data.QuadVertexBufferPtr->Color = color;
+			s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
+			s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+			s_Data.QuadVertexBufferPtr->TileCount = tileCount;
+			s_Data.QuadVertexBufferPtr++;
+		}
+		s_Data.QuadIndiceCount += 6;
+
+		//Statistics Count 
+		s_Data.Stats.QuadCount++;
+	}
+	void Renderer2D::DrawPart(const glm::vec3& position, const glm::vec2& size, const glm::vec2* texCoords, const size_t qVCount,
 							  const Ref<Texture2D>& texture,
 							  float rotation , float tileCount ,
 							  const glm::vec4& color )
+	{
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		DrawPart(transform, texCoords, qVCount, texture, tileCount, color);
+	}
+	void Renderer2D::DrawPart(const glm::mat4& transform, const glm::vec2* texCoords, const size_t qVCount,
+							  const Ref<Texture2D>& texture,
+							  float tileCount,
+							  const glm::vec4& color)
 	{
 		// 边界判定
 		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxTextureSlots)
@@ -178,10 +224,6 @@ namespace Spark {
 			s_Data.TextureSlotIndex++;
 		}
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-
 		// 批处理填入数据
 		for (size_t i = 0; i < qVCount; i++)
 		{
@@ -197,7 +239,46 @@ namespace Spark {
 		//Statistics Count 
 		s_Data.Stats.QuadCount++;
 	}
+		
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, float tileCount)
+	{
+		SPK_PROFILE_FUNCTION();
+		// 设定参数
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec2 texCoords[] = { {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
+		
+		DrawPart(transform, texCoords, quadVertexCount ,tileCount, color);
+	}
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tileCount, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
+	{
+		SPK_PROFILE_FUNCTION();
+		// 材质剪裁
+		constexpr float x = 2.0f, y = 3.0f;
+		constexpr float sheetWidth = 2560, sheetHeight = 1664;
+		constexpr float spriteWidth = 128, spriteHeight = 128;
+		// 设定参数
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec2 texCoords[] =
+		{
+			{(x * spriteWidth) / sheetWidth, (y * spriteHeight) / sheetHeight},
+			{((x + 1) * spriteWidth) / sheetWidth, (y * spriteHeight) / sheetHeight},
+			{((x + 1) * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight},
+			{(x * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight}
+		};
 
+		DrawPart(transform, texCoords, quadVertexCount, texture, tileCount, textureColor);
+	}
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<SubTexture2D>& subtexture, float tileCount, const glm::vec4& textureColor)
+	{
+		SPK_PROFILE_FUNCTION();
+		// 设定参数
+		constexpr size_t quadVertexCount = 4;
+		const glm::vec2* texCoords = subtexture->GetTexCoords();
+		const Ref<Texture2D> texture = subtexture->GetTexture();
+
+		// 调用绘制Texture函数
+		DrawPart(transform, texCoords, quadVertexCount, texture, tileCount, textureColor);
+	}
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec3& color, float tileCount)
 	{
 		DrawQuad({ position.x, position.y, 0.0f }, size, { color.r,color.g,color.b,1.0f }, tileCount);
@@ -209,6 +290,19 @@ namespace Spark {
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float tileCount)
 	{
 		SPK_PROFILE_FUNCTION();
+		// 设定参数
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec2 texCoords[] = { {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
+
+		DrawPart(position, size, texCoords, quadVertexCount, 0.0f, tileCount, color);
+	}
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tileCount, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
+	{
+		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tileCount, textureColor);
+	}
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tileCount, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
+	{
+		SPK_PROFILE_FUNCTION();
 		// 材质剪裁
 		constexpr float x = 2.0f, y = 3.0f;
 		constexpr float sheetWidth = 2560, sheetHeight = 1664;
@@ -223,43 +317,8 @@ namespace Spark {
 			{(x * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight}
 		};
 
-		// 边界判定
-		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxIndice)
-			FlushAndReset();
-
-		// 设定参数，TexIndex 0.0 是纯白Texture
-		const float texIndex = 0.0f;
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) 
-			* glm::scale(glm::mat4(1.0f), {size.x, size.y, 1.0f});
-		
-		// 批处理填入数据
-		for (size_t i = 0; i < quadVertexCount; i++)
-		{
-			s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[i];
-			s_Data.QuadVertexBufferPtr->Color = color;
-			s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
-			s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-			s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-			s_Data.QuadVertexBufferPtr++;
-		}
-		s_Data.QuadIndiceCount += 6;
-
-		//Statistics Count 
-		s_Data.Stats.QuadCount++;
-	}
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tileCount, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
-	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tileCount, textureColor);
-	}
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tileCount, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
-	{
-		SPK_PROFILE_FUNCTION();
-		// 设定参数
-		constexpr size_t quadVertexCount = 4;
-		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
-		constexpr glm::vec2 texCoords[] = {{0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f}};
-
-		DrawPart(position, size, texCoords, quadVertexCount,texture);
+		// 调用绘制函数，后三个参数默认
+		DrawPart(position, size, texCoords, quadVertexCount,texture,0.0f, tileCount, textureColor);
 	}
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& subtexture, float tileCount, const glm::vec4& textureColor)
 	{
@@ -270,12 +329,11 @@ namespace Spark {
 		SPK_PROFILE_FUNCTION();
 		// 设定参数
 		constexpr size_t quadVertexCount = 4;
-		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		const glm::vec2* texCoords = subtexture->GetTexCoords();
 		const Ref<Texture2D> texture = subtexture->GetTexture();
 
 		// 调用绘制Texture函数
-		DrawPart(position, size, texCoords, quadVertexCount, texture);
+		DrawPart(position, size, texCoords, quadVertexCount, texture, 0.0f, tileCount, textureColor);
 	}
 
 	/// <summary>
@@ -286,6 +344,35 @@ namespace Spark {
 	/// <param name="color">颜色（RGB数值）</param>
 	/// <param name="rotation">旋转（角度值°）</param>
 	/// <param name="tileCount">密度</param>
+	void Renderer2D::DrawRotationQuad(const glm::mat4& transform, const glm::vec4& color, float tileCount /*= 1.0f*/, float textureScale /*=1.0f*/)
+	{
+		SPK_PROFILE_FUNCTION();
+		// 设定参数
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec2 texCoords[] = { {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
+
+		DrawPart(transform, texCoords, quadVertexCount, tileCount, color);
+	}
+	void Renderer2D::DrawRotationQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tileCount /*= 1.0f*/, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
+	{
+		SPK_PROFILE_FUNCTION();
+		// 材质剪裁
+		constexpr float x = 2.0f, y = 3.0f;
+		constexpr float sheetWidth = 2560, sheetHeight = 1664;
+		constexpr float spriteWidth = 128, spriteHeight = 128;
+		// 设定参数
+		constexpr size_t quadVertexCount = 4;
+		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+		constexpr glm::vec2 texCoords[] =
+		{
+			{(x * spriteWidth) / sheetWidth, (y * spriteHeight) / sheetHeight},
+			{((x + 1) * spriteWidth) / sheetWidth, (y * spriteHeight) / sheetHeight},
+			{((x + 1) * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight},
+			{(x * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight}
+		};
+
+		DrawPart(transform, texCoords, quadVertexCount, texture, tileCount, textureColor);
+	}
 	void Renderer2D::DrawRotationQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec3& color, float rotation, float tileCount /*= 1.0f*/)
 	{
 		DrawRotationQuad({ position.x, position.y, 0.0f }, size, { color.r,color.g,color.b,1.0f }, rotation, tileCount);
@@ -297,44 +384,11 @@ namespace Spark {
 	void Renderer2D::DrawRotationQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color, float rotation, float tileCount /*= 1.0f*/)
 	{
 		SPK_PROFILE_FUNCTION();
-		// 材质剪裁
-		constexpr float x = 2.0f, y = 3.0f;
-		constexpr float sheetWidth = 2560, sheetHeight = 1664;
-		constexpr float spriteWidth = 128, spriteHeight = 128;
 		// 设定参数
 		constexpr size_t quadVertexCount = 4;
-		constexpr glm::vec2 texCoords[] =
-		{
-			{(x * spriteWidth) / sheetWidth, (y * spriteHeight) / sheetHeight},
-			{((x + 1) * spriteWidth) / sheetWidth, (y * spriteHeight) / sheetHeight},
-			{((x + 1) * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight},
-			{(x * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight}
-		};
+		constexpr glm::vec2 texCoords[] = { {0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f} };
 
-		// 边界判定
-		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxTextureSlots)
-			FlushAndReset();
-
-		// 设定参数
-		float texIndex = 0.0f;
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		
-		// 批处理填入数据
-		for (size_t i = 0; i < quadVertexCount; i++)
-		{
-			s_Data.QuadVertexBufferPtr->Positon = transform * s_Data.QuadVertexPosition[i];
-			s_Data.QuadVertexBufferPtr->Color = color;
-			s_Data.QuadVertexBufferPtr->TexCoord = texCoords[i];
-			s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
-			s_Data.QuadVertexBufferPtr->TileCount = tileCount;
-			s_Data.QuadVertexBufferPtr++;
-		}
-		s_Data.QuadIndiceCount += 6;
-
-		//Statistics Count 
-		s_Data.Stats.QuadCount++;
+		DrawPart(position, size, texCoords, quadVertexCount, rotation, tileCount, color);
 	}
 	void Renderer2D::DrawRotationQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float rotation, float tileCount /*= 1.0f*/, const glm::vec4& textureColor /*= glm::vec4(1.0f)*/)
 	{
@@ -349,7 +403,6 @@ namespace Spark {
 		constexpr float spriteWidth = 128, spriteHeight = 128;
 		// 设定参数
 		constexpr size_t quadVertexCount = 4;
-		constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 		constexpr glm::vec2 texCoords[] =
 		{
 			{(x * spriteWidth) / sheetWidth, (y * spriteHeight) / sheetHeight},
@@ -358,7 +411,7 @@ namespace Spark {
 			{(x * spriteWidth) / sheetWidth, ((y + 1) * spriteHeight) / sheetHeight}
 		};
 
-		DrawPart(position, size, texCoords, quadVertexCount, texture, rotation);
+		DrawPart(position, size, texCoords, quadVertexCount, texture, rotation, tileCount, textureColor);
 	}
 	
 	// Statistics

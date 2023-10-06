@@ -1,19 +1,34 @@
 #pragma once
 #include <memory>
 
-#ifdef SPK_PLATFORM_WINDOWS
-#if SPARK_DYNAMIC_LINK
-	#ifdef SPK_BUILD_DLL
-		#define SPARK_API __declspec(dllexport)
+#ifdef _WIN32
+	#ifdef _WIN64
+		#define SPK_PLATFORM_WINDOWS
 	#else
-		#define SPARK_API __declspec(dllimport)
-	#endif // SPK_BUILD_DLL
+		#error "x86 Builds Are NOT Supported!"
+	#endif // _WIN32	
+#elif defined(__APPLE__) || defined(__MACH__)
+	#include <TargetConditions.h>
+	#if TARGET_IPHONE_SIMULATOR == 1
+		#error "IOS Simulator Is NOT Supported!"
+	#elef TARGET_OS_IPHONE == 1
+		#define SPK_PLATFORM_IOS
+		#error "IOS Is NOT Supported!"
+	#elif TARGET_OS_MAC == 1
+		#define SPK_PLATFORM_MACOS
+		#error "MACOS Is NOT Supported!"
+	#else
+		#error "Unknown Apple Platform!"
+	#endif
+#elif #define(__ANDROID__)
+	#define SPK_PLATFORM_ANDROID
+	#error "Android Is NOT Supported!"
+#elif #define(__Linux__)
+	#define SPK_PLATFORM_LINUX
+	#error "Linux Is NOT Supported!"
 #else
-	#define SPARK_API
+	#error "Unknown Platform!"
 #endif
-#else
-	#error Spark only support windows!
-#endif // SPK_PLATFROM_WINDOWS
 
 #ifdef SPK_DEBUG
 	#if defined(SPK_PLATFORM_WINDOWS)
@@ -29,6 +44,7 @@
 	#define SPK_DEBUGBREAK()
 #endif // HZ_DEBUG
 
+// TODO Mirco 实现参数输入
 #ifdef SPK_ENABLE_ASSERTS
 	// 出错打印，并在错误处中断
 	#define SPK_ASSERT(x,...) {if(!(x)) { SPK_ERROR("Assertion Faild: {0}",__VA_ARGS__); SPK_DEBUGBREAK(); }}
