@@ -170,6 +170,7 @@
     </ClInclude>
     <ClInclude Include="src\Spark\Scenes\Scene.h" />
     <ClInclude Include="src\Spark\Scenes\Component.h" />
+    <ClInclude Include="src\Spark\Scenes\Entity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
@@ -269,5 +270,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Spark\Scenes\Scene.cpp" />
+    <ClCompile Include="src\Spark\Scenes\Entity.cpp" />
   </ItemGroup>
 </Project>

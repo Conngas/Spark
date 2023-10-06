@@ -4,6 +4,7 @@
 #include <entt.hpp>
 
 namespace Spark {
+	class Entity;
 
 	class Scene
 	{
@@ -11,13 +12,12 @@ namespace Spark {
 		Scene();
 		~Scene();
 
-		//TEMP
-		entt::registry& Reg() { return m_Registry; }
-
-		entt::entity CreateEntity();
+		Entity CreateEntity(const std::string& name = std::string());
+		
 		void OnUpdate(Timestep ts);
 	private:
 		entt::registry m_Registry;
+		friend class Entity;
 	};
 
 }
