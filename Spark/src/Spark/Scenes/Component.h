@@ -1,4 +1,5 @@
 #pragma once
+#include "Spark/Renderer/Camera.h"
 
 #include <glm/glm.hpp>
 
@@ -35,5 +36,15 @@ namespace Spark {
 		TagComponent(const TagComponent&) = default;
 		TagComponent(const std::string& tg)
 			: Tag(tg) {}
+	};
+
+	struct CameraComponent
+	{
+		Spark::Camera camera;
+		bool Primary = true; // Scene Cam
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
+		CameraComponent(const glm::mat4& projection) : camera(projection) {}
 	};
 }

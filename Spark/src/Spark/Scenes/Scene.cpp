@@ -59,11 +59,36 @@ namespace Spark {
 
 	void Scene::OnUpdate(Timestep ts)
 	{
-		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-		for (auto entity : group)
+		Camera* mainCamera = nullptr;
+		glm::mat4* cameraTransform = nullptr;
 		{
-			auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			Renderer2D::DrawQuad(transform, sprite.Color);
+			auto group = m_Registry.view<TransformComponent, CameraComponent>();
+			for (auto entity:group)
+			{
+				auto& [transformCom , cameraCom] = group.get<TransformComponent, CameraComponent>(entity);
+				// 若为主相机
+				if (cameraCom.Primary)
+				{
+					mainCamera = &cameraCom.camera;
+					cameraTransform = &transformCom.Transform;
+					break;
+				}
+			}
 		}
+		if (mainCamera)
+		{
+			Renderer2D::BeginScene(mainCamera->GetProjection(), *cameraTransform);
+
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			for (auto entity : group)
+			{
+				auto& [transformCom, spriteColor] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				Renderer2D::DrawQuad(transformCom.Transform, spriteColor.Color);
+			}
+
+			Renderer2D::EndScene();
+		}
+
+
 	}
 }
