@@ -102,7 +102,7 @@ void Sandbox2D::OnUpdate(Spark::Timestep ts)
 	}
 #endif
 	// ≤‚ ‘ParticaleSystem
-	if (Spark::Input::IsMouseButtonPress(SPK_MOUSE_BUTTON_LEFT))
+	if (Spark::Input::IsMouseButtonPressed(SPK_MOUSE_BUTTON_LEFT))
 	{
 		auto [x, y] = Spark::Input::GetMousePosition();
 		auto width = Spark::Application::Get().GetWindow().GetWidth();

@@ -171,6 +171,7 @@
     <ClInclude Include="src\Spark\Scenes\Scene.h" />
     <ClInclude Include="src\Spark\Scenes\Component.h" />
     <ClInclude Include="src\Spark\Scenes\Entity.h" />
+    <ClInclude Include="src\Spark\Renderer\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">

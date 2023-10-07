@@ -24,8 +24,8 @@ namespace Spark {
 	class Instrumentor
 	{
 	public:
-		Instrumentor() : m_CurSession(nullptr)
-		{}
+		Instrumentor(const Instrumentor&) = delete;
+		Instrumentor(Instrumentor&&) = delete;
 
 		void BeginSession(const std::string& name, const std::string& filepath = "results.json")
 		{
@@ -94,6 +94,9 @@ namespace Spark {
 		}
 
 	private:
+		Instrumentor() : m_CurSession(nullptr) {}
+		~Instrumentor() { EndSession(); }
+
 		void WriteHeader()
 		{
 			m_OutputStream << "{\"otherData\": {}, \"traceEvents\":[{}";
@@ -181,7 +184,10 @@ namespace Spark {
 
 #define SPK_PROFILE_BEGIN_SESSION(name,filepath) ::Spark::Instrumentor::Get().BeginSession(name, filepath)
 #define SPK_PROFILE_END_SESSION() ::Spark::Instrumentor::Get().EndSession();
-#define SPK_PROFILE_SCOPE(name) ::Spark::InstrumentationTimer timer##__LINE__(name);
+#define HZ_PROFILE_SCOPE_LINE2(name, line) constexpr auto fixedName##line = ::Hazel::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
+																			::Hazel::InstrumentationTimer timer##line(fixedName##line.Data)
+#define HZ_PROFILE_SCOPE_LINE(name, line) HZ_PROFILE_SCOPE_LINE2(name, line)
+#define HZ_PROFILE_SCOPE(name) HZ_PROFILE_SCOPE_LINE(name, __LINE__)
 #define SPK_PROFILE_FUNCTION() SPK_PROFILE_SCOPE(SPK_FUNC_SIG)
 #else
 #define SPK_PROFILE_BEGIN_SESSION
