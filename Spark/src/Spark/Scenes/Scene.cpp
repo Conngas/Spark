@@ -59,6 +59,23 @@ namespace Spark {
 
 	void Scene::OnUpdate(Timestep ts)
 	{
+		// Native Script 执行部分
+		{
+			// nsc:nativeScriptComponent 原生表达式{}为函数执行体
+			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc){
+					if (!nsc.Instance)
+					{
+						nsc.InstantiateFunction();
+						nsc.Instance->m_Entity = Entity{ entity, this };
+
+						if (nsc.OnCreateFunction)
+							nsc.OnCreateFunction(nsc.Instance);
+					}
+					if (nsc.OnUpdateFunction)
+						nsc.OnUpdateFunction(nsc.Instance, ts);
+				});
+		}
+
 		Camera* mainCamera = nullptr;
 		glm::mat4* cameraTransform = nullptr;
 		{

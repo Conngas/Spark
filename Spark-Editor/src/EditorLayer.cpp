@@ -71,6 +71,32 @@ namespace Spark {
 		m_SceondEntity = m_ActiveScene->CreateEntity("Clip-Space Entity");
 		auto& cc = m_SceondEntity.AddComponent<CameraComponent>();
 		cc.Primary = false;
+
+		// Test Cam Script Component
+		class CameraController : public ScriptableEntity
+		{
+		public:
+			void OnCreate()
+			{}
+			void OnDestory()
+			{}
+			void OnUpdate(Timestep ts)
+			{
+				auto& transform = GetComponent<TransformComponent>().Transform;
+				float speed = 3.0f;
+
+				if (Input::IsKeyPressed(KeyCode::A))
+					transform[3][0] -= speed * ts;
+				if (Input::IsKeyPressed(KeyCode::D))
+					transform[3][0] += speed * ts;
+				if (Input::IsKeyPressed(KeyCode::W))
+					transform[3][1] += speed * ts;
+				if (Input::IsKeyPressed(KeyCode::S))
+					transform[3][1] -= speed * ts;
+			}
+		};
+		// ½«Nativate°ó¶¨µ½CameraController
+		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 	}
 
 	void EditorLayer::OnDetach()

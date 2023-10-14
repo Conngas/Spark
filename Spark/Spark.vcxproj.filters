@@ -184,6 +184,7 @@
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="src\Spark\Scenes\SceneCamera.h" />
+    <ClInclude Include="src\Spark\Scenes\ScriptableEntity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">

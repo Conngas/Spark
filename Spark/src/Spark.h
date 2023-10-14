@@ -18,6 +18,7 @@
 #include "Spark/Scenes/Scene.h"
 #include "Spark/Scenes/Entity.h"
 #include "Spark/Scenes/Component.h"
+#include "Spark/Scenes/ScriptableEntity.h"
 
 //////////////////////////////////////////////////////////////////////////
 // Debug
