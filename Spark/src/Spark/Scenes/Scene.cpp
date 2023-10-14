@@ -62,10 +62,10 @@ namespace Spark {
 		Camera* mainCamera = nullptr;
 		glm::mat4* cameraTransform = nullptr;
 		{
-			auto group = m_Registry.view<TransformComponent, CameraComponent>();
-			for (auto entity:group)
+			auto view = m_Registry.view<TransformComponent, CameraComponent>();
+			for (auto entity: view)
 			{
-				auto& [transformCom , cameraCom] = group.get<TransformComponent, CameraComponent>(entity);
+				auto& [transformCom , cameraCom] = view.get<TransformComponent, CameraComponent>(entity);
 				// 若为主相机
 				if (cameraCom.Primary)
 				{
@@ -88,7 +88,20 @@ namespace Spark {
 
 			Renderer2D::EndScene();
 		}
+	}
 
+	void Scene::OnViewPortResize(uint32_t width, uint32_t height)
+	{
+		m_ViewPortWidth = width;
+		m_ViewPorthHeigh = height;
 
+		// 修正ViewPort尺寸
+		auto view = m_Registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			auto& cameraComponent = view.get<CameraComponent>(entity);
+			if (!cameraComponent.FixedAspectionRatio)
+				cameraComponent.camera.SetViewPortSize(width, height);
+		}
 	}
 }

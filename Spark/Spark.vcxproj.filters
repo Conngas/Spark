@@ -31,6 +31,9 @@
     <Filter Include="src\Spark\Renderer">
       <UniqueIdentifier>{C3F62570-AFDA-E6C5-183B-E118043ED147}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Spark\Scenes">
+      <UniqueIdentifier>{0D59EFB4-F951-0E07-2284-F38B0EDCED12}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Spark\SubSystem">
       <UniqueIdentifier>{7BB786EB-E718-64F9-7086-AAABDCE69AB8}</UniqueIdentifier>
     </Filter>
@@ -123,6 +126,9 @@
     <ClInclude Include="src\Spark\Renderer\Buffer.h">
       <Filter>src\Spark\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\Renderer\Camera.h">
+      <Filter>src\Spark\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Spark\Renderer\FrameBuffer.h">
       <Filter>src\Spark\Renderer</Filter>
     </ClInclude>
@@ -159,6 +165,15 @@
     <ClInclude Include="src\Spark\Renderer\VertexArray.h">
       <Filter>src\Spark\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\Scenes\Component.h">
+      <Filter>src\Spark\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Scenes\Entity.h">
+      <Filter>src\Spark\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Spark\Scenes\Scene.h">
+      <Filter>src\Spark\Scenes</Filter>
+    </ClInclude>
     <ClInclude Include="src\Spark\SubSystem\ParticaleSystem.h">
       <Filter>src\Spark\SubSystem</Filter>
     </ClInclude>
@@ -168,10 +183,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Spark\Scenes\Scene.h" />
-    <ClInclude Include="src\Spark\Scenes\Component.h" />
-    <ClInclude Include="src\Spark\Scenes\Entity.h" />
-    <ClInclude Include="src\Spark\Renderer\Camera.h" />
+    <ClInclude Include="src\Spark\Scenes\SceneCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
@@ -261,6 +273,12 @@
     <ClCompile Include="src\Spark\Renderer\VertexArray.cpp">
       <Filter>src\Spark\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Spark\Scenes\Entity.cpp">
+      <Filter>src\Spark\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Scenes\Scene.cpp">
+      <Filter>src\Spark\Scenes</Filter>
+    </ClCompile>
     <ClCompile Include="src\Spark\SubSystem\ParticaleSystem.cpp">
       <Filter>src\Spark\SubSystem</Filter>
     </ClCompile>
@@ -270,7 +288,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Spark\Scenes\Scene.cpp" />
-    <ClCompile Include="src\Spark\Scenes\Entity.cpp" />
+    <ClCompile Include="src\Spark\Scenes\SceneCamera.cpp" />
   </ItemGroup>
 </Project>
