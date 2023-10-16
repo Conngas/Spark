@@ -65,14 +65,12 @@ namespace Spark {
 			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc){
 					if (!nsc.Instance)
 					{
-						nsc.InstantiateFunction();
+						nsc.Instance = nsc.InstantiateScript();
 						nsc.Instance->m_Entity = Entity{ entity, this };
 
-						if (nsc.OnCreateFunction)
-							nsc.OnCreateFunction(nsc.Instance);
+						nsc.Instance->OnCreate();
 					}
-					if (nsc.OnUpdateFunction)
-						nsc.OnUpdateFunction(nsc.Instance, ts);
+					nsc.Instance->OnUpdate(ts);
 				});
 		}
 
@@ -82,7 +80,7 @@ namespace Spark {
 			auto view = m_Registry.view<TransformComponent, CameraComponent>();
 			for (auto entity: view)
 			{
-				auto& [transformCom , cameraCom] = view.get<TransformComponent, CameraComponent>(entity);
+				auto [transformCom , cameraCom] = view.get<TransformComponent, CameraComponent>(entity);
 				// 若为主相机
 				if (cameraCom.Primary)
 				{
@@ -99,7 +97,7 @@ namespace Spark {
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
-				auto& [transformCom, spriteColor] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				auto [transformCom, spriteColor] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 				Renderer2D::DrawQuad(transformCom.Transform, spriteColor.Color);
 			}
 

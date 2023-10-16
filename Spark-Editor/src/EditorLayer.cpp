@@ -97,6 +97,7 @@ namespace Spark {
 		};
 		// ½«Nativate°ó¶¨µ½CameraController
 		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+		m_SceondEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 	}
 
 	void EditorLayer::OnDetach()
