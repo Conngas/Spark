@@ -3,11 +3,12 @@
 **/bin/
 **/binInt/
 binInt/
-!vendor/bin/premake
-!vendor/premake/bin
+!vendor/bin/premake/
+!vendor/premake/bin/
 
 # Spark file
 *.log
+*.tlog
 
 # other file
 .user/
