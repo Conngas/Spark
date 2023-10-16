@@ -1,8 +1,8 @@
 #pragma once
-#include "spkpch.h"
+#include <functional>
 
 #include "Spark/Core/Base.h"
-
+#include "Spark/Core/Log.h"
 
 namespace Spark {
 	// 当事件发生时，将会立即分发处理

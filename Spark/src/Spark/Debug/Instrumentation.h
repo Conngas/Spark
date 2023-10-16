@@ -1,11 +1,15 @@
 #pragma once
 
+#include <mutex>
 #include <string>
 #include <chrono>
 #include <thread>
 #include <iomanip>
 #include <fstream>
+#include <sstream>
 #include <algorithm>
+
+#include "Spark/Core/Log.h"
 
 namespace Spark {
 	struct ProfileResult

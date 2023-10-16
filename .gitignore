@@ -3,8 +3,6 @@
 **/bin/
 **/binInt/
 binInt/
-!vendor/bin/premake/
-!vendor/premake/bin/
 
 # Spark file
 *.log
