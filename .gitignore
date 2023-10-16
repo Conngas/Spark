@@ -1,12 +1,22 @@
 # Ingore Intermediate File
 .vs/
-bin/
+**/bin/
+**/binInt/
 binInt/
+!vendor/bin/premake
+!vendor/premake/bin
+
+# Spark file
+*.log
 
 # other file
 .user/
 *.log
+*.obj
 
 # Ingore IDE File Use premake5.exe instead
-*.sln
-*.vcxproj
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.users
