@@ -1,26 +1,26 @@
 project "Spark"
-    location "Spark"
     kind "StaticLib"
     language "C++"
     cppdialect "C++17"
     staticruntime "on"
+
     -- 设置编译输出目录
-    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("binInt/" .. outputdir .. "/%{prj.name}")
+    targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("%{wks.location}/binInt/" .. outputdir .. "/%{prj.name}")
 
     -- 设置pch预编译头
     pchheader "spkpch.h"
-    pchsource "Spark/src/spkpch.cpp"
+    pchsource "src/spkpch.cpp"
 
     -- 归纳源代码文件
     files
     {
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp",
-        "%{prj.name}/vendor/stb_image/**.h",
-        "%{prj.name}/vendor/stb_image/**.cpp",
-        "%{prj.name}/vendor/glm/gml/**.hpp",
-        "%{prj.name}/vendor/glm/gml/**.inl"
+        "src/**.h",
+        "src/**.cpp",
+        "vendor/stb_image/**.h",
+        "vendor/stb_image/**.cpp",
+        "vendor/glm/gml/**.hpp",
+        "vendor/glm/gml/**.inl"
     }
 
     -- 未来会删除
@@ -33,8 +33,8 @@ project "Spark"
     -- include文件
     includedirs
     {
-        "%{prj.name}/src",
-        "%{prj.name}/vendor/spdlog/include",
+        "src",
+        "vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
@@ -60,6 +60,7 @@ project "Spark"
         {
             "SPK_PLATFORM_WINDOWS"
         }
+        
         -- 创建过滤器
         filter "configurations:Debug"
             defines "SPK_DEBUG"

@@ -37,31 +37,31 @@ namespace Spark {
 			m_Camera.SetRotation(m_CameraRotation);
 		}
 		*/
-		if (Spark::Input::IsKeyPressed(SPK_KEY_A))
+		if (Spark::Input::IsKeyPressed(Key::A))
 		{
 			m_CameraPosition.x -= cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 			m_CameraPosition.y -= sin(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 		}
-		else if (Spark::Input::IsKeyPressed(SPK_KEY_D))
+		else if (Spark::Input::IsKeyPressed(Key::D))
 		{
 			m_CameraPosition.x += cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 			m_CameraPosition.y += sin(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 		}
-		if (Spark::Input::IsKeyPressed(SPK_KEY_W))
+		if (Spark::Input::IsKeyPressed(Key::W))
 		{
 			m_CameraPosition.x += -sin(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 			m_CameraPosition.y += cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 		}
-		else if (Spark::Input::IsKeyPressed(SPK_KEY_S))
+		else if (Spark::Input::IsKeyPressed(Key::S))
 		{
 			m_CameraPosition.x -= -sin(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 			m_CameraPosition.y -= cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 		}
 		if (m_Rotation)
 		{
-			if ((Spark::Input::IsKeyPressed(SPK_KEY_Q)))
+			if ((Spark::Input::IsKeyPressed(Key::Q)))
 				m_CameraRotation += m_CameraRotationSpeed * ts;
-			if ((Spark::Input::IsKeyPressed(SPK_KEY_E)))
+			if ((Spark::Input::IsKeyPressed(Key::E)))
 				m_CameraRotation -= m_CameraRotationSpeed * ts;
 			m_Camera.SetRotation(m_CameraRotation);
 		}

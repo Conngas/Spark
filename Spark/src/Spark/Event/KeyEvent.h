@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Spark/Core/Input.h"
 #include "Spark/Event/Event.h"
+#include "Spark/Core/KeyCodes.h"
 
 namespace Spark {
 
@@ -15,7 +15,7 @@ namespace Spark {
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 	protected:
-		KeyEvent(KeyCode keycode) : m_KeyCode(keycode){}
+		KeyEvent(const KeyCode keycode) : m_KeyCode(keycode){}
 
 		KeyCode m_KeyCode;
 	};
@@ -26,9 +26,10 @@ namespace Spark {
 	class KeyPressedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(KeyCode keycode,int repeatCount): KeyEvent(keycode), m_RepeatCount(repeatCount) {}
+		KeyPressedEvent(const KeyCode keycode, const uint16_t repeatCount)
+			: KeyEvent(keycode), m_RepeatCount(repeatCount) {}
 
-		inline int GetRepeatCount() const { return m_RepeatCount; }
+		uint32_t GetRepeatCount() const { return m_RepeatCount; }
 
 		std::string ToString() const override
 		{
@@ -40,7 +41,7 @@ namespace Spark {
 		EVENT_CLASS_TYPE(KeyPressed)
 
 	private:
-		int m_RepeatCount;
+		uint16_t m_RepeatCount;
 	};
 
 	/// <summary>
@@ -49,7 +50,7 @@ namespace Spark {
 	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyReleasedEvent(KeyCode keycode) : KeyEvent(keycode){}
+		KeyReleasedEvent(const KeyCode keycode) : KeyEvent(keycode){}
 		std::string ToString() const override
 		{
 			std::stringstream ss;
@@ -66,7 +67,7 @@ namespace Spark {
 	class KeyTypedEvent : public KeyEvent
 	{
 	public:
-		KeyTypedEvent(KeyCode keycode)
+		KeyTypedEvent(const KeyCode keycode)
 			: KeyEvent(keycode) {}
 
 		std::string ToString() const override

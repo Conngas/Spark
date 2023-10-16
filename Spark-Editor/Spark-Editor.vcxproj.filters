@@ -7,4 +7,7 @@
   <ItemGroup>
     <ClInclude Include="src\EditorLayer.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="premake5.lua" />
+  </ItemGroup>
 </Project>

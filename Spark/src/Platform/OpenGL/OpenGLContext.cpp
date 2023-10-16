@@ -28,6 +28,8 @@ namespace Spark {
 		SPK_CORE_INFO("  Vender:\t{0}", (char*)glGetString(GL_VENDOR));
 		SPK_CORE_INFO("  Renderer:\t{0}", (char*)glGetString(GL_RENDERER));
 		SPK_CORE_INFO("  Version:\t{0}", (char*)glGetString(GL_VERSION));
+
+		SPK_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5), "Spark Requires at least OpenGL Version 4.5!");
 	}
 
 	void OpenGLContext::SwapBuffers()

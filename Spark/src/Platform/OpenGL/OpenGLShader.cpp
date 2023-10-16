@@ -60,7 +60,7 @@ namespace Spark {
 		SPK_PROFILE_FUNCTION();
 
 		std::string readInRes;
-		std::ifstream in(filepath, std::ios::in | std::ios::binary);
+		std::ifstream in(filepath, std::ios::in | std::ios::binary);	// ifstream close itself due to RAII 会自动关闭
 		if (in)
 		{
 			// 读取到文件末尾
