@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Spark.h"
+#include "Panel/SceneHierarchyPanel.h"
 #include "Spark/SubSystem/ParticaleSystem.h"
 
 namespace Spark {
@@ -44,5 +45,8 @@ namespace Spark {
 
 		uint32_t m_MapWidth, m_MapHeight;
 		std::unordered_map<char, Spark::Ref<Spark::SubTexture2D>> s_TextureMap;
+
+		// Panel
+		SceneHierarchyPanel m_SceneHierarchyPanel;
 	};
 }

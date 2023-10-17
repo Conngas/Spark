@@ -1,13 +1,53 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="src\EditorLayer.cpp" />
-    <ClCompile Include="src\SparkEditorApp.cpp" />
+    <Filter Include="Assets">
+      <UniqueIdentifier>{3824E0A7-24C6-0A7E-0D81-1ED2F9C191CE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Game">
+      <UniqueIdentifier>{E1A0B213-4D56-2B09-D64A-25E042FF210D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Game\Texture">
+      <UniqueIdentifier>{41173A64-AD78-1772-36E6-5D24A2464E31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Texture">
+      <UniqueIdentifier>{98018519-84CF-781F-6D63-E94559D05484}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Panel">
+      <UniqueIdentifier>{ECC89AB3-5833-4F2A-A171-00D00D1B2D7F}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\EditorLayer.h" />
+    <ClInclude Include="src\EditorLayer.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Panel\SceneHierarchyPanel.h">
+      <Filter>src\Panel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="premake5.lua" />
+    <ClCompile Include="src\EditorLayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Panel\SceneHierarchyPanel.cpp">
+      <Filter>src\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SparkEditorApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Game\Texture\RPGpack_sheet_2X.png">
+      <Filter>Assets\Game\Texture</Filter>
+    </Image>
+    <Image Include="Assets\Texture\Checkerboard.png">
+      <Filter>Assets\Texture</Filter>
+    </Image>
+    <Image Include="Assets\Texture\ChernoLogo.png">
+      <Filter>Assets\Texture</Filter>
+    </Image>
   </ItemGroup>
 </Project>

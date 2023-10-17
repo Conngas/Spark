@@ -15,7 +15,7 @@ project "Sandbox"
     -- include文件
     includedirs
     {
-        "&{wks.location}/Spark/vendor/spdlog/include",
+        "%{wks.location}/Spark/vendor/spdlog/include",
         "%{wks.location}/Spark/src",
         "%{wks.location}/Spark/vendor",
         "%{IncludeDir.glm}",
