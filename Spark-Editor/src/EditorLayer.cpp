@@ -76,11 +76,11 @@ namespace Spark {
 		class CameraController : public ScriptableEntity
 		{
 		public:
-			void OnCreate()
+			virtual void OnCreate() override
 			{}
-			void OnDestory()
+			virtual void OnDestory() override
 			{}
-			void OnUpdate(Timestep ts)
+			virtual void OnUpdate(Timestep ts) override
 			{
 				auto& transform = GetComponent<TransformComponent>().Transform;
 				float speed = 3.0f;
@@ -165,7 +165,9 @@ namespace Spark {
 			Spark::Renderer2D::EndScene();
 		}
 	#endif
-		// ≤‚ ‘ParticaleSystem
+		//////////////////////////////////////////////////////////////////////////
+		/// ≤‚ ‘ParticaleSystem
+		//////////////////////////////////////////////////////////////////////////
 		if (Spark::Input::IsMouseButtonPressed(Mouse::ButtonLeft))
 		{
 			glm::vec2 mousePos = Spark::Input::GetMousePosition();
@@ -182,8 +184,9 @@ namespace Spark {
 		m_ParticaleSystem.OnUpdate(ts);
 		m_ParticaleSystem.OnRender(m_CameraController.GetCamera());
 
-		// ≤‚ ‘TextureSheet
-		// GAME RPG TEST
+		//////////////////////////////////////////////////////////////////////////
+		/// ≤‚ ‘TextureSheet
+		//////////////////////////////////////////////////////////////////////////
 		Spark::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
 		// Update Scene
