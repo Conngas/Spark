@@ -20,8 +20,8 @@ namespace Spark {
 		
 		float GetPerspectiveVerticalFOV() const { return m_PerspectiveFOV; }
 		void SetPerspectiveVerticalFOV(float verticalFOV) { m_PerspectiveFOV = verticalFOV; ReculateProjection(); }
-		float GetPersepctiveNearClip() const { return m_PerspectiveNear; }
-		void SetPerspectiveFarClip(float nearClip) { m_PerspectiveNear = nearClip; ReculateProjection(); }
+		float GetPerspectiveNearClip() const { return m_PerspectiveNear; }
+		void SetPerspectiveNearClip(float nearClip) { m_PerspectiveNear = nearClip; ReculateProjection(); }
 		float GetPerspectiveFarClip() const { return m_PerspectiveFar; }
 		void SetPerspectiveFarClip(float farClip) { m_PerspectiveFar = farClip; ReculateProjection(); }
 

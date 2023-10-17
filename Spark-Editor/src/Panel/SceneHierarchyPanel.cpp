@@ -98,7 +98,66 @@ namespace Spark {
 
 		if (entity.HasComponent<CameraComponent>())
 		{
+			// 从相机ID转为HashCode并设置节点为折叠开启状态，设置名称为Camera
+			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Camera"));
+			{
+				auto& cameraComponent = entity.GetComponent<CameraComponent>();
+				auto& camera = cameraComponent.Camera;
+				ImGui::Checkbox("Primary", &cameraComponent.Primary);
+				const char* projectionTypeString[] = { "Perspective, Orthographic" };
+				const char* currentProjectionTypeString = projectionTypeString[(int)camera.GetProjection()];
+				// 使用选择框决定相机采取的透视方法
+				if (ImGui::BeginCombo("Projection", currentProjectionTypeString))
+				{
+					// 遍历填充Combo区域
+					for (int i 0; i < 2; i++)
+					{
+						bool isSelected = currentProjectionTypeString == projectionTypeString[i];
+						if (ImGui::Selectable(projectionTypeString[i], isSelected))
+						{
+							currentProjectionTypeString = projectionTypeString[i];
+							// 设置相机投射类型
+							camera.SetProjectionType((SceneCamera::ProjectionType)i);
+						}
+						if (isSelected)
+							ImGui::SetItemDefaultFocus();
+					}
+					ImGui::EndCombo();
+				}
 
+				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
+				{
+					float verticalFov = glm::degrees(camera.GetPerspectiveVerticalFOV());
+					if (ImGui::DragFloat("Vertical FOV", verticalFov))
+						camera.SetPerspectiveVerticalFOV(glm::radians(verticalFov));
+
+					float perspNear = camera.GetPerspectiveNearClip();
+					if (ImGui::DragFloat("Near Plane", perspNear))
+						camera.SetPerspectiveNearClip(perspNear);
+
+					float perspFar = camera.GetPerspectiveFarClip();
+					if (ImGui::DragFloat("Far Plane", perspFar))
+						camera.SetPerspectiveFarClip(perspFar);					
+				}
+
+				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
+				{
+					float orthoSize = camera.GetOrthographicSize();
+					if (ImGui::DragFloat("Orthographic Size", orthoSize))
+						camera.SetOrthographicSize(orthoSize);
+
+					float orthoNear = camera.GetOrthographicNearClip();
+					if (ImGui::DragFloat("Near Plane", orthoNear))
+						camera.SetOrthographicNearClip(orthoNear);
+
+					float orthoFar = camera.GetOrthographicFarClip();
+					if (ImGui::DragFloat("Far Plane", orthoFar))
+						camera.SetOrthographicFarClip(orthoFar);
+
+					ImGui::Checkbox("Fixed Aspect Ratio", &cameraComponent.FixedAspectRatio);
+				}
+				ImGui::TreePop();
+			}
 		}
 	}
 }
