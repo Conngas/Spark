@@ -44,7 +44,7 @@ namespace Spark {
 		ProjectionType m_ProjectionType = ProjectionType::Orthographic;
 
 		float m_PerspectiveFOV = glm::radians(45.0f);
-		float m_PerspectiveNear = 0.01f, m_PerspectiveFar = 0.01f;
+		float m_PerspectiveNear = 0.01f, m_PerspectiveFar = 1000.0f;
 
 		float m_OrthoGraphicSize = 10.0f;
 		float m_OrthoGraphicNear = -1.0f, m_OrthographicFar = 1.0f;
