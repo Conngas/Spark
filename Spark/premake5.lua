@@ -34,6 +34,7 @@ project "Spark"
     includedirs
     {
         "src",
+		"Panel",
         "vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",

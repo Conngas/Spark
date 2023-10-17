@@ -20,6 +20,7 @@ namespace Spark {
 		entt::registry m_Registry;
 		uint32_t m_ViewPortWidth, m_ViewPorthHeigh;
 		friend class Entity;
+		friend class SceneHierarchyPanel;
 	};
 
 }

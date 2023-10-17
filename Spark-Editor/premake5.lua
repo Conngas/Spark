@@ -7,10 +7,13 @@ project "Spark-Editor"
     targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
     objdir ("%{wks.location}/binInt/" .. outputdir .. "/%{prj.name}")
     -- ����Դ�����ļ�
-    files
+    
+	files
     {
-        "src/**.h",
-        "src/**.cpp"
+		"src/**.h",
+		"src/**.cpp",
+		"Assets/**.png",
+		"Assets/**.jpg"
     }
     -- include�ļ�
     includedirs

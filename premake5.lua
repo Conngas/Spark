@@ -1,6 +1,5 @@
 include "./vendor/premake/solution_items.lua"
 
-
 workspace "Spark"
     architecture "x86_64"
     startproject "Spark-Editor"
@@ -26,12 +25,11 @@ workspace "Spark"
 
     -- 复制GLFW lua配置到本配置中
     IncludeDir = {}
-    IncludeDir["GLFW"] = "%{wks.loaction}/vendor/GLFW/include"
-    IncludeDir["stb_image"] = "%{wks.loaction}/vendor/stb_image"
-    
+    IncludeDir["GLFW"] = "%{wks.location}/Spark/vendor/GLFW/include"
     IncludeDir["Glad"] = "%{wks.location}/Spark/vendor/Glad/include"
     IncludeDir["ImGui"] = "%{wks.location}/Spark/vendor/imgui"
     IncludeDir["glm"] = "%{wks.location}/Spark/vendor/glm"
+    IncludeDir["stb_image"] = "%{wks.location}/Spark/vendor/stb_image"
     IncludeDir["entt"] = "%{wks.location}/Spark/vendor/entt/include"
 
     -- 组依赖（include）

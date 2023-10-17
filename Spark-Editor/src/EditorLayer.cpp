@@ -98,6 +98,9 @@ namespace Spark {
 		// ½«Nativate°ó¶¨µ½CameraController
 		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 		m_SceondEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
+		// Hierarchy
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -267,7 +270,11 @@ namespace Spark {
 			ImGui::EndMenuBar();
 		}
 	#endif // DockSpaceOpen
-	
+		//////////////////////////////////////////////////////////////////////////
+		/// Hierarchy
+		//////////////////////////////////////////////////////////////////////////
+		m_SceneHierarchyPanel.OnImGuiRender();
+
 		//////////////////////////////////////////////////////////////////////////
 		/// Editor Bar
 		//////////////////////////////////////////////////////////////////////////
