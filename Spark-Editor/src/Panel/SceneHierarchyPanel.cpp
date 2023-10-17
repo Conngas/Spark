@@ -65,6 +65,8 @@ namespace Spark {
 
 	void SceneHierarchyPanel::DrawComponent(Entity entity)
 	{
+		//////////////////////////////////////////////////////////////////////////
+
 		if (entity.HasComponent<TagComponent>())
 		{
 			auto& tag = entity.GetComponent<TagComponent>().Tag;
@@ -78,6 +80,8 @@ namespace Spark {
 			}
 		}
 
+		//////////////////////////////////////////////////////////////////////////
+
 		if (entity.HasComponent<TransformComponent>())
 		{
 			// 设置唯一树节点序号用于打开列表
@@ -88,6 +92,13 @@ namespace Spark {
 				// 
 				ImGui::TreePop();
 			}
+		}
+
+		//////////////////////////////////////////////////////////////////////////
+
+		if (entity.HasComponent<CameraComponent>())
+		{
+
 		}
 	}
 }
