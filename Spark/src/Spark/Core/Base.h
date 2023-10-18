@@ -17,15 +17,8 @@
 		#define SPK_DEBUGBREAK()
 #endif // HZ_DEBUG
 
-// TODO Mirco 实现参数输入
-#ifdef SPK_ENABLE_ASSERTS
-	// 出错打印，并在错误处中断
-	#define SPK_ASSERT(x,...) {if(!(x)) { SPK_ERROR("Assertion Faild: {0}",__VA_ARGS__); SPK_DEBUGBREAK(); }}
-	#define SPK_CORE_ASSERT(x,...) {if(!(x)) {SPK_CORE_ERROR("Assertion Faild: {0}",__VA_ARGS__); SPK_DEBUGBREAK(); }}
-#else
-	#define SPK_ASSERT(x,...)
-	#define SPK_CORE_ASSERT(x,...)
-#endif // SPK_ENABLE_ASSERTS	
+#define SPK_EXPAND_MACRO(x) x
+#define SPK_STRINGIFY_MACRO(x) #x
 
 // Event---------------
 // 左移运算符相当于乘2
@@ -56,5 +49,7 @@ namespace Spark {
 	{
 		return std::make_shared<T>(std::forward<Args>(args)...);
 	}
-
 }
+
+#include "Spark/Core/Log.h"
+#include "Spark/Core/Assert.h"

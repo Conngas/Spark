@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Spark/Core/Log.h"
 #include "Spark/Core/Base.h"
 #include "Spark/Scenes/Scene.h"
 #include "Spark/Scenes/Entity.h"
