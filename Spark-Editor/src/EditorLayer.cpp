@@ -67,10 +67,10 @@ namespace Spark {
 		auto redSquare = m_ActiveScene->CreateEntity("Red Square");
 		redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.2f, 0.1f, 1.0f });
 		m_SquareEntity = square;
-		m_CameraEntity = m_ActiveScene->CreateEntity("Camera Entity");
+		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
 		m_CameraEntity.AddComponent<CameraComponent>();
 
-		m_SceondEntity = m_ActiveScene->CreateEntity("Clip-Space Entity");
+		m_SceondEntity = m_ActiveScene->CreateEntity("Camera B");
 		auto& cc = m_SceondEntity.AddComponent<CameraComponent>();
 		cc.Primary = false;
 
