@@ -122,9 +122,7 @@ namespace Spark {
 		s_Data.QuadShader->Bind();
 		s_Data.QuadShader->SetMat4("u_ViewProjection", viewProj);
 
-		s_Data.QuadIndiceCount = 0;
-		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
-		s_Data.TextureSlotIndex = 1;
+		StartBatch();
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
@@ -133,11 +131,8 @@ namespace Spark {
 
 		s_Data.QuadShader->Bind();
 		s_Data.QuadShader->SetMat4("u_ViewProjection",camera.GetViewProjectionMatrix());
-
-		//记住VB位置
-		s_Data.QuadIndiceCount = 0;
-		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
-		s_Data.TextureSlotIndex = 1;
+		// 定位当前VertexBuffer位置
+		StartBatch();
 	}
 
 	void Renderer2D::EndScene()
@@ -154,6 +149,10 @@ namespace Spark {
 		if (s_Data.QuadIndiceCount == 0)
 			return;
 
+		// 创建新的VB空间
+		uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
+		s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
+
 		// 绑定Texture
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; ++i)
 			s_Data.TextureSlots[i]->Bind(i);
@@ -161,6 +160,14 @@ namespace Spark {
 
 		//Statistics Count 
 		s_Data.Stats.DrawCalls++;
+	}
+
+	void Renderer2D::StartBatch()
+	{
+		s_Data.QuadIndiceCount = 0;
+		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+		s_Data.TextureSlotIndex = 1;
 	}
 
 	void Renderer2D::DrawPart(const glm::vec3& position, const glm::vec2& size, const glm::vec2* texCoords, const size_t qVCount,
@@ -178,7 +185,7 @@ namespace Spark {
 	{
 		// 边界判定
 		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxIndice)
-			FlushAndReset();
+			NextBatch();
 
 		// 设定参数，TexIndex 0.0 是纯白Texture
 		const float texIndex = 0.0f;
@@ -216,7 +223,7 @@ namespace Spark {
 	{
 		// 边界判定
 		if (s_Data.QuadIndiceCount >= Renderer2DStorage::MaxTextureSlots)
-			FlushAndReset();
+			NextBatch();
 		if (!texture)
 			SPK_CORE_ASSERT(false, "No Texture to Draw!");
 
@@ -439,13 +446,11 @@ namespace Spark {
 		return s_Data.Stats;
 	}
 
-	void Renderer2D::FlushAndReset()
+	void Renderer2D::NextBatch()
 	{
-		EndScene();
-		//记住VB位置
-		s_Data.QuadIndiceCount = 0;
-		s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
-		s_Data.TextureSlotIndex = 1;
+		Flush();
+		// 记住VB位置
+		StartBatch();
 	}
 
 }

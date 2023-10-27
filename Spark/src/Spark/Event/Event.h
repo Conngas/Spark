@@ -83,8 +83,8 @@ namespace Spark {
 		{
 			if (m_Event.GetEventType() == T::GetStaticType())
 			{
-				// 调用func函数
-				m_Event.m_Handled = func(*(T*)&m_Event);
+				// 调用func函数，|=保证m_Event.m_Handled一旦赋值就无法被赋值为空
+				m_Event.m_Handled |= func(*(T*)&m_Event);
 				return true;				
 			}
 			return false;

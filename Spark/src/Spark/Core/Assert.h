@@ -3,29 +3,14 @@
 #include "Spark/Core/Log.h"
 #include "Spark/Core/Base.h"
 
+#include <filesystem>
+
 #ifdef SPK_ENABLE_ASSERT
-
-	namespace Spark::Assert {
-
-		constexpr const char* CurrentFileName(const char* path)
-		{
-			// ¶ÁÈ¡Â·¾¶×Ö·û
-			const char* file = path;
-			while (*path)
-			{
-				if (*path == '/' || *path == '\\')
-					file = ++path;
-				else
-					++path;
-			}
-			return file;
-		}
-	}
 
 	#define SPK_INTERNAL_ASSERT_IMPL(type, check, msg, ...) {if(!(check)) {SPK##ERROR(msg,__VA_ARGS__); SPK_DEBUGBREAK();} }
 	#define SPK_INTERNAL_ASSERT_WITH_MSG(type, check, ...) SPK_INTERNAL_ASSERT_IMPL(type, check , "Asserion Failed: {0}", __VA__ARGS__)
 	#define SPK_INTERNAL_ASSERT_NO_MSG(type, check) SPK_INTERNAL_ASSERT_IMPL(type, check, "Assersion '{0}' failed at {1}:{2}",
-			SPK_STRINGIFY_MACRO(check), ::Spark::Assert::CurrentFileName(__FILE__), __LINE__)
+			SPK_STRINGIFY_MACRO(check), std::filesystem::path(__FILE__).filename().string(), __LINE__)
 	#define SPK_INTERNAL_ASSERT_GET_MACRO_NAME(arg1, arg2, macro, ...) macro
 	#define SPK_INTERNAL_ASSERT_GET_MACRO(...) SPK_EXPAND_MACRO(SPK_INTERNAL_ASSERT_GET_MACRO(__VA_ARGS__, SPK_INTERNAL_ASSERT_WITH_MSG, SPK_INTERNAL_ASSERT_NO_MSG))
 

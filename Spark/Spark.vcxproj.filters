@@ -75,6 +75,9 @@
     <ClInclude Include="src\Spark\Core\Application.h">
       <Filter>src\Spark\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\Core\Assert.h">
+      <Filter>src\Spark\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Spark\Core\Base.h">
       <Filter>src\Spark\Core</Filter>
     </ClInclude>
@@ -192,7 +195,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Spark\Core\Assert.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
