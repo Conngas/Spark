@@ -73,8 +73,8 @@ namespace Spark{
 	{
 	public:
 		BufferLayout() {}
-
-		BufferLayout(const std::initializer_list<BufferElement>& element)
+		// 使用按值传递代替指针传递
+		BufferLayout(std::initializer_list<BufferElement> element)
 			: m_Elements(element) 
 		{
 			CaculateOffsetsAndStride();
