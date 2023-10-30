@@ -79,22 +79,25 @@ namespace Spark {
 		{
 		public:
 			virtual void OnCreate() override
-			{}
+			{
+				auto& translation = GetComponent<TransformComponent>().Translation;
+				translation.x = rand() % 15 - 5.0f;
+			}
 			virtual void OnDestory() override
 			{}
 			virtual void OnUpdate(Timestep ts) override
 			{
-				auto& transform = GetComponent<TransformComponent>().Transform;
+				auto& transform = GetComponent<TransformComponent>().Translation;
 				float speed = 3.0f;
 
 				if (Input::IsKeyPressed(Key::A))
-					transform[3][0] -= speed * ts;
+					transform.x -= speed * ts;
 				if (Input::IsKeyPressed(Key::D))
-					transform[3][0] += speed * ts;
+					transform.x += speed * ts;
 				if (Input::IsKeyPressed(Key::W))
-					transform[3][1] += speed * ts;
+					transform.y += speed * ts;
 				if (Input::IsKeyPressed(Key::S))
-					transform[3][1] -= speed * ts;
+					transform.y -= speed * ts;
 			}
 		};
 		// ½«Nativate°ó¶¨µ½CameraController
@@ -169,22 +172,22 @@ namespace Spark {
 	#endif
 		//////////////////////////////////////////////////////////////////////////
 		/// ²âÊÔParticaleSystem
-		//////////////////////////////////////////////////////////////////////////
-		if (Spark::Input::IsMouseButtonPressed(Mouse::ButtonLeft))
-		{
-			glm::vec2 mousePos = Spark::Input::GetMousePosition();
-			auto width = Spark::Application::Get().GetWindow().GetWidth();
-			auto height = Spark::Application::Get().GetWindow().GetHeight();
-			auto bounds = m_CameraController.GetBounds();
-			auto pos = m_CameraController.GetCamera().GetPosition();
-			mousePos.x = (mousePos.x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
-			mousePos.y = bounds.GetHeight() * 0.5f - (mousePos.y / height) * bounds.GetHeight();
-			m_Particale.Postion = { mousePos.x + pos.x, mousePos.y + pos.y };
-			for (int i = 0; i < 5; ++i)
-				m_ParticaleSystem.Emit(m_Particale);
-		}
-		m_ParticaleSystem.OnUpdate(ts);
-		m_ParticaleSystem.OnRender(m_CameraController.GetCamera());
+		////////////////////////////////////////////////////////////////////////////
+		//if (Spark::Input::IsMouseButtonPressed(Mouse::ButtonLeft))
+		//{
+		//	glm::vec2 mousePos = Spark::Input::GetMousePosition();
+		//	auto width = Spark::Application::Get().GetWindow().GetWidth();
+		//	auto height = Spark::Application::Get().GetWindow().GetHeight();
+		//	auto bounds = m_CameraController.GetBounds();
+		//	auto pos = m_CameraController.GetCamera().GetPosition();
+		//	mousePos.x = (mousePos.x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		//	mousePos.y = bounds.GetHeight() * 0.5f - (mousePos.y / height) * bounds.GetHeight();
+		//	m_Particale.Postion = { mousePos.x + pos.x, mousePos.y + pos.y };
+		//	for (int i = 0; i < 5; ++i)
+		//		m_ParticaleSystem.Emit(m_Particale);
+		//}
+		//m_ParticaleSystem.OnUpdate(ts);
+		//m_ParticaleSystem.OnRender(m_CameraController.GetCamera());
 
 		//////////////////////////////////////////////////////////////////////////
 		/// ²âÊÔTextureSheet
@@ -291,33 +294,6 @@ namespace Spark {
 		ImGui::Text("Quads: %d", stats.QuadCount);
 		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-
-		// Entity Test
-		if (m_SquareEntity)
-		{
-			ImGui::Separator();
-			auto& tag = m_SquareEntity.GetComponent<TagComponent>().Tag;
-			ImGui::Text("%s", tag.c_str());
-
-			auto& squareColor = m_SquareEntity.GetComponent<SpriteRendererComponent>().Color;
-			ImGui::ColorEdit4("Square Color", glm::value_ptr(squareColor));
-			ImGui::Separator();
-		}
-
-		ImGui::DragFloat("Camera Transform",glm::value_ptr(m_CameraEntity.GetComponent<TransformComponent>().Transform[3]));
-		if (ImGui::Checkbox("Camera A", &m_PrimaryCamera))
-		{
-			m_CameraEntity.GetComponent<CameraComponent>().Primary = m_PrimaryCamera;
-			m_SceondEntity.GetComponent<CameraComponent>().Primary = !m_PrimaryCamera;
-		}
-
-		{
-			auto& camera = m_SceondEntity.GetComponent<CameraComponent>().camera;
-			float orthoSize = camera.GetOrthographicSize();
-			if (ImGui::DragFloat("Second Camera Orthographic Size", &orthoSize))
-				camera.SetOrthographicSize(orthoSize);
-		}
-
 		ImGui::End();
 
 		//////////////////////////////////////////////////////////////////////////

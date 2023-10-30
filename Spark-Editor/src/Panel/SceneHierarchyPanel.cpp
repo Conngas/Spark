@@ -2,6 +2,7 @@
 #include "Spark/Scenes/Component.h"
 
 #include <imgui/imgui.h>
+#include <imgui/imgui_internal.h>
 #include <glm/gtc/type_ptr.hpp>
 
 namespace Spark {
@@ -63,6 +64,60 @@ namespace Spark {
 		}
 	}
 
+	// 绘制变量的组件
+	static void DrawVec3Control(const std::string& label, glm::vec3& value, float resetValues = 0.0f, float columnWidth = 100.0f)
+	{
+		ImGui::PushID(label.c_str());
+		// Set Info 
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, columnWidth);
+		ImGui::Text(label.c_str());
+		ImGui::NextColumn();
+		// Ref Demo Vec3 Component
+		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0.0f,0.0f });
+
+		// Set Appearance
+		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+		// X Part
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+		if (ImGui::Button("X", buttonSize))
+			value.x = resetValues;
+		ImGui::PopStyleColor(3);
+		ImGui::SameLine();
+		ImGui::DragFloat("##X", &value.x, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		// Y Part
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
+		if (ImGui::Button("Y", buttonSize))
+			value.y = resetValues;
+		ImGui::PopStyleColor(3);
+		ImGui::SameLine();
+		ImGui::DragFloat("##Y", &value.y, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+		// Z Part
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.35f, 0.9f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.25f, 0.8f, 1.0f));
+		if (ImGui::Button("Z", buttonSize))
+			value.z = resetValues;
+		ImGui::PopStyleColor(3);
+		ImGui::SameLine();
+		ImGui::DragFloat("##Z", &value.z, 0.1f, 0.0f, 0.0f, "%.2f");
+		ImGui::PopItemWidth();
+
+		ImGui::PopStyleVar();
+		ImGui::Columns(1);
+		ImGui::PopID();
+	}
+
 	void SceneHierarchyPanel::DrawComponent(Entity entity)
 	{
 		//////////////////////////////////////////////////////////////////////////
@@ -81,15 +136,19 @@ namespace Spark {
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-
+		
 		if (entity.HasComponent<TransformComponent>())
 		{
 			// 设置唯一树节点序号用于打开列表
 			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
 			{
-				auto& transform = entity.GetComponent<TransformComponent>().Transform;
-				ImGui::DragFloat3("Position", glm::value_ptr(transform[3]), 0.1f);
-				// 
+				auto& transformComponent = entity.GetComponent<TransformComponent>();
+				DrawVec3Control("Translation", transformComponent.Translation);
+				glm::vec3 rotation = glm::degrees(transformComponent.Rotation);
+				DrawVec3Control("Rotation", rotation);
+				transformComponent.Rotation = glm::radians(rotation);
+				DrawVec3Control("Scale", transformComponent.Scale, 1.0f);
+
 				ImGui::TreePop();
 			}
 		}
@@ -99,10 +158,10 @@ namespace Spark {
 		if (entity.HasComponent<CameraComponent>())
 		{
 			// 从相机ID转为HashCode并设置节点为折叠开启状态，设置名称为Camera
-			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Camera"));
+			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Camera"))
 			{
 				auto& cameraComponent = entity.GetComponent<CameraComponent>();
-				auto& camera = cameraComponent.camera;
+				auto& camera = cameraComponent.Camera;
 				ImGui::Checkbox("Primary", &cameraComponent.Primary);
 				const char* projectionTypeString[] = { "Perspective", "Orthographic" };
 				const char* currentProjectionTypeString = projectionTypeString[(int)camera.GetProjectionType()];
@@ -154,7 +213,7 @@ namespace Spark {
 					if (ImGui::DragFloat("Far Plane", &orthoFar))
 						camera.SetOrthographicFarClip(orthoFar);
 
-					ImGui::Checkbox("Fixed Aspect Ratio", &cameraComponent.FixedAspectionRatio);
+					ImGui::Checkbox("Fixed Aspect Ratio", &cameraComponent.FixedAspectRatio);
 				}
 				ImGui::TreePop();
 			}
