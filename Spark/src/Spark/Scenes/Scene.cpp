@@ -75,7 +75,7 @@ namespace Spark {
 		}
 
 		Camera* mainCamera = nullptr;
-		glm::mat4* cameraTransform = nullptr;
+		glm::mat4 cameraTransform;
 		{
 			auto view = m_Registry.view<TransformComponent, CameraComponent>();
 			for (auto entity: view)
@@ -84,21 +84,21 @@ namespace Spark {
 				// 若为主相机
 				if (cameraCom.Primary)
 				{
-					mainCamera = &cameraCom.camera;
-					cameraTransform = &transformCom.Transform;
+					mainCamera = &cameraCom.Camera;
+					cameraTransform = transformCom.GetTransform();
 					break;
 				}
 			}
 		}
 		if (mainCamera)
 		{
-			Renderer2D::BeginScene(*mainCamera, *cameraTransform);
+			Renderer2D::BeginScene(*mainCamera, cameraTransform);
 
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
 				auto [transformCom, spriteColor] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-				Renderer2D::DrawQuad(transformCom.Transform, spriteColor.Color);
+				Renderer2D::DrawQuad(transformCom.GetTransform(), spriteColor.Color);
 			}
 
 			Renderer2D::EndScene();
@@ -115,8 +115,8 @@ namespace Spark {
 		for (auto entity : view)
 		{
 			auto& cameraComponent = view.get<CameraComponent>(entity);
-			if (!cameraComponent.FixedAspectionRatio)
-				cameraComponent.camera.SetViewPortSize(width, height);
+			if (!cameraComponent.FixedAspectRatio)
+				cameraComponent.Camera.SetViewPortSize(width, height);
 		}
 	}
 }
