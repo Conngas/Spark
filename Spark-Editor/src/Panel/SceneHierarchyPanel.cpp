@@ -32,6 +32,14 @@ namespace Spark {
 
 		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
 			m_SelectionContext = {};
+
+		// Right Click On Black Panel
+		if (ImGui::BeginPopupContextWindow(0, 1, false))
+		{
+			if (ImGui::MenuItem("Create Empty Entity"))
+				m_Context->CreateEntity("Empty Entity");
+			ImGui::EndPopup();
+		}
 		ImGui::End();
 
 		//////////////////////////////////////////////////////////////////////////
@@ -39,7 +47,26 @@ namespace Spark {
 		//////////////////////////////////////////////////////////////////////////
 		ImGui::Begin("Properties");
 		if (m_SelectionContext)
+		{
 			DrawComponent(m_SelectionContext);
+			
+			if (ImGui::Button("Add Component"))
+				ImGui::OpenPopup("AddComponent");
+			if (ImGui::BeginPopup("AddComponent"))
+			{
+				if (ImGui::MenuItem("Camera"))
+				{
+					m_SelectionContext.AddComponent<CameraComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+				if (ImGui::MenuItem("Sprite Render"))
+				{
+					m_SelectionContext.AddComponent<SpriteRendererComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+				ImGui::EndPopup();
+			}
+		}
 		ImGui::End();
 	}
 
@@ -53,6 +80,15 @@ namespace Spark {
 		{
 			m_SelectionContext = entity;
 		}
+
+		bool entityDeleted = false;
+		if (ImGui::BeginPopupContextItem())
+		{
+			if (ImGui::MenuItem("DeleteEntity"))
+				entityDeleted = true;
+			ImGui::EndPopup();
+		}
+
 		if (opened)
 		{
 			ImGuiTreeNodeFlags flag = ImGuiTreeNodeFlags_OpenOnArrow;
@@ -61,6 +97,14 @@ namespace Spark {
 			if (opened)
 				ImGui::TreePop();
 			ImGui::TreePop();
+		}
+
+		// Delay Delete 延迟删除
+		if (entityDeleted)
+		{
+			m_Context->DestoryEntity(entity);
+			if (m_SelectionContext == entity)
+				m_SelectionContext = {};
 		}
 	}
 
@@ -136,11 +180,14 @@ namespace Spark {
 		}
 
 		//////////////////////////////////////////////////////////////////////////
-		
+		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+
 		if (entity.HasComponent<TransformComponent>())
 		{
 			// 设置唯一树节点序号用于打开列表
-			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
+			bool open = ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), treeNodeFlags, "Transform");
+			
+			if(open)
 			{
 				auto& transformComponent = entity.GetComponent<TransformComponent>();
 				DrawVec3Control("Translation", transformComponent.Translation);
@@ -158,7 +205,7 @@ namespace Spark {
 		if (entity.HasComponent<CameraComponent>())
 		{
 			// 从相机ID转为HashCode并设置节点为折叠开启状态，设置名称为Camera
-			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Camera"))
+			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), treeNodeFlags, "Camera"))
 			{
 				auto& cameraComponent = entity.GetComponent<CameraComponent>();
 				auto& camera = cameraComponent.Camera;
@@ -223,12 +270,32 @@ namespace Spark {
 
 		if (entity.HasComponent<SpriteRendererComponent>())
 		{
-			if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Render"))
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+			bool open = ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), treeNodeFlags, "Sprite Render");
+			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
+			if (ImGui::Button("+", ImVec2{ 20, 20 }))
+			{
+				ImGui::OpenPopup("ComponentSettings");
+			}
+			ImGui::PopStyleVar();
+			
+			bool removeComponent = false;
+			if (ImGui::BeginPopup("ComponentSettings"))
+			{
+				if (ImGui::MenuItem("Remove Component"))
+					removeComponent = true;
+				ImGui::EndPopup();
+			}
+
+			if(open)
 			{
 				auto& src = entity.GetComponent<SpriteRendererComponent>();
 				ImGui::ColorEdit4("Color", glm::value_ptr(src.Color));
 				ImGui::TreePop();
 			}
+
+			if (removeComponent)
+				entity.RemoveComponent<SpriteRendererComponent>();
 		}
 	}
 }
