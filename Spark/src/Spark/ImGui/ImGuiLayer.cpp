@@ -54,6 +54,10 @@ namespace Spark {
 		// 设置BIND
 		ImGui_ImplGlfw_InitForOpenGL(window, true);
 		ImGui_ImplOpenGL3_Init("#version 410");
+
+		// Setting Font 设置字体，字体排列以数组为关系
+		io.Fonts->AddFontFromFileTTF("Assets/Fonts/HarmonyOS_Sans/HarmonyOS_Sans_Black.ttf", 16.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Assets/Fonts/HarmonyOS_Sans/HarmonyOS_Sans_Regular.ttf", 16.0f);
 	}
 
 	void ImGuiLayer::OnDetach()

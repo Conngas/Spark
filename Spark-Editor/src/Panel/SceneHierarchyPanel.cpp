@@ -75,6 +75,7 @@ namespace Spark {
 		auto& tag = entity.GetComponent<TagComponent>().Tag;
 		// 初始化TreeNodeFlags用于判定选中状态变量，（）为转换提升作用
 		ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
 		if (ImGui::IsItemClicked())
 		{
@@ -111,6 +112,10 @@ namespace Spark {
 	// 绘制变量的组件
 	static void DrawVec3Control(const std::string& label, glm::vec3& value, float resetValues = 0.0f, float columnWidth = 100.0f)
 	{
+		// Get Fonts
+		ImGuiIO& io = ImGui::GetIO();
+		auto boldfont = io.Fonts->Fonts[0];
+
 		ImGui::PushID(label.c_str());
 		// Set Info 
 		ImGui::Columns(2);
@@ -128,8 +133,10 @@ namespace Spark {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+		ImGui::PushFont(boldfont);
 		if (ImGui::Button("X", buttonSize))
 			value.x = resetValues;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 		ImGui::SameLine();
 		ImGui::DragFloat("##X", &value.x, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -139,8 +146,10 @@ namespace Spark {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
+		ImGui::PushFont(boldfont);
 		if (ImGui::Button("Y", buttonSize))
 			value.y = resetValues;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 		ImGui::SameLine();
 		ImGui::DragFloat("##Y", &value.y, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -150,8 +159,10 @@ namespace Spark {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.35f, 0.9f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.25f, 0.8f, 1.0f));
+		ImGui::PushFont(boldfont);
 		if (ImGui::Button("Z", buttonSize))
 			value.z = resetValues;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 		ImGui::SameLine();
 		ImGui::DragFloat("##Z", &value.z, 0.1f, 0.0f, 0.0f, "%.2f");
