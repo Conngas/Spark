@@ -102,16 +102,16 @@ void Sandbox2D::OnUpdate(Spark::Timestep ts)
 	}
 #endif
 	// ≤‚ ‘ParticaleSystem
-	if (Spark::Input::IsMouseButtonPressed(SPK_MOUSE_BUTTON_LEFT))
+	if (Spark::Input::IsMouseButtonPressed(Spark::Mouse::ButtonLeft))
 	{
-		auto [x, y] = Spark::Input::GetMousePosition();
+		glm::vec2 mousePos = Spark::Input::GetMousePosition();
 		auto width = Spark::Application::Get().GetWindow().GetWidth();
 		auto height = Spark::Application::Get().GetWindow().GetHeight();
 		auto bounds = m_CameraController.GetBounds();
 		auto pos = m_CameraController.GetCamera().GetPosition();
-		x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
-		y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
-		m_Particale.Postion = { x + pos.x, y + pos.y };
+		mousePos.x = (mousePos.x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		mousePos.y = bounds.GetHeight() * 0.5f - (mousePos.y / height) * bounds.GetHeight();
+		m_Particale.Postion = { mousePos.x + pos.x, mousePos.y + pos.y };
 		for (int i = 0; i < 5; ++i)
 			m_ParticaleSystem.Emit(m_Particale);
 	}
