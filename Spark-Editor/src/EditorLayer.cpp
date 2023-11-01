@@ -246,7 +246,7 @@ namespace Spark {
 		}
 
 		// When using ImGuiDockNodeFlags_PassthruDockspace, DockSpace() will render our background and handle the pass-thru hole, so we ask Begin() to not render a background.
-		if (opt_flags & ImGuiDockNodeFlags_PassthruDockspace)
+		if (opt_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 			window_flags |= ImGuiWindowFlags_NoBackground;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
@@ -256,13 +256,18 @@ namespace Spark {
 		if (opt_fullscreen)
 			ImGui::PopStyleVar(2);
 
-		// Dock space
+		// Docking Space
 		ImGuiIO& io = ImGui::GetIO();
+		// Limit Docking Width
+		ImGuiStyle& style = ImGui::GetStyle();
+		float minWinSize = style.WindowMinSize.x;
+		style.WindowMinSize.x = 370.0f;
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("MyDockspace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), opt_flags);
 		}
+		style.WindowMinSize.x = minWinSize;
 
 		if (ImGui::BeginMenuBar())
 		{

@@ -34,7 +34,7 @@ namespace Spark {
 			m_SelectionContext = {};
 
 		// Right Click On Black Panel
-		if (ImGui::BeginPopupContextWindow(0, 1, false))
+		if (ImGui::BeginPopupContextWindow(0, 1))
 		{
 			if (ImGui::MenuItem("Create Empty Entity"))
 				m_Context->CreateEntity("Empty Entity");
@@ -48,24 +48,7 @@ namespace Spark {
 		ImGui::Begin("Properties");
 		if (m_SelectionContext)
 		{
-			DrawComponent(m_SelectionContext);
-			
-			if (ImGui::Button("Add Component"))
-				ImGui::OpenPopup("AddComponent");
-			if (ImGui::BeginPopup("AddComponent"))
-			{
-				if (ImGui::MenuItem("Camera"))
-				{
-					m_SelectionContext.AddComponent<CameraComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-				if (ImGui::MenuItem("Sprite Render"))
-				{
-					m_SelectionContext.AddComponent<SpriteRendererComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-				ImGui::EndPopup();
-			}
+			DrawComponents(m_SelectionContext);
 		}
 		ImGui::End();
 	}
@@ -75,6 +58,7 @@ namespace Spark {
 		auto& tag = entity.GetComponent<TagComponent>().Tag;
 		// 初始化TreeNodeFlags用于判定选中状态变量，（）为转换提升作用
 		ImGuiTreeNodeFlags flags = ((m_SelectionContext == entity) ? ImGuiTreeNodeFlags_Selected : 0) | ImGuiTreeNodeFlags_OpenOnArrow;
+		flags |= ImGuiTreeNodeFlags_SpanAvailWidth;
 		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.c_str());
 		if (ImGui::IsItemClicked())
 		{
@@ -91,7 +75,7 @@ namespace Spark {
 
 		if (opened)
 		{
-			ImGuiTreeNodeFlags flag = ImGuiTreeNodeFlags_OpenOnArrow;
+			ImGuiTreeNodeFlags flag = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 			// 硬编码作为节点
 			bool opened = ImGui::TreeNodeEx((void*)9817239, flags, tag.c_str());
 			if (opened)
@@ -111,6 +95,10 @@ namespace Spark {
 	// 绘制变量的组件
 	static void DrawVec3Control(const std::string& label, glm::vec3& value, float resetValues = 0.0f, float columnWidth = 100.0f)
 	{
+		// Get Fonts
+		ImGuiIO& io = ImGui::GetIO();
+		auto boldfont = io.Fonts->Fonts[0];
+
 		ImGui::PushID(label.c_str());
 		// Set Info 
 		ImGui::Columns(2);
@@ -128,8 +116,10 @@ namespace Spark {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+		ImGui::PushFont(boldfont);
 		if (ImGui::Button("X", buttonSize))
 			value.x = resetValues;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 		ImGui::SameLine();
 		ImGui::DragFloat("##X", &value.x, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -139,8 +129,10 @@ namespace Spark {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.2f, 0.7f, 0.2f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
+		ImGui::PushFont(boldfont);
 		if (ImGui::Button("Y", buttonSize))
 			value.y = resetValues;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 		ImGui::SameLine();
 		ImGui::DragFloat("##Y", &value.y, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -150,8 +142,10 @@ namespace Spark {
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.1f, 0.25f, 0.8f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.35f, 0.9f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.25f, 0.8f, 1.0f));
+		ImGui::PushFont(boldfont);
 		if (ImGui::Button("Z", buttonSize))
 			value.z = resetValues;
+		ImGui::PopFont();
 		ImGui::PopStyleColor(3);
 		ImGui::SameLine();
 		ImGui::DragFloat("##Z", &value.z, 0.1f, 0.0f, 0.0f, "%.2f");
@@ -162,8 +156,52 @@ namespace Spark {
 		ImGui::PopID();
 	}
 
-	void SceneHierarchyPanel::DrawComponent(Entity entity)
+	template<typename T, typename UIFunction>
+	static void DrawComponent(const std::string& name, Entity entity, UIFunction uiFunction)
 	{
+		// Setting Flags
+		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen
+			| ImGuiTreeNodeFlags_Framed 
+			| ImGuiTreeNodeFlags_SpanAvailWidth
+			| ImGuiTreeNodeFlags_AllowItemOverlap
+			| ImGuiTreeNodeFlags_FramePadding;
+
+		if (entity.HasComponent<T>())
+		{
+			auto& component = entity.GetComponent<T>();
+			ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
+
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
+			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+			ImGui::Separator();
+			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, name.c_str());
+			ImGui::PopStyleVar();
+			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5);
+			if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight }))
+			{
+				ImGui::OpenPopup("ComponentSettings");
+			}
+			bool removeComponent = false;
+			if (ImGui::BeginPopup("ComponentSettings"))
+			{
+				if (ImGui::MenuItem("Remove Component"))
+					removeComponent = true;
+				ImGui::EndPopup();
+			}
+			if (open)
+			{
+				uiFunction(component);
+				ImGui::TreePop();
+			}
+			if (removeComponent)
+				entity.RemoveComponent<T>();
+		}
+	}
+
+	void SceneHierarchyPanel::DrawComponents(Entity entity)
+	{
+		//////////////////////////////////////////////////////////////////////////
+		/// Require
 		//////////////////////////////////////////////////////////////////////////
 
 		if (entity.HasComponent<TagComponent>())
@@ -173,43 +211,51 @@ namespace Spark {
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
 			strcpy_s(buffer, sizeof(buffer), tag.c_str());
-			if (ImGui::InputText("Tag", buffer, sizeof(buffer)))
+			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
 			{
 				tag = std::string(buffer);
 			}
 		}
 
-		//////////////////////////////////////////////////////////////////////////
-		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
-
-		if (entity.HasComponent<TransformComponent>())
+		ImGui::SameLine();
+		ImGui::PushItemWidth(-1);
+		if (ImGui::Button("Add Component"))
+			ImGui::OpenPopup("AddComponent");
+		if (ImGui::BeginPopup("AddComponent"))
 		{
-			// 设置唯一树节点序号用于打开列表
-			bool open = ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), treeNodeFlags, "Transform");
-			
-			if(open)
+			if (ImGui::MenuItem("Camera"))
 			{
-				auto& transformComponent = entity.GetComponent<TransformComponent>();
-				DrawVec3Control("Translation", transformComponent.Translation);
-				glm::vec3 rotation = glm::degrees(transformComponent.Rotation);
-				DrawVec3Control("Rotation", rotation);
-				transformComponent.Rotation = glm::radians(rotation);
-				DrawVec3Control("Scale", transformComponent.Scale, 1.0f);
-
-				ImGui::TreePop();
+				m_SelectionContext.AddComponent<CameraComponent>();
+				ImGui::CloseCurrentPopup();
 			}
+
+			if (ImGui::MenuItem("Sprite Render"))
+			{
+				m_SelectionContext.AddComponent<SpriteRendererComponent>();
+				ImGui::CloseCurrentPopup();
+			}
+
+			ImGui::EndPopup();
 		}
+		ImGui::PopItemWidth();
+
+		DrawComponent<TransformComponent>("Transform Component", entity, [](auto& component)
+			{
+				DrawVec3Control("Translation", component.Translation);
+				glm::vec3 rotation = glm::degrees(component.Rotation);
+				DrawVec3Control("Rotation", rotation);
+				component.Rotation = glm::radians(rotation);
+				DrawVec3Control("Scale", component.Scale, 1.0f);
+			});
 
 		//////////////////////////////////////////////////////////////////////////
+		/// Flexible
+		//////////////////////////////////////////////////////////////////////////
 
-		if (entity.HasComponent<CameraComponent>())
-		{
-			// 从相机ID转为HashCode并设置节点为折叠开启状态，设置名称为Camera
-			if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), treeNodeFlags, "Camera"))
+		DrawComponent<CameraComponent>("Camera Component", entity, [](auto& component) 
 			{
-				auto& cameraComponent = entity.GetComponent<CameraComponent>();
-				auto& camera = cameraComponent.Camera;
-				ImGui::Checkbox("Primary", &cameraComponent.Primary);
+				auto& camera = component.Camera;
+				ImGui::Checkbox("Primary", &component.Primary);
 				const char* projectionTypeString[] = { "Perspective", "Orthographic" };
 				const char* currentProjectionTypeString = projectionTypeString[(int)camera.GetProjectionType()];
 				// 使用选择框决定相机采取的透视方法
@@ -243,7 +289,7 @@ namespace Spark {
 
 					float perspFar = camera.GetPerspectiveFarClip();
 					if (ImGui::DragFloat("Far Plane", &perspFar))
-						camera.SetPerspectiveFarClip(perspFar);					
+						camera.SetPerspectiveFarClip(perspFar);
 				}
 
 				if (camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
@@ -260,42 +306,13 @@ namespace Spark {
 					if (ImGui::DragFloat("Far Plane", &orthoFar))
 						camera.SetOrthographicFarClip(orthoFar);
 
-					ImGui::Checkbox("Fixed Aspect Ratio", &cameraComponent.FixedAspectRatio);
+					ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
 				}
-				ImGui::TreePop();
-			}
-		}
+			});
 
-		//////////////////////////////////////////////////////////////////////////
-
-		if (entity.HasComponent<SpriteRendererComponent>())
-		{
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
-			bool open = ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), treeNodeFlags, "Sprite Render");
-			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
-			if (ImGui::Button("+", ImVec2{ 20, 20 }))
+		DrawComponent<SpriteRendererComponent>("Sprite Render", entity, [](auto& component)
 			{
-				ImGui::OpenPopup("ComponentSettings");
-			}
-			ImGui::PopStyleVar();
-			
-			bool removeComponent = false;
-			if (ImGui::BeginPopup("ComponentSettings"))
-			{
-				if (ImGui::MenuItem("Remove Component"))
-					removeComponent = true;
-				ImGui::EndPopup();
-			}
-
-			if(open)
-			{
-				auto& src = entity.GetComponent<SpriteRendererComponent>();
-				ImGui::ColorEdit4("Color", glm::value_ptr(src.Color));
-				ImGui::TreePop();
-			}
-
-			if (removeComponent)
-				entity.RemoveComponent<SpriteRendererComponent>();
-		}
+				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+			});
 	}
 }

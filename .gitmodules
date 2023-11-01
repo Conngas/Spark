@@ -1,12 +1,16 @@
-[submodule "Spark/vendor/spdlog"]
-	path = Spark/vendor/spdlog
-	url = ../../gabime/spdlog.git
-[submodule "Spark/vendor/GLFW"]
-	path = Spark/vendor/GLFW
-	url = ../../TheCherno/glfw.git
 [submodule "Spark/vendor/imgui"]
 	path = Spark/vendor/imgui
-	url = ../../TheCherno/imgui.git
+	url = git@github.com:TheCherno/imgui.git
+	branch = docking
+[submodule "Spark/vendor/spdlog"]
+	path = Spark/vendor/spdlog
+	url = git@github.com:gabime/spdlog.git
+	branch = v1.x
+[submodule "Spark/vendor/GLFW"]
+	path = Spark/vendor/GLFW
+	url = git@github.com:TheCherno/glfw.git
+	branch = master
 [submodule "Spark/vendor/glm"]
 	path = Spark/vendor/glm
-	url = ../../g-truc/glm.git
+	url = git@github.com:g-truc/glm.git
+	branch = master
