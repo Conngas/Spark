@@ -183,6 +183,9 @@
     <ClInclude Include="src\Spark\Scenes\SceneCamera.h">
       <Filter>src\Spark\Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\Scenes\SceneSerializor.h">
+      <Filter>src\Spark\Scenes</Filter>
+    </ClInclude>
     <ClInclude Include="src\Spark\Scenes\ScriptableEntity.h">
       <Filter>src\Spark\Scenes</Filter>
     </ClInclude>
@@ -291,6 +294,9 @@
       <Filter>src\Spark\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\Spark\Scenes\SceneCamera.cpp">
+      <Filter>src\Spark\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Scenes\SceneSerializor.cpp">
       <Filter>src\Spark\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="src\Spark\SubSystem\ParticaleSystem.cpp">

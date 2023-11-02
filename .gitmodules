@@ -14,3 +14,6 @@
 	path = Spark/vendor/glm
 	url = git@github.com:g-truc/glm.git
 	branch = master
+[submodule "Spark/vendor/yaml-cpp"]
+	path = Spark/vendor/yaml-cpp
+	url = git@github.com:TheCherno/yaml-cpp.git

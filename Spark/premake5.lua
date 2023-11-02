@@ -41,7 +41,8 @@ project "Spark"
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
-        "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+		"%{IncludeDir.yaml_cpp}"
     }
 
     -- link文件
@@ -50,6 +51,7 @@ project "Spark"
         "GLFW",
         "Glad",
         "ImGui",
+		"yaml-cpp",
         "opengl32.lib"
     }
 
