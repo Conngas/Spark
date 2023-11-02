@@ -1,6 +1,6 @@
 IncludeDir = {}
 IncludeDir['stb_image'] = "%{wks.location}/Spark/vendor/stb_image"
-IncludeDir["ymal_cpp"] = "%{wks.location}/Spark/vendor/yaml-cpp/include"
+IncludeDir["yaml_cpp"] = "%{wks.location}/Spark/vendor/yaml-cpp/include"
 IncludeDir["Box2D"] = "%{wks.location}/Spark/vendor/Box2D/include"
 IncludeDir["filewatch"] = "%{wks.location}/Spark/vendor/filewatch"
 IncludeDir["GLFW"] = "%{wks.location}/Spark/vendor/GLFW/include"

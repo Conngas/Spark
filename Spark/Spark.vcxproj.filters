@@ -183,6 +183,9 @@
     <ClInclude Include="src\Spark\Scenes\SceneCamera.h">
       <Filter>src\Spark\Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\Scenes\SceneSerializor.h">
+      <Filter>src\Spark\Scenes</Filter>
+    </ClInclude>
     <ClInclude Include="src\Spark\Scenes\ScriptableEntity.h">
       <Filter>src\Spark\Scenes</Filter>
     </ClInclude>
@@ -195,7 +198,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Spark\Scenes\SceneSerializor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
@@ -294,6 +296,9 @@
     <ClCompile Include="src\Spark\Scenes\SceneCamera.cpp">
       <Filter>src\Spark\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="src\Spark\Scenes\SceneSerializor.cpp">
+      <Filter>src\Spark\Scenes</Filter>
+    </ClCompile>
     <ClCompile Include="src\Spark\SubSystem\ParticaleSystem.cpp">
       <Filter>src\Spark\SubSystem</Filter>
     </ClCompile>
@@ -303,6 +308,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Spark\Scenes\SceneSerializor.cpp" />
   </ItemGroup>
 </Project>

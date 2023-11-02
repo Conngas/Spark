@@ -1,0 +1,29 @@
+Scene: Untitled
+Entities:
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: Camera
+    TransformComponent:
+      Translation: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 0
+        PerspectiveFOV: 0.785398185
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: true
+      FixedAspectRatio: false
+  - Entity: 12837192831273
+    TagComponent:
+      Tag: LuckSquare
+    TransformComponent:
+      Translation: [0.200000003, 0, -2.0999999]
+      Rotation: [0, -0.816814065, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [0.237942636, 0.447218478, 0.569620252, 1]

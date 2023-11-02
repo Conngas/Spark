@@ -51,7 +51,7 @@ project "Spark"
         "GLFW",
         "Glad",
         "ImGui",
-		"yaml_cpp",
+		"yaml-cpp",
         "opengl32.lib"
     }
 

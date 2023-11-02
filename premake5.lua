@@ -31,7 +31,7 @@ workspace "Spark"
     IncludeDir["glm"] = "%{wks.location}/Spark/vendor/glm"
     IncludeDir["stb_image"] = "%{wks.location}/Spark/vendor/stb_image"
     IncludeDir["entt"] = "%{wks.location}/Spark/vendor/entt/include"
-	IncludeDir["yaml_cpp"] = "%{wks.location}/Spark/vendor/YAML/include"
+	IncludeDir["yaml_cpp"] = "%{wks.location}/Spark/vendor/yaml-cpp/include"
 
     -- 组依赖（include）
     -- include "Spark/vendor/GLFW"
@@ -42,7 +42,7 @@ workspace "Spark"
         include "Spark/vendor/GLFW"
         include "Spark/vendor/Glad"
         include "Spark/vendor/imgui"
-		include "Spark/vendor/YAML"
+	include "Spark/vendor/yaml-cpp"
         
     group ""
 
