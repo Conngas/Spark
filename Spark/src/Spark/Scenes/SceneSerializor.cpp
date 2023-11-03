@@ -148,7 +148,7 @@ namespace Spark {
 		out << YAML::EndMap;
 	}
 	
-	void SceneSerializor::Serialize(const std::string& filePath)
+	void SceneSerializor::Serialize(const std::wstring& filePath)
 	{
 		// Create YAML Obj 创建YAML对象
 		YAML::Emitter out;
@@ -172,13 +172,13 @@ namespace Spark {
 		fout << out.c_str();
 	}
 
-	void SceneSerializor::SerializeRuntime(const std::string& filePath)
+	void SceneSerializor::SerializeRuntime(const std::wstring& filePath)
 	{
 		// To Be Continue
 		SPK_CORE_ASSERT(false);
 	}
 
-	bool SceneSerializor::DeSerialize(const std::string& filePath)
+	bool SceneSerializor::DeSerialize(const std::wstring& filePath)
 	{
 		// 打开给定位置的字符流，rdbuf用于获取缓冲部分
 		std::ifstream stream(filePath);
@@ -249,7 +249,7 @@ namespace Spark {
 	}
 
 	// 待实现
-	bool SceneSerializor::DeSerializeRuntime(const std::string& filePath)
+	bool SceneSerializor::DeSerializeRuntime(const std::wstring& filePath)
 	{
 		SPK_CORE_ASSERT(false);
 		return false;

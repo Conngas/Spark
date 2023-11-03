@@ -10,6 +10,7 @@ namespace Spark {
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& context)
 	{
 		SetContext(context);
+		m_SelectionContext = {};
 	}
 
 	void SceneHierarchyPanel::SetContext(const Ref<Scene>& context)
