@@ -19,6 +19,11 @@ namespace Spark {
 		virtual void OnImGuiRender() override;
 		void OnEvent(Spark::Event& e) override;
 	private:
+		bool OnKeyPressed(KeyPressedEvent& e);
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
+	private:
 		Spark::OrthographicCameraController m_CameraController;
 	
 		// Test 
@@ -42,9 +47,6 @@ namespace Spark {
 
 		ParticaleSystem m_ParticaleSystem;
 		ParticaleProps m_Particale;
-
-		uint32_t m_MapWidth, m_MapHeight;
-		std::unordered_map<char, Spark::Ref<Spark::SubTexture2D>> s_TextureMap;
 
 		// Panel
 		SceneHierarchyPanel m_SceneHierarchyPanel;

@@ -9,11 +9,11 @@ namespace Spark {
 	public:
 		SceneSerializor(const Ref<Scene>& scene);
 
-		void Serialize(const std::string& filePath);
-		void SerializeRuntime(const std::string& filePath);
+		void Serialize(const std::wstring& filePath);
+		void SerializeRuntime(const std::wstring& filePath);
 
-		bool DeSerialize(const std::string& filePath);
-		bool DeSerializeRuntime(const std::string& filePath);
+		bool DeSerialize(const std::wstring& filePath);
+		bool DeSerializeRuntime(const std::wstring& filePath);
 	private:
 		Ref<Scene> m_Scene;
 	};
