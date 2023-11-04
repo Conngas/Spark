@@ -1,6 +1,7 @@
 #pragma once
-
 #include "Spark/Scenes/Scene.h"
+
+#include <optional>
 
 namespace Spark {
 
@@ -9,11 +10,11 @@ namespace Spark {
 	public:
 		SceneSerializor(const Ref<Scene>& scene);
 
-		void Serialize(const std::wstring& filePath);
-		void SerializeRuntime(const std::wstring& filePath);
+		void Serialize(const std::optional<std::wstring>& filePath);
+		void SerializeRuntime(const std::optional<std::wstring>& filePath);
 
-		bool DeSerialize(const std::wstring& filePath);
-		bool DeSerializeRuntime(const std::wstring& filePath);
+		bool DeSerialize(const std::optional<std::wstring>& filePath);
+		bool DeSerializeRuntime(const std::optional<std::wstring>& filePath);
 	private:
 		Ref<Scene> m_Scene;
 	};

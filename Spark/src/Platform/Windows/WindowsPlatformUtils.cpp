@@ -2,6 +2,7 @@
 #include "Spark/Core/Application.h"
 #include "Spark/Utils/PlatformUtils.h"
 
+#include <sstream>
 #include <commdlg.h>
 #include <GLFW/glfw3.h>
 // 获取父窗口并冻结
@@ -11,7 +12,7 @@
 
 namespace Spark {
 	// Standard Windows OpenFile Option 标准Win文件操作，使用宽字符串保证兼容性
-	std::wstring FileDialogs::OpenFile(const WCHAR* filter)
+	std::optional<std::wstring> FileDialogs::OpenFile(const WCHAR* filter)
 	{
 		// 存储文件对话框配置信息
 		OPENFILENAMEW openfileName;
@@ -38,11 +39,11 @@ namespace Spark {
 		{
 			return openfileName.lpstrFile;
 		}
-		// 取消操作返回空字符串
-		return std::wstring();
+		// 取消操作返回空optional文件
+		return std::nullopt;
 	}
 
-	std::wstring FileDialogs::SaveFile(const WCHAR* filter)
+	std::optional<std::wstring> FileDialogs::SaveFile(const WCHAR* filter)
 	{
 		OPENFILENAMEW openFileName;
 		WCHAR szFile[260] = { 0 };
@@ -53,11 +54,13 @@ namespace Spark {
 		openFileName.nMaxFile = sizeof(szFile);
 		openFileName.lpstrFilter = filter;
 		openFileName.nFilterIndex = 1;
+		// 未指定名称时，使用默认的扩展名称存储文件
+		openFileName.lpstrDefExt = std::wcschr(filter, L'\0') + 1;
 		openFileName.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 		if (GetSaveFileNameW(&openFileName) == TRUE)
 		{
 			return openFileName.lpstrFile;
 		}
-		return std::wstring();
+		return std::nullopt;
 	}
 }
