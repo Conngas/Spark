@@ -3,6 +3,7 @@
 #include "Spark/Scenes/Component.h"
 #include "Spark/Scenes/SceneSerializor.h"
 
+#include <optional>
 #include <fstream>
 #include <yaml-cpp/yaml.h>
 
@@ -18,6 +19,7 @@ namespace YAML {
 			node.push_back(rhs.x);
 			node.push_back(rhs.y);
 			node.push_back(rhs.z);
+			node.SetStyle(EmitterStyle::Flow);
 			return node;
 		}
 
@@ -42,6 +44,7 @@ namespace YAML {
 			node.push_back(rhs.y);
 			node.push_back(rhs.z);
 			node.push_back(rhs.w);
+			node.SetStyle(EmitterStyle::Flow);
 			return node;
 		}
 
@@ -148,7 +151,7 @@ namespace Spark {
 		out << YAML::EndMap;
 	}
 	
-	void SceneSerializor::Serialize(const std::wstring& filePath)
+	void SceneSerializor::Serialize(const std::optional<std::wstring>& filePath)
 	{
 		// Create YAML Obj 创建YAML对象
 		YAML::Emitter out;
@@ -168,20 +171,20 @@ namespace Spark {
 		out << YAML::EndSeq;
 		out << YAML::EndMap;
 		// 将数据写入文件中
-		std::ofstream fout(filePath);
+		std::ofstream fout(filePath->c_str());
 		fout << out.c_str();
 	}
 
-	void SceneSerializor::SerializeRuntime(const std::wstring& filePath)
+	void SceneSerializor::SerializeRuntime(const std::optional<std::wstring>& filePath)
 	{
 		// To Be Continue
 		SPK_CORE_ASSERT(false);
 	}
 
-	bool SceneSerializor::DeSerialize(const std::wstring& filePath)
+	bool SceneSerializor::DeSerialize(const std::optional<std::wstring>& filePath)
 	{
 		// 打开给定位置的字符流，rdbuf用于获取缓冲部分
-		std::ifstream stream(filePath);
+		std::ifstream stream(filePath->c_str());
 		std::stringstream strStream;
 		strStream << stream.rdbuf();
 		// 字符流加载到Node中
@@ -249,7 +252,7 @@ namespace Spark {
 	}
 
 	// 待实现
-	bool SceneSerializor::DeSerializeRuntime(const std::wstring& filePath)
+	bool SceneSerializor::DeSerializeRuntime(const std::optional<std::wstring>& filePath)
 	{
 		SPK_CORE_ASSERT(false);
 		return false;

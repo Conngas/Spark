@@ -311,8 +311,8 @@ namespace Spark {
 	void EditorLayer::OpenScene()
 	{
 		// Spark Scene (*.spark) 为文件筛选器的第一个字符串 后者为限制规则，添加L使其变为WCHAR* 规格以适应Unicode字符
-		std::wstring filePath = FileDialogs::OpenFile(L"Spark Scene (*.spark)\0*.spark\0");
-		if (!filePath.empty())
+		std::optional<std::wstring> filePath = FileDialogs::OpenFile(L"Spark Scene (*.spark)\0*.spark\0");
+		if (filePath)
 		{
 			m_ActiveScene = CreateRef<Scene>();
 			m_ActiveScene->OnViewPortResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
@@ -325,8 +325,8 @@ namespace Spark {
 
 	void EditorLayer::SaveSceneAs()
 	{
-		std::wstring filePath = FileDialogs::SaveFile(L"Spark Scene (*.spark)\0*.spark\0");
-		if (!filePath.empty())
+		std::optional<std::wstring> filePath = FileDialogs::SaveFile(L"Spark Scene (*.spark)\0*.spark\0");
+		if (filePath)
 		{
 			SceneSerializor sceneSerializor(m_ActiveScene);
 			sceneSerializor.Serialize(filePath);

@@ -4,6 +4,10 @@
 #include <imgui/imgui.h>
 #include <imgui/imgui_internal.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <cstring>
+#ifdef _MSVC_LANG
+	#define _CRT_SECURE_NO_WARNINGS
+#endif
 
 namespace Spark {
 
@@ -211,7 +215,7 @@ namespace Spark {
 			// 用于命名缓冲区
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
-			strcpy_s(buffer, sizeof(buffer), tag.c_str());
+			strncpy(buffer, tag.c_str(), sizeof(buffer));
 			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
 			{
 				tag = std::string(buffer);
@@ -226,13 +230,19 @@ namespace Spark {
 		{
 			if (ImGui::MenuItem("Camera"))
 			{
-				m_SelectionContext.AddComponent<CameraComponent>();
+				if (!m_SelectionContext.HasComponent<CameraComponent>())
+					m_SelectionContext.AddComponent<CameraComponent>();
+				else
+					SPK_CORE_WARN("This Entity Already has the CameraComponent");
 				ImGui::CloseCurrentPopup();
 			}
 
 			if (ImGui::MenuItem("Sprite Render"))
 			{
-				m_SelectionContext.AddComponent<SpriteRendererComponent>();
+				if (!m_SelectionContext.HasComponent<SpriteRendererComponent>())
+					m_SelectionContext.AddComponent<SpriteRendererComponent>();
+				else
+					SPK_CORE_WARN("THis Entiy Already has the SpriteRenderComponent");
 				ImGui::CloseCurrentPopup();
 			}
 
