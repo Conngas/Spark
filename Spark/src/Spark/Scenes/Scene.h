@@ -13,6 +13,7 @@ namespace Spark {
 		~Scene();
 
 		Entity CreateEntity(const std::string& name = std::string());
+		Entity GetPrimaryCameraEntity();
 		void DestoryEntity(Entity entity);
 
 		void OnUpdate(Timestep ts);

@@ -1,12 +1,15 @@
 #include "spkpch.h"
 #include "EditorLayer.h"
+#include "Spark/Math/Math.h"
 #include "Spark/Utils/PlatformUtils.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 #include "Spark/Scenes/SceneSerializor.h"
 
+
 #include <imgui/imgui.h>
-#include <glm/gtc/matrix_transform.hpp>
+#include <ImGuizmo.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 namespace Spark {
 
@@ -245,18 +248,64 @@ namespace Spark {
 		ImGui::End();
 
 		//////////////////////////////////////////////////////////////////////////
-		// 窗口铺满与聚焦功能
+		/// 窗口铺满与聚焦功能
 		//////////////////////////////////////////////////////////////////////////
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0,0 });
 		ImGui::Begin("ViewPort");
 		// 更新窗口聚焦状态
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
-		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused || !m_ViewportHovered);
+		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused && !m_ViewportHovered);
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 		uint64_t textureID = m_FrameBuffer->GetColorAttchment();
 		ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ m_ViewportSize.x, m_ViewportSize.y },ImVec2{0,1},ImVec2{1,0});
+		
+		//////////////////////////////////////////////////////////////////////////
+		/// ImGuizmo		
+		//////////////////////////////////////////////////////////////////////////
+		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+		if (selectedEntity && m_ImGuizmoType != -1)
+		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+			const glm::mat4& cameraProjection = camera.GetProjection();
+			const glm::mat4& cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+			auto& transformComponent = selectedEntity.GetComponent<TransformComponent>();
+			glm::mat4 transform = transformComponent.GetTransform();
+
+			// Snap 间隔
+			bool snap = Input::IsKeyPressed(Key::LeftControl);
+			float snapValue = 0.1f;
+			if (m_ImGuizmoType == ImGuizmo::OPERATION::ROTATE)
+				snapValue = 15.0f;
+			float snapValues[3] = { snapValue, snapValue, snapValue };
+			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+				(ImGuizmo::OPERATION)m_ImGuizmoType, ImGuizmo::LOCAL, glm::value_ptr(transform),
+				nullptr, snap ? snapValues : nullptr);
+
+			if (ImGuizmo::IsUsing())
+			{
+				// 矩阵分解使用Guizmo控制
+				glm::vec3 translation, rotation, scale;
+				Math::DecomposeTransform(transform, translation, rotation, scale);
+
+				glm::vec3 deleteRotation = rotation - transformComponent.Rotation;
+				transformComponent.Translation = translation;
+				transformComponent.Rotation += deleteRotation;
+				transformComponent.Scale = scale;
+			}
+		}
+
+		//////////////////////////////////////////////////////////////////////////
 		ImGui::End();
 		ImGui::PopStyleVar();
 
@@ -280,6 +329,9 @@ namespace Spark {
 		bool shift = Input::IsKeyPressed(Key::LeftShift) || Input::IsKeyPressed(Key::RightShift);
 		switch (e.GetKeyCode())
 		{
+			//////////////////////////////////////////////////////////////////////////
+			/// Data Serialization
+			//////////////////////////////////////////////////////////////////////////
 			case Key::N:
 			{
 				if (control)
@@ -294,10 +346,26 @@ namespace Spark {
 			}
 			case Key::S:
 			{
-				if (control)
+				if (control && shift)
 					SaveSceneAs();
 				break;
 			}
+
+			//////////////////////////////////////////////////////////////////////////
+			/// ImGuizmo
+			//////////////////////////////////////////////////////////////////////////
+			case Key::Q:
+				m_ImGuizmoType = -1;
+				break;
+			case Key::W:
+				m_ImGuizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			case Key::E:
+				m_ImGuizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			case Key::R:
+				m_ImGuizmoType = ImGuizmo::OPERATION::SCALE;
+				break;
 		}
 	}
 	

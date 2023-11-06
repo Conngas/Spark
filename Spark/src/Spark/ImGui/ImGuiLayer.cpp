@@ -1,11 +1,11 @@
 #include "spkpch.h"
 #include "Spark/ImGui/ImGuiLayer.h"
+#include "Spark/Core/Application.h"
 
+#include <ImGuizmo.h>
 #include <imgui.h>
 #include <examples/imgui_impl_glfw.h>
 #include <examples/imgui_impl_opengl3.h>
-
-#include "Spark/Core/Application.h"
 
 // ¡Ÿ ±“˝”√
 #include <GLFW/glfw3.h>
@@ -96,6 +96,7 @@ namespace Spark {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 	}
 
 	void ImGuiLayer::End()
