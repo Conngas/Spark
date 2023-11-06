@@ -28,6 +28,9 @@
     <Filter Include="src\Spark\ImGui">
       <UniqueIdentifier>{67B509FD-D340-77C1-DC51-FAB5485CD3C1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Spark\Math">
+      <UniqueIdentifier>{76110A7C-62DF-FD81-4B73-6EA837E0D9E6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Spark\Renderer">
       <UniqueIdentifier>{C3F62570-AFDA-E6C5-183B-E118043ED147}</UniqueIdentifier>
     </Filter>
@@ -42,6 +45,9 @@
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\ImGuizmo">
+      <UniqueIdentifier>{73BF7F4C-DF4A-ED10-E85B-700554664911}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\stb_image">
       <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
@@ -132,6 +138,9 @@
     <ClInclude Include="src\Spark\ImGui\ImGuiLayer.h">
       <Filter>src\Spark\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\Spark\Math\Math.h">
+      <Filter>src\Spark\Math</Filter>
+    </ClInclude>
     <ClInclude Include="src\Spark\Renderer\Buffer.h">
       <Filter>src\Spark\Renderer</Filter>
     </ClInclude>
@@ -201,6 +210,9 @@
     <ClInclude Include="src\spkpch.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="vendor\ImGuizmo\ImGuizmo.h">
+      <Filter>vendor\ImGuizmo</Filter>
+    </ClInclude>
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
@@ -256,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="src\Spark\ImGui\ImGuiLayer.cpp">
       <Filter>src\Spark\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Spark\Math\Math.cpp">
+      <Filter>src\Spark\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Spark\Renderer\Buffer.cpp">
       <Filter>src\Spark\Renderer</Filter>
@@ -313,6 +328,9 @@
     </ClCompile>
     <ClCompile Include="src\spkpch.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp">
+      <Filter>vendor\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>

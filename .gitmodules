@@ -17,3 +17,6 @@
 [submodule "Spark/vendor/yaml-cpp"]
 	path = Spark/vendor/yaml-cpp
 	url = git@github.com:TheCherno/yaml-cpp.git
+[submodule "Spark/vendor/ImGuizmo"]
+	path = Spark/vendor/ImGuizmo
+	url = git@github.com:TheCherno/ImGuizmo.git

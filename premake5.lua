@@ -32,6 +32,7 @@ workspace "Spark"
     IncludeDir["stb_image"] = "%{wks.location}/Spark/vendor/stb_image"
     IncludeDir["entt"] = "%{wks.location}/Spark/vendor/entt/include"
 	IncludeDir["yaml_cpp"] = "%{wks.location}/Spark/vendor/yaml-cpp/include"
+	IncludeDir["ImGuizmo"] = "%{wks.location}/Spark/vendor/ImGuizmo"
 
     -- 组依赖（include）
     -- include "Spark/vendor/GLFW"

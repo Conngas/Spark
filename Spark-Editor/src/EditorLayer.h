@@ -12,11 +12,11 @@ namespace Spark {
 		EditorLayer();
 		virtual ~EditorLayer() = default;
 
-		virtual void OnAttach() override;
-		virtual void OnDetach() override;
+		void OnAttach() override;
+		void OnDetach() override;
 
 		void OnUpdate(Spark::Timestep ts) override;
-		virtual void OnImGuiRender() override;
+		void OnImGuiRender() override;
 		void OnEvent(Spark::Event& e) override;
 	private:
 		bool OnKeyPressed(KeyPressedEvent& e);
@@ -47,6 +47,8 @@ namespace Spark {
 
 		ParticaleSystem m_ParticaleSystem;
 		ParticaleProps m_Particale;
+
+		int m_ImGuizmoType = -1;
 
 		// Panel
 		SceneHierarchyPanel m_SceneHierarchyPanel;

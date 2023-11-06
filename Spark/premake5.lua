@@ -20,7 +20,9 @@ project "Spark"
         "vendor/stb_image/**.h",
         "vendor/stb_image/**.cpp",
         "vendor/glm/gml/**.hpp",
-        "vendor/glm/gml/**.inl"
+        "vendor/glm/gml/**.inl",
+		"vendor/ImGuizmo/ImGuizmo.h",
+		"vendor/ImGuizmo/ImGuizmo.cpp"
     }
 
     -- 未来会删除
@@ -42,7 +44,8 @@ project "Spark"
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.entt}",
-		"%{IncludeDir.yaml_cpp}"
+		"%{IncludeDir.yaml_cpp}",
+		"%{IncludeDir.ImGuizmo}"
     }
 
     -- link文件
@@ -54,6 +57,10 @@ project "Spark"
 		"yaml-cpp",
         "opengl32.lib"
     }
+
+	-- 不适用pch文件的模块
+	filter "files:vendor/ImGuizmo/**.cpp"
+	flags {"NoPCH"}
 
     -- IDE编译器设置
     filter "system:windows"

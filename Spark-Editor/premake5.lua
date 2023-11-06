@@ -22,7 +22,8 @@ project "Spark-Editor"
         "%{wks.location}/Spark/src",
         "%{wks.location}/Spark/vendor",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+		"%{IncludeDir.ImGuizmo}"
     }
     -- ����Sandbox��Spark
     links
