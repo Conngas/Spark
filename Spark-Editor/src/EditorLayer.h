@@ -2,6 +2,7 @@
 
 #include "Spark.h"
 #include "Panel/SceneHierarchyPanel.h"
+#include "Spark/Scenes/EditorCamera.h"
 #include "Spark/SubSystem/ParticaleSystem.h"
 
 namespace Spark {
@@ -39,6 +40,8 @@ namespace Spark {
 		Entity m_SquareEntity;
 		Entity m_CameraEntity;
 		Entity m_SceondEntity;
+
+		EditorCamera m_EditorCamera;
 
 		bool m_PrimaryCamera = false;	
 		bool m_ViewportFocused = false, m_ViewportHovered = false;

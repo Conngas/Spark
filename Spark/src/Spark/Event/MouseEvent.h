@@ -3,6 +3,8 @@
 #include "Spark/Event/Event.h"
 #include "Spark/Core/MouseCodes.h"
 
+#include <sstream>
+
 namespace Spark {
 	/// <summary>
 	/// 鼠标移动事件
