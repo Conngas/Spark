@@ -12,9 +12,55 @@
 namespace Spark {
 
 	EditorCamera::EditorCamera(float fov, float aspectRatio, float nearClip, float farClip)
-		: m_FOV(fov), m_AspectRatio(aspectRatio), m_NearClip(nearClip), m_FarClip(farClip)
+		: m_FOV(fov), m_AspectRatio(aspectRatio), m_NearClip(nearClip), m_FarClip(farClip), 
+		  Camera(glm::perspective(glm::radians(fov), aspectRatio, nearClip, farClip))
 	{
 		UpdateView();
+	}
+
+	void EditorCamera::UpdateProjection()
+	{
+		m_AspectRatio = m_ViewportWitdh / m_ViewportHeight;
+		m_Projection = glm::perspective(glm::radians(m_FOV), m_AspectRatio, m_NearClip, m_FarClip);
+	}
+
+	void EditorCamera::UpdateView()
+	{
+		// Lock Camera
+		//m_Yaw, m_Pitch = 0.0f;
+		m_Position = CaculatePosition();
+		glm::quat orientation = GetOrientation();
+		m_ViewMatrix = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(orientation);
+		m_ViewMatrix = glm::inverse(m_ViewMatrix);
+	}
+
+	/// <summary>
+	/// 根据二次函数写成的表达式用于返回值
+	/// </summary>
+	/// <returns></returns>
+	std::pair<float, float> EditorCamera::PanSpeed() const
+	{
+		float x = std::min(m_ViewportWitdh / 1000.0f, 2.4f); // max = 2.4
+		float xFactor = 0.0366f * (x * x) - 0.1778f * x + 0.3021f;
+
+		float y = std::min(m_ViewportHeight / 1000.0f, 2.4f);
+		float yFactor = 0.0336f * (y * y) - 0.1778f * x + 0.3021f;
+
+		return { xFactor, yFactor };
+	}
+
+	float EditorCamera::RotationSpeed() const
+	{
+		return 0.8f;
+	}
+
+	float EditorCamera::ZoomSpeed() const
+	{
+		float distance = m_Distance * 0.2f;
+		distance = std::max(distance, 0.0f);
+		float speed = distance * distance;
+		speed = std::min(speed, 100.0f);
+		return speed;
 	}
 
 	void EditorCamera::OnUpdate(Timestep ts)
@@ -36,7 +82,6 @@ namespace Spark {
 		UpdateView();
 	}
 
-
 	void EditorCamera::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
@@ -54,46 +99,6 @@ namespace Spark {
 		MouseZoom(delta);
 		UpdateView();
 		return false;
-	}
-
-	glm::vec3 EditorCamera::GetUpDirection() const
-	{
-		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 1.0f, 0.0f));
-	}
-
-
-	glm::vec3 EditorCamera::GetRightDirection() const
-	{
-		return glm::rotate(GetOrientation(), glm::vec3(1.0f, 0.0f, 0.0f));
-	}
-
-
-	glm::vec3 EditorCamera::GetForwardDirection() const
-	{
-		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 0.0f, -1.0f));
-	}
-
-
-	glm::quat EditorCamera::GetOrientation() const
-	{
-		return glm::quat(glm::vec3(-m_Pitch, -m_Yaw, 0.0f));
-	}
-
-	void EditorCamera::UpdateProjection()
-	{
-		m_AspectRatio = m_ViewportWitdh / m_ViewportHeight;
-		m_Projection = glm::perspective(glm::radians(m_FOV), m_AspectRatio, m_NearClip, m_FarClip);
-	}
-
-	void EditorCamera::UpdateView()
-	{
-		// Lock Camera
-		//m_Yaw, m_Pitch = 0.0f;
-
-		m_Position = CaculatePosition();
-		glm::quat orientation = GetOrientation();
-		m_ViewMatrix = glm::translate(glm::mat4(1.0f), m_Position) * glm::toMat4(orientation);
-		m_ViewMatrix = glm::inverse(m_ViewMatrix);
 	}
 
 	/// <summary>
@@ -133,38 +138,28 @@ namespace Spark {
 		}
 	}
 
+	glm::vec3 EditorCamera::GetUpDirection() const
+	{
+		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 1.0f, 0.0f));
+	}
+
+	glm::vec3 EditorCamera::GetRightDirection() const
+	{
+		return glm::rotate(GetOrientation(), glm::vec3(1.0f, 0.0f, 0.0f));
+	}
+
+	glm::vec3 EditorCamera::GetForwardDirection() const
+	{
+		return glm::rotate(GetOrientation(), glm::vec3(0.0f, 0.0f, -1.0f));
+	}
+
+	glm::quat EditorCamera::GetOrientation() const
+	{
+		return glm::quat(glm::vec3(-m_Pitch, -m_Yaw, 0.0f));
+	}
+
 	glm::vec3 EditorCamera::CaculatePosition() const
 	{
 		return m_FocalPoint - GetForwardDirection() * m_Distance;
-	}
-
-	/// <summary>
-	/// 根据二次函数写成的表达式用于返回值
-	/// </summary>
-	/// <returns></returns>
-	std::pair<float, float> EditorCamera::PanSpeed() const
-	{
-		float x = std::min(m_ViewportWitdh / 1000.0f, 2.4f); // max = 2.4
-		float xFactor = 0.0366f * (x * x) - 0.1778f * x + 0.3021f;
-
-		float y = std::min(m_ViewportHeight / 1000.0f, 2.4f);
-		float yFactor = 0.0336f * (y * y) - 0.1778f * x + 0.3021f;
-
-		return { xFactor, yFactor };
-	}
-
-	float EditorCamera::RotationSpeed() const
-	{
-		return 0.8f;
-	}
-
-
-	float EditorCamera::ZoomSpeed() const
-	{
-		float distance = m_Distance * 0.2f;
-		distance = std::max(distance, 0.0f);
-		float speed = distance * distance;
-		speed = std::min(speed, 100.0f);
-		return speed;
 	}
 }

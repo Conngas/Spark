@@ -2,7 +2,6 @@
 #include "Spark/Core/Application.h"
 #include "Spark/Utils/PlatformUtils.h"
 
-#include <sstream>
 #include <commdlg.h>
 #include <GLFW/glfw3.h>
 // 获取父窗口并冻结
@@ -18,6 +17,7 @@ namespace Spark {
 		OPENFILENAMEW openfileName;
 		// 定义文件路径字符宽度
 		WCHAR szFile[260] = { 0 };
+		WCHAR currentDir[256] = { 0 };
 		// 初始化成员为0
 		ZeroMemory(&openfileName, sizeof(OPENFILENAMEW));
 		// 设置结构大小
@@ -26,6 +26,9 @@ namespace Spark {
 		openfileName.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
 		// 存储文件路径缓冲区
 		openfileName.lpstrFile = szFile;
+		// 设置当前工作目录打开
+		if (GetCurrentDirectory(256, currentDir))
+			openfileName.lpstrInitialDir = currentDir;
 		// 设置缓冲区大小
 		openfileName.nMaxFile = sizeof(szFile);
 		// 设置文件过滤器，决定使用哪些文件与否
@@ -47,16 +50,19 @@ namespace Spark {
 	{
 		OPENFILENAMEW openFileName;
 		WCHAR szFile[260] = { 0 };
+		WCHAR currentDir[256] = { 0 };
 		ZeroMemory(&openFileName, sizeof(OPENFILENAMEW));
 		openFileName.lStructSize = sizeof(OPENFILENAMEW);
 		openFileName.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
 		openFileName.lpstrFile = szFile;
 		openFileName.nMaxFile = sizeof(szFile);
+		if (GetCurrentDirectory(256, currentDir))
+			openFileName.lpstrInitialDir = currentDir;
 		openFileName.lpstrFilter = filter;
 		openFileName.nFilterIndex = 1;
 		// 未指定名称时，使用默认的扩展名称存储文件
 		openFileName.lpstrDefExt = std::wcschr(filter, L'\0') + 1;
-		openFileName.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+		openFileName.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
 		if (GetSaveFileNameW(&openFileName) == TRUE)
 		{
 			return openFileName.lpstrFile;
