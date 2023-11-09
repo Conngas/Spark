@@ -1,6 +1,7 @@
-#pragma once
+#pragma once;
 #include "Spark/Renderer/Camera.h"
 #include "Spark/Renderer/Texture.h"
+#include "Spark/Scenes/EditorCamera.h"
 #include "Spark/Renderer/SubTexture2D.h"
 #include "Spark/Renderer/OrthographicCamera.h"
 
@@ -12,8 +13,9 @@ namespace Spark {
 		static void Init();
 		static void ShutDown();
 
-		static void BeginScene(const Camera& camera, const glm::mat4& transform);
+		static void BeginScene(const EditorCamera& camera);
 		static void BeginScene(const OrthographicCamera& camera); // TODO Remove
+		static void BeginScene(const Camera& camera, const glm::mat4& transform);
 		static void EndScene();
 		static void Flush();
 

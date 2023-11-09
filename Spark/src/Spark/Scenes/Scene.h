@@ -1,5 +1,6 @@
 #pragma once
 #include "Spark/Core/Timestep.h"
+#include "Spark/Scenes/EditorCamera.h"
 
 #include <entt.hpp>
 
@@ -16,7 +17,8 @@ namespace Spark {
 		Entity GetPrimaryCameraEntity();
 		void DestoryEntity(Entity entity);
 
-		void OnUpdate(Timestep ts);
+		void OnUpdateRuntime(Timestep ts);
+		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
 		void OnViewPortResize(uint32_t width, uint32_t height);
 	private:
 		template<typename T>

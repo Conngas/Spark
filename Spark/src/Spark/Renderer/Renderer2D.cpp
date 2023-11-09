@@ -1,7 +1,8 @@
 #include "spkpch.h"
-#include "Spark/Renderer/Renderer2D.h"
-#include "Spark/Renderer/VertexArray.h"
 #include "Spark/Renderer/Shader.h"
+#include "Spark/Renderer/Renderer2D.h"
+#include "Spark/Scenes/EditorCamera.h"
+#include "Spark/Renderer/VertexArray.h"
 #include "Spark/Renderer/RenderCommand.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -132,6 +133,17 @@ namespace Spark {
 		s_Data.QuadShader->Bind();
 		s_Data.QuadShader->SetMat4("u_ViewProjection",camera.GetViewProjectionMatrix());
 		// 定位当前VertexBuffer位置
+		StartBatch();
+	}
+
+	void Renderer2D::BeginScene(const EditorCamera& camera)
+	{
+		SPK_PROFILE_FUNCTION();
+
+		glm::mat4 viewProj = camera.GetViewProjection();
+		s_Data.QuadShader->Bind();
+		s_Data.QuadShader->SetMat4("u_ViewProjection", viewProj);
+
 		StartBatch();
 	}
 
