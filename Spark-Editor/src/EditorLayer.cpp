@@ -24,6 +24,7 @@ namespace Spark {
 		m_SquareTexture = Spark::Texture2D::Create("Assets/Texture/Checkerboard.png");
 
 		Spark::FrameBufferSpecification fbSpec;
+		fbSpec.Attachments = { FrameBufferTextureFormat::RGBA8, FrameBufferTextureFormat::Depth };
 		fbSpec.Width = 1280;
 		fbSpec.Height = 720;
 		m_FrameBuffer = Spark::FrameBuffer::Create(fbSpec);
@@ -263,7 +264,7 @@ namespace Spark {
 		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused && !m_ViewportHovered);
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-		uint64_t textureID = m_FrameBuffer->GetColorAttchment();
+		uint64_t textureID = m_FrameBuffer->GetColorAttchmentRendererID();
 		ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ m_ViewportSize.x, m_ViewportSize.y },ImVec2{0,1},ImVec2{1,0});
 		
 		//////////////////////////////////////////////////////////////////////////
